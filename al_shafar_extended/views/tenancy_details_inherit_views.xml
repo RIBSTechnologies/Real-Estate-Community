@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Tenancy Details – Al-Shafar Extended Additions
+        ================================================
+        • Smart buttons for Refund Summary, Invoice Refund, Tax Refund, Security Deposit Refund.
+        • Refund Settlement page with detailed component statuses.
+    -->
+    <record id="view_tenancy_details_form_al_shafar_extended" model="ir.ui.view">
+        <field name="name">tenancy.details.form.al.shafar.extended</field>
+        <field name="model">tenancy.details</field>
+        <field name="inherit_id" ref="ribs_real_estate.tenancy_details_form_view_inherit"/>
+        <field name="arch" type="xml">
+
+            <!-- Add Smart Buttons -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+
+                <!-- Refund Summary Smart Button -->
+                <button name="action_view_refund_summary"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="calculate"
+                        invisible="contract_type not in ('terminated', 'pre_terminated', 'close') and total_refund_amount &lt;= 0">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="total_refund_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Refund Summary (<field name="overall_refund_status"/>)
+                        </span>
+                    </div>
+                </button>
+
+                <!-- Invoice Refund Smart Button -->
+                <button name="action_view_invoice_refunds"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="undo"
+                        invisible="invoice_refund_amount &lt;= 0">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="invoice_refund_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Invoice Refund (<field name="invoice_refund_status"/>)
+                        </span>
+                    </div>
+                </button>
+
+                <!-- Tax Refund Smart Button -->
+                <button name="action_view_tax_refunds"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="percent"
+                        invisible="tax_refund_amount &lt;= 0 or tax_refundable">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="tax_refund_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Tax Refund (<field name="tax_refund_status"/>)
+                        </span>
+                    </div>
+                </button>
+
+                <!-- Security Deposit Refund Smart Button -->
+                <button name="action_view_deposit_refunds"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="security"
+                        invisible="deposit_refund_amount &lt;= 0">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="deposit_refund_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Deposit Refund (<field name="deposit_refund_status"/>)
+                        </span>
+                    </div>
+                </button>
+
+                <!-- Registered PDC Cheques Smart Button - only after the
+                     contract's closure/termination has been approved -->
+                <button name="action_view_registered_pdc"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="payments"
+                        invisible="registered_pdc_count == 0 or contract_type not in ('terminated', 'pre_terminated', 'close')">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="registered_pdc_count"/>
+                        </span>
+                        <span class="o_stat_text">Registered PDC</span>
+                    </div>
+                </button>
+
+                <!-- Returned PDC Cheques Smart Button - only after the
+                     contract's closure/termination has been approved -->
+                <button name="action_view_returned_pdc"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="undo"
+                        invisible="returned_pdc_count == 0 or contract_type not in ('terminated', 'pre_terminated', 'close')">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="returned_pdc_count"/>
+                        </span>
+                        <span class="o_stat_text">PDC Return List</span>
+                    </div>
+                </button>
+
+                <!-- Original Contract Smart Button - only on a contract that
+                     was itself created by renewing/extending another one. -->
+                <field name="original_contract_id" invisible="1"/>
+                <button name="action_view_original_contract"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="article"
+                        invisible="not original_contract_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Original Contract</span>
+                    </div>
+                </button>
+
+            </xpath>
+
+            <!-- Renew Contract button: widen visibility from the original
+                 "not new_contract_sent" to the stage-based rule below.
+                 Same button (id="extend_contract_button"), same
+                 name="renew_contract" method already defined in
+                 ribs_real_estate - only the visibility condition changes. -->
+            <xpath expr="//button[@id='extend_contract_button']" position="attributes">
+                <attribute name="invisible">contract_type not in ('running_contract', 'expire_contract', 'expiring_soon', 'closure_pending_approval', 'closure_final_approval')</attribute>
+            </xpath>
+
+            <!-- Add Refund Details & Settlement Page in Notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Termination &amp; Refund Settlement"
+                      name="termination_refund_settlement"
+                      invisible="contract_type not in ('terminated', 'pre_terminated', 'close')">
+                    <group>
+                        <group string="Termination Details">
+                            <field name="termination_date" readonly="1"/>
+                            <field name="termination_reason" readonly="1"/>
+                            <field name="settlement_method" readonly="1"/>
+                            <field name="prorate_days" readonly="1"/>
+                            <field name="tax_refundable" readonly="1"/>
+                            <field name="refund_method" readonly="1"/>
+                            <field name="termination_remarks" readonly="1"/>
+                        </group>
+                        <group string="Financial Refund Component Summary">
+                            <field name="total_paid_amount" style="font-weight:bold; color:#1E3A8A;"/>
+                            <field name="total_utilized_amount" style="color:#0369A1;"/>
+                            <field name="invoice_refund_amount" style="color:#15803D;"/>
+                            <field name="tax_refund_amount" style="color:#6B21A8;"/>
+                            <field name="deposit_refund_amount" style="color:#059669;"/>
+                            <field name="total_refund_amount" style="font-size:14px; font-weight:bold; color:#B91C1C;"/>
+                            <field name="refunded_amount"/>
+                            <field name="balance_refund"/>
+                        </group>
+                    </group>
+
+                    <group string="Component Status Tracking">
+                        <group>
+                            <field name="invoice_refund_status" widget="badge"
+                                   decoration-success="invoice_refund_status == 'refunded'"
+                                   decoration-warning="invoice_refund_status == 'pending'"
+                                   decoration-info="invoice_refund_status == 'partially_refunded'"/>
+                            <field name="tax_refund_status" widget="badge"
+                                   decoration-success="tax_refund_status == 'refunded'"
+                                   decoration-warning="tax_refund_status == 'pending'"
+                                   decoration-muted="tax_refund_status == 'not_applicable'"/>
+                        </group>
+                        <group>
+                            <field name="deposit_refund_status" widget="badge"
+                                   decoration-success="deposit_refund_status == 'refunded'"
+                                   decoration-warning="deposit_refund_status == 'pending'"
+                                   decoration-info="deposit_refund_status == 'partially_refunded'"/>
+                            <field name="overall_refund_status" widget="badge"
+                                   decoration-success="overall_refund_status == 'fully_refunded'"
+                                   decoration-warning="overall_refund_status in ('pending', 'partially_refunded')"
+                                   decoration-muted="overall_refund_status == 'no_refund'"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!--
+        Renew Contract - List View
+        ==========================
+        Same "renew_contract" object method as the form-view button above
+        (ribs_real_estate/models/tenancy_details.py). A <button> embedded
+        as a list-view column always calls the object method on that row's
+        own record, so this is safe per-record even with the list's
+        multi-select enabled - it never operates on a batch recordset.
+        Visibility mirrors the form-view button exactly.
+    -->
+    <record id="view_tenancy_details_list_al_shafar_extended" model="ir.ui.view">
+        <field name="name">tenancy.details.list.al.shafar.extended</field>
+        <field name="model">tenancy.details</field>
+        <field name="inherit_id" ref="ribs_real_estate.tenancy_details_tree_view_inherit"/>
+        <field name="arch" type="xml">
+            <!-- Standalone "Send Renewal Reminder" button, next to "New" -
+                 not the list's Action (gear) menu. Enabled once one or
+                 more rows are checked; opens wizard/
+                 contract_reminder_wizard.py for the selected contracts. -->
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_open_contract_reminder_wizard" type="object"
+                        string="Send Renewal Reminder"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='contract_type']" position="after">
+                <button name="renew_contract" type="object" string="Renew Contract"
+                    title="Renew Contract" icon="refresh"
+                    invisible="contract_type not in ('running_contract', 'expire_contract', 'expiring_soon', 'closure_pending_approval', 'closure_final_approval')"/>
+            </xpath>
+
+            <!-- Show Contract Value instead of Original Price (total_rent) in the list -->
+            <xpath expr="//field[@name='total_rent']" position="replace">
+                <field name="contract_value" string="Contract Value"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

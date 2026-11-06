@@ -1,0 +1,356 @@
+<odoo>
+
+    <!-- Portal Home for My Documents -->
+    <template id="portal_my_documents" inherit_id="portal.portal_my_home" name="My Documents Portal Home Entry">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry"
+                title.translate="My Documents"
+                url.f="/my/documents"
+                placeholder_count.f="custom_documents_count"
+                text.translate="View and download your uploaded documents"
+                icon.f="/web/static/src/img/document_icon.png"
+                config_card="True"/>
+        </xpath>
+        <!-- <xpath expr="//div[@id='portal_client_category']" position="replace">
+        </xpath> -->
+    </template>
+
+    <!-- Document Upload view -->
+    <template id="portal_upload_form" name="Upload Documents (Validated)">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-5">
+                <div class="text-center mb-4">
+                    <h2 class="font-weight-bold text-primary">Upload Required Documents</h2>
+                    <p class="text-muted">For Contract: <strong><t t-out="contract.tenancy_seq"/></strong></p>
+                </div>
+
+                <div class="card shadow-sm border-0" style="background-color: #f9f9f9;">
+                    <div class="card-body">
+                        <form id="uploadForm" action="/my/documents/upload/submit" method="post" enctype="multipart/form-data" class="p-3" onsubmit="return validateUploadForm()">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="contract_id" t-att-value="contract.id"/>
+
+                            <t t-foreach="document_names" t-as="doc">
+                                <div class="form-group mb-4">
+                                    <label class="font-weight-bold">
+                                        <t t-out="doc.name"/> <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="file" 
+                                        t-att-name="'document_%s' % doc.id" 
+                                        class="form-control mb-2 doc-upload-input" 
+                                        accept=".pdf,image/*" 
+                                        required="required" 
+                                        multiple="multiple"/>
+
+                                    <small class="form-text text-muted">
+                                        Allowed: PDF, JPG, PNG. (Max 3 files - 5MB each)
+                                    </small>
+                                    <div class="input-group mb-3 mt-2">
+                                        <span class="input-group-text">Expiry Date</span>
+                                            <input type="date" 
+                                                t-att-name="'expiry_%s' % doc.id" 
+                                                class="form-control form-control-sm" 
+                                                style="max-width: 200px;"/>
+                                    </div>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text">Notes</span>
+                                        <input type="text" id="notes" name="notes" class="form-control" placeholder="Enter your notes..."/>
+                                    </div>
+                                    <div class="alert alert-danger d-none upload-error"></div>
+                                    <hr/>
+                                </div>
+                            </t>
+
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    <i class="oi mr-2" data-icon="upload"></i> Submit Documents
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                function validateUploadForm() {
+                    const uploadSections = document.querySelectorAll('.doc-upload-input');
+                    let isValid = true;
+
+                    uploadSections.forEach((input) =&gt; {
+                        const files = input.files;
+                        const errorBox = input.parentElement.querySelector('.upload-error');
+                        errorBox.classList.add('d-none');
+                        errorBox.innerHTML = '';
+
+                        if (files.length === 0) {
+                            errorBox.innerHTML = 'Please select at least one file.';
+                            errorBox.classList.remove('d-none');
+                            isValid = false;
+                            return;
+                        }
+
+                        if (files. &gt; 3) {
+                            errorBox.innerHTML = 'You can upload a maximum of 3 files.';
+                            errorBox.classList.lengthremove('d-none');
+                            isValid = false;
+                            return;
+                        }
+
+                        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+                        for (let i = 0; i &lt; files.length; i++) {
+                            const file = files[i];
+
+                            if (!allowedTypes.includes(file.type)) {
+                                errorBox.innerHTML = `File "${file.name}" is not a valid PDF or image.`;
+                                errorBox.classList.remove('d-none');
+                                isValid = false;
+                                break;
+                            }
+
+                            if (file.size &gt; 5 * 1024 * 1024) { // 5 MB
+                                errorBox.innerHTML = `File "${file.name}" exceeds the 5MB limit.`;
+                                errorBox.classList.remove('d-none');
+                                isValid = false;
+                                break;
+                            }
+                        }
+                    });
+
+                    return isValid;
+                }
+            </script>
+        </t>
+    </template>
+
+
+    <!-- Documents Upload Success Page -->
+    <template id="portal_upload_success" name="Upload Success">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+            <div class="alert alert-success">
+                Your documents have been uploaded successfully.
+            </div>
+            <a href="/my/home" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </t>
+    </template>
+
+    <!-- Breadcrumbs and List View for Documents -->
+    <template id="portal_documents_breadcrumbs" inherit_id="portal.portal_breadcrumbs" name="Documents Breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'partner_documents_list_view'" class="breadcrumb-item">My Documents</li>
+            <li t-if="page_name == 'partner_documents_form_view'" class="breadcrumb-item color-primary">
+                <a href="/my/documents">My Documents</a>
+            </li>
+            <li t-if="page_name == 'partner_documents_form_view'" class="breadcrumb-item">
+                <t t-out="document.document_name" />
+            </li>
+
+        </xpath>
+    </template>
+
+    <!-- Document List View -->
+    <template id="portal_documents_list" name="My Uploaded Documents">
+        <t t-call="portal.portal_layout">
+            <div class="container my-5">
+                <h3 class="mb-4">My Documents</h3>
+
+                <div class="alert alert-info">
+                    Total: <strong><t t-out="summary['total']"/></strong> |
+                    Pending: <strong><t t-out="summary['pending']"/></strong> |
+                    Approved: <strong><t t-out="summary['accepted']"/></strong> |
+                    Rejected: <strong><t t-out="summary['rejected']"/></strong>
+                </div>
+
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Document Name</th>
+                            <th>Expiry Date</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                            <th>Attachments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="documents" t-as="doc">
+                            <tr>
+                                <td><t t-out="doc.document_id.name"/></td>
+                                <td><t t-out="doc.expiry_date"/></td>
+                                <td>
+                                    <t t-if="doc.verified_status == 'pending'">
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    </t>
+                                    <t t-if="doc.verified_status == 'accepted'">
+                                        <span class="badge bg-success">Approved</span>
+                                    </t>
+                                    <t t-if="doc.verified_status == 'rejected'">
+                                        <span class="badge bg-danger">Rejected</span>
+                                    </t>
+                                </td>
+                                <td><t t-out="doc.notes"/></td>
+                                <td>
+                                    <t t-foreach="doc.attachments" t-as="attach">
+                                        <a t-att-href="'/my/documents/download/%s' % attach.id" class="btn btn-sm btn-outline-primary mr-2 mb-1">
+                                            <i class="oi" data-icon="download"/> <t t-out="attach.name"/>
+                                        </a><br/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <div class="text-end my-4">
+                    <button class="btn btn-primary" type="button" onclick="toggleUploadForm()">
+                        <i class="oi" data-icon="upload"></i> Upload New Document
+                    </button>
+                </div>
+
+                <div id="upload-form-section" class="card card-body border shadow-sm p-4" style="display: none;">
+                    <t t-if="available_docs">
+                        <form id="uploadForm" action="/my/documents/upload/inline" method="post" enctype="multipart/form-data" onsubmit="return validateUploadForm()">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="partner_id" t-att-value="partner_id"/>
+
+                            <div class="form-group mb-3">
+                                <label for="document_id">Select Document Type:</label>
+                                <select name="document_id" class="form-control"
+                                        style="max-height: 200px; overflow-y: auto;"
+                                        required="required">
+                                    <option value="">-- Select Document --</option>
+                                    <t t-foreach="available_docs" t-as="doc">
+                                        <option t-att-value="doc.id"><t t-out="doc.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+
+                            <label class="font-weight-bold mt-2">Expiry Date</label>
+                            <div class="input-group mb-3">
+                                <input type="date" 
+                                    t-att-name="'expiry_%s' % doc.id" 
+                                    class="form-control form-control-sm" 
+                                    style="max-width: 200px;"/>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label for="attachments">Upload Files:</label>
+                                <input type="file" id="attachments" name="attachments" class="form-control" accept=".pdf,image/*" multiple="multiple" required="required"/>
+                                <small class="form-text text-muted">Allowed: PDF, JPG, PNG. (Max 3 files - 5MB - Each)</small>
+                            </div>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text">Notes</span>
+                                <input type="text" id="notes" name="notes" class="form-control" placeholder="Enter your notes..."/>
+                            </div>
+
+                            <div id="upload-error" class="alert alert-danger d-none"></div>
+                            
+                            <div class="d-flex justify-content-start gap-2 mt-3">
+                                <button type="submit" class="btn btn-success">Submit</button>
+                                <button type="button" class="btn btn-secondary ms-2" onclick="toggleUploadForm()">Cancel</button>
+                            </div>
+                        </form>
+                    </t>
+                    <t t-else="">
+                        <div class="alert alert-success">
+                            All required documents are already approved.
+                        </div>
+                    </t>
+                </div>
+
+                <script type="text/javascript">
+                    // Toggles form visibility only
+                    function toggleUploadForm() {
+                        var formSection = document.getElementById('upload-form-section');
+                        if (formSection.style.display === 'none') {
+                            formSection.style.display = 'block';
+                            formSection.scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                            formSection.style.display = 'none';
+                        }
+
+                        // Clear previous errors and file inputs on toggle
+                        const input = document.getElementById('attachments');
+                        if(input) input.value = '';
+                        const errorBox = document.getElementById('upload-error');
+                        errorBox.classList.add('d-none');
+                        errorBox.innerHTML = '';
+                    }
+
+                    // Validation on form submission
+                    function validateUploadForm() {
+                        const input = document.getElementById('attachments');
+                        const errorBox = document.getElementById('upload-error');
+                        errorBox.classList.add('d-none');
+                        errorBox.innerHTML = '';
+
+                        const files = input.files;
+                        if (files.length === 0) {
+                            errorBox.innerHTML = 'Please select at least one file.';
+                            errorBox.classList.remove('d-none');
+                            return false;
+                        }
+
+                        if (files.length &gt; 3) {
+                            errorBox.innerHTML = 'You can upload a maximum of 3 files.';
+                            errorBox.classList.remove('d-none');
+                            return false;
+                        }
+
+                        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+                        for (let i = 0; i &lt; files.length; i++) {
+                            const file = files[i];
+
+                            if (!allowedTypes.includes(file.type)) {
+                                errorBox.innerHTML = `File "${file.name}" is not a valid PDF or image.`;
+                                errorBox.classList.remove('d-none');
+                                return false;
+                            }
+
+                            if (file.size &gt; 5 * 1024 * 1024) { // 5 MB
+                                errorBox.innerHTML = `File "${file.name}" exceeds the 5MB limit.`;
+                                errorBox.classList.remove('d-none');
+                                return false;
+                            }
+                        }
+
+                        return true; // All checks passed
+                    }
+                </script>
+            </div>
+        </t>
+    </template>
+
+    <!-- Upload Link Expired Page -->
+    <template id="portal_upload_expired" name="Upload Link Expired or Already Used">
+        <t t-call="portal.portal_layout">
+            <div class="container my-5 text-center">
+                <h1 class="text-danger mb-3">Upload Link Unavailable</h1>
+                <p class="mb-2">
+                    This document upload link is no longer active.
+                </p>
+                <p>
+                    It may have expired after 30 minutes of inactivity, or it may have already been used to upload your document.
+                </p>
+                <p>
+                    Please contact your property manager if you need a new upload link.
+                </p>
+                <a href="/my" class="btn btn-primary mt-3">Back to My Portal</a>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="portal_upload_forbidden" name="Access Denied">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-5 text-center">
+                <div class="alert alert-danger p-5 shadow-sm">
+                    <h2 class="text-danger"><i class="oi" data-icon="block"></i> Access Denied</h2>
+                    <p class="mt-3">You do not have permission to access this document upload page.</p>
+                    <a href="/my" class="btn btn-outline-primary mt-3">Go Back to My Account</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

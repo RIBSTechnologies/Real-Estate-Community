@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <g>
+    <!-- Card background -->
+    <rect x="12" y="24" width="488" height="464" rx="42" fill="#fff1f2"/>
+    <rect x="12" y="24" width="488" height="96" rx="42" fill="#e11d48"/>
+
+    <!-- Header dots -->
+    <circle cx="72" cy="72" r="8" fill="#ffffff"/>
+    <circle cx="104" cy="72" r="8" fill="#ffffff"/>
+    <circle cx="136" cy="72" r="8" fill="#ffffff"/>
+
+    <!-- BIG Finance (money) icon -->
+    <circle cx="256" cy="290" r="120" fill="#be123c"/>
+    <text x="208" y="345"
+          font-size="150"
+          font-weight="800"
+          fill="#ffffff">₹</text>
+
+    <!-- Comment / note badge -->
+    <rect x="290" y="190" width="190" height="120" rx="36" fill="#fecdd3"/>
+    <circle cx="335" cy="250" r="10" fill="#be123c"/>
+    <circle cx="385" cy="250" r="10" fill="#be123c"/>
+    <circle cx="435" cy="250" r="10" fill="#be123c"/>
+
+    <!-- Bottom separator -->
+    <rect x="96" y="420" width="320" height="18" rx="9" fill="#fda4af"/>
+  </g>
+</svg>

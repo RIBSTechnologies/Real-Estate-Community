@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="termination_request_portal" model="mail.template">
+            <field name="name">Termination Request From Portal</field>
+            <field name="model_id" ref="model_tenancy_details"/>
+            <field name="subject">Termination Request</field>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: Arial, sans-serif; font-size: 14px;">
+                    <p>Hello,</p>
+
+                    <p>
+                        A Termination Request has been raised for
+                        <b><t t-out="object.tenancy_seq or 'N/A'"/></b>.
+                    </p>
+
+                    <table border="0" cellpadding="6" cellspacing="0">
+                        <tr>
+                            <td><strong>Tenant Name:</strong></td>
+                            <td><t t-out="object.tenancy_id.name or 'N/A'"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mobile No:</strong></td>
+                            <td><t t-out="object.tenancy_id.phone or 'N/A'"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email Id:</strong></td>
+                            <td><t t-out="object.tenancy_id.email or 'N/A'"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Building:</strong></td>
+                            <td><t t-out="object.property_project_id.name or ''"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Unit:</strong></td>
+                            <td><t t-call="ribs_real_estate.property_display_value"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reason:</strong></td>
+                            <td><t t-out="ctx.get('reason') or 'N/A'"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Preferred Closing Date:</strong></td>
+                            <td><t t-out="ctx.get('preferred_time') or 'N/A'"/></td>
+                        </tr>
+                    </table>
+                    <br/>
+
+                    <p>
+                        Please review and take the necessary action.
+                    </p>
+
+                    <p>
+                       Thank You
+                    </p>
+                </div>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

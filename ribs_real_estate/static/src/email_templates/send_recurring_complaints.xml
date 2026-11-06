@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_recurring_complaints" model="mail.template">
+            <field name="name">Recurring Complaints</field>
+            <field name="model_id" ref="maintenance.model_maintenance_request"/>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="subject">Multiple Complaints for {{ object.property_id.name }}</field>
+            <field name="body_html">
+                <![CDATA[
+                    <div style="background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;
+                                font-size:14px;padding:20px;border-radius:8px;">
+                        <p>Hello,</p>
+                        <p>There are <b><t t-out="ctx.get('complaint_count', '')"></t></b> complaints reported for the property
+                        <b><t t-out="ctx.get('property', '')"> </b>.
+                        Please take a look at the details in the system.</p>
+                        
+                        <a t-attf-href="{{ object.get_mr_url() }}"
+                            style="padding:10px 20px;background:#007bff;color:#fff;text-decoration:none;border-radius:5px;">
+                                View Complaints
+                        </a>
+                        
+                        <p>Thank you,<br/></p>
+                    </div>
+                ]]>
+            </field>
+        </record> 
+    </data>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="email_template_send_hot_leads" model="mail.template">
+            <field name="name">Ticket Details</field>
+            <field name="model_id" ref="crm.model_crm_lead" />
+            <field name="email_from">{{(object.user_id.email_formatted or user.email_formatted)}}</field>
+            <field name="partner_to">{{object.partner_id.id}}</field>
+            <field name="subject">Details of {{object.name}}</field>
+            <field name="body_html">
+                <![CDATA[
+                    <div style="background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;padding-top:5px;padding-left:30px;padding-bottom:5px;padding-right:30px;">
+                        <p style="font-weight:bold;color:#d9534f;">This is really a hot lead, don't miss this lead!</p>
+                        <p>
+                            <a t-attf-href="#{object.get_lead_url()}">View Lead Details</a>
+                        </p>
+                        <p>Thank you,<br/></p>
+                    </div>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

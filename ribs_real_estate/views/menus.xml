@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- <menuitem 
+        name="Minimum Discount"
+        id="menu_minimum_discount"
+        parent="rental_management.menu_configuration"
+        groups="rental_management.property_rental_manager"
+        action="minimum_discount_action"
+        sequence="1" 
+    /> -->
+
+    <menuitem 
+        name="Parking Allocation"
+        id="menu_parking_allocation"
+        parent="rental_management.menu_configuration"
+        groups="rental_management.property_rental_manager"
+        action="parking_allocation_action"
+        sequence="2" 
+    />
+
+    <menuitem name="Taxes"
+        id="menu_taxes"
+        parent="rental_management.menu_configuration"
+        groups="ribs_real_estate.property_rental_accountant"
+        action="account.action_tax_form"
+        sequence="-4"
+    />
+    
+    <menuitem name="Chart Of Accounts"
+        id="menu_coa"
+        parent="rental_management.menu_configuration"
+        groups="ribs_real_estate.property_rental_accountant"
+        action="account.action_account_form"
+        sequence="-3"
+    />
+    <menuitem name="Journals"
+        id="menu_journals"
+        parent="rental_management.menu_configuration"
+        groups="ribs_real_estate.property_rental_accountant"
+        action="account.action_account_journal_form"
+        sequence="-2"
+    />
+
+    <menuitem name="Products"
+        id="menu_products_1"
+        parent="rental_management.menu_configuration"
+        groups="ribs_real_estate.property_rental_accountant"
+        action="sale.product_template_action"
+        sequence="-1"
+    />
+
+    <menuitem name="Banks"
+        id="menu_remitter_banks"
+        parent="rental_management.menu_configuration"
+        groups="ribs_real_estate.property_rental_accountant"
+        action="sh_pdc.action_res_bank_form"
+        sequence="-1"
+    />
+
+    <menuitem
+        name="Terms and Conditions"
+        id="menu_default_terms_and_conditions"
+        parent="rental_management.menu_configuration"
+        action="default_terms_and_conditions_action_form"
+        sequence="1"
+    />
+
+    <menuitem 
+        name="CRM"
+        id="menu_crm"
+        parent="rental_management.main_menu_rental_management"
+        sequence="4">
+
+    <menuitem name="Leads"
+        id="crm_property_lead"
+        action="crm.crm_lead_all_leads"
+        groups="rental_management.property_rental_manager,rental_management.property_rental_officer" 
+        sequence="1"/>
+        
+    <menuitem
+        id="menu_crm_opportunities"
+        name="Opportunities"
+        action="crm.crm_lead_opportunities"
+        sequence="2"/>
+    </menuitem>
+
+    <menuitem name="Property"
+        id="menu_property_new"
+        parent="rental_management.main_menu_rental_management"
+        groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+        sequence="2">
+        <menuitem name="Buildings"
+            id="menu_property_project"
+            action="rental_management.action_property_project"
+            groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+            sequence="1"/>
+        <menuitem name="Units"
+            id="menu_property_units"
+            action="property_details_action_inherit"
+            groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+            sequence="2"/>
+    </menuitem>
+
+    <menuitem name="Users"
+        id="menu_user_new"
+        parent="rental_management.main_menu_rental_management"
+        groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+        sequence="5">
+        <menuitem name="Customers"
+            id="menu_customer_details"
+            action="rental_management.customer_details_action"
+            groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+            sequence="1"/>
+        <menuitem name="Vendors"
+            id="menu_vendor_details"
+            action="account.res_partner_action_supplier"
+            groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+            sequence="1"/>
+        <menuitem name="Employees"
+            id="menu_employee"
+            action="hr.open_view_employee_list_my"
+            groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+            sequence="2"/>  
+        <menuitem name="Landlords"
+            id="menu_landlord_details"
+            action="rental_management.landlord_details_action"
+            groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+            sequence="3"/>
+        <menuitem name="Brokers"
+            id="menu_broker_details"
+            action="rental_management.broker_details_action"
+            groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+            sequence="4"/>
+    </menuitem>
+
+    <record id="rental_management.menu_employee" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="rental_management.menu_customer_details" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="rental_management.menu_property_broker_landlord" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="rental_management.menu_property_lead" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Sub Project (Buildings) -->
+    <record model="ir.ui.menu" id="rental_management.menu_property_sub_project">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Units -->
+    <record model="ir.ui.menu" id="rental_management.menu_property">
+        <field name="name">Units</field>
+    </record>
+
+    <record model="ir.ui.menu" id="rental_management.menu_property">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record model="ir.ui.menu" id="rental_management.menu_property_region">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record model="ir.ui.menu" id="rental_management.menu_property_details">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Units Sub Menu -->
+    <record model="ir.ui.menu" id="rental_management.menu_property_details">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!--Rent contract menu-->
+    <record model="ir.ui.menu" id="rental_management.menu_tenancy_details">
+        <field name="name">Accounting</field>
+    </record>
+
+    <record model="ir.ui.menu" id="rental_management.menu_rent_contract">
+        <field name="active" eval="False"/>
+    </record>
+    <!-- Project Main Menu -->
+    <record model="ir.ui.menu" id="rental_management.menu_property_project_subproject">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record model="ir.ui.menu" id="rental_management.menu_property_vendor">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Project Sub Menu -->
+    <record model="ir.ui.menu" id="rental_management.menu_property_project">
+        <field name="name">Buildings</field>
+    </record>
+
+    <record model="ir.ui.menu" id="rental_management.menu_rent_invoice_tenancy">
+        <field name="group_ids" eval="[(6, 0, [ref('ribs_real_estate.property_rental_accountant')])]"/>
+    </record>
+
+    <record model="ir.ui.menu" id="rental_management.menu_rent_bills_tenancy">
+        <field name="group_ids" eval="[(6, 0, [ref('ribs_real_estate.property_rental_accountant')])]"/>
+    </record>
+
+    <record model="ir.ui.menu" id="rental_management.menu_property_maintenance_invoices">
+        <field name="group_ids" eval="[(6, 0, [ref('ribs_real_estate.property_rental_accountant')])]"/>
+    </record>
+    
+    <record model="ir.ui.menu" id="rental_management.menu_property_maintenance_bills">
+        <field name="group_ids" eval="[(6, 0, [ref('ribs_real_estate.property_rental_accountant')])]"/>
+    </record>
+
+    <menuitem name="Contract"
+        id="menu_contact"
+        parent="rental_management.main_menu_rental_management"
+        groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+        sequence="3">
+        <menuitem
+            id="menu_contract_new"
+            name="Contracts"
+            action="tenancy_details_action_inherit"
+            groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+            sequence="1"/>
+        <menuitem name="Update Contract Details"
+            id="menu_approve_contract_update_details"
+            action="approve_update_contract"
+            groups="rental_management.property_rental_manager"
+            sequence="2"/>
+        <menuitem name="Expiring Contracts"
+            id="menu_expiring_contract_new"
+            action="tenancy_details_action_expiring"
+            groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+            sequence="3"
+            active="False"/>
+        <!-- <menuitem
+            name="Group Contracts"
+            id="menu_group_contracts"
+            action="group_contracts_action"
+            sequence="4"/> -->
+        <menuitem
+            name="Multi Contracts" 
+            id="menu_multi_contracts"
+            action="group_multi_contracts_action_"
+            sequence="5"/>
+    </menuitem>
+    <menuitem
+        id="waiting_for_approval"
+        name="Waiting For Approval"
+        parent="menu_contact"
+        sequence="20">
+        <menuitem name="Contract Amount - Waiting For Approval"
+            id="menu_approve_contract"
+            action="tenancy_action_approve_contract"
+            groups="rental_management.property_rental_manager"
+            sequence="1"/>
+        <menuitem name="Update Contract Details - Waiting For Approval"
+            id="menu_waiting_for_approve_contract_update_details"
+            action="waiting_approve_update_contract"
+            groups="rental_management.property_rental_manager"
+            sequence="2"/>
+        <menuitem name="Contract Closure - Waiting For First Approval"
+            id="menu_waiting_for_closure_first_approval"
+            action="waiting_closure_first_level_approval"
+            groups="rental_management.property_rental_manager"
+            sequence="3"/>
+        <menuitem name="Contract Closure - Waiting For Final Approval"
+            id="menu_waiting_closure_final_level_approval"
+            action="waiting_closure_final_level_approval"
+            groups="rental_management.property_rental_manager"
+            sequence="4"/>
+    </menuitem>
+    <menuitem
+        id="menu_maintenance_report"
+        name="Maintenance Report"
+        parent="maintenance.maintenance_reporting"
+        action="maintenance_report_action"
+        sequence="20"/>
+    <record id="maintenance.maintenance_request_reporting" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

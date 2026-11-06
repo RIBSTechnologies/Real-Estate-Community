@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Accounting > Customers > Contracts & Terminations.
+        Lists the real rental contracts (tenancy.details) that were closed by
+        the Close Contract wizard: Pre Terminated (early termination) and
+        Terminated (release at end of contract). Replaces the old menu target
+        (contract.contract), which nothing ever populated.
+    -->
+    <record id="view_tenancy_terminated_list" model="ir.ui.view">
+        <field name="name">tenancy.details.terminated.list</field>
+        <field name="model">tenancy.details</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="Terminated Contracts" create="false"
+                  decoration-warning="contract_type == 'pre_terminated'"
+                  decoration-danger="contract_type == 'terminated'">
+                <field name="tenancy_seq"/>
+                <field name="tenancy_id" string="Customer"/>
+                <field name="property_project_id"/>
+                <field name="property_id" string="Unit"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="terminate_date"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="total_refund_amount" sum="Total"/>
+                <field name="refund_status" widget="badge"
+                       decoration-success="refund_status == 'refunded'"
+                       decoration-warning="refund_status in ('pending', 'partially_refunded')"
+                       decoration-muted="refund_status == 'no_refund'"/>
+                <field name="contract_type" string="Contract Status" widget="badge"
+                       decoration-warning="contract_type == 'pre_terminated'"
+                       decoration-danger="contract_type == 'terminated'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tenancy_terminated_search" model="ir.ui.view">
+        <field name="name">tenancy.details.terminated.search</field>
+        <field name="model">tenancy.details</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <search string="Terminated Contracts">
+                <field name="tenancy_seq"/>
+                <field name="tenancy_id" string="Customer"/>
+                <field name="property_project_id"/>
+                <field name="property_id" string="Unit"/>
+                <filter string="Pre Terminated" name="pre_terminated"
+                        domain="[('contract_type', '=', 'pre_terminated')]"/>
+                <filter string="Terminated" name="terminated"
+                        domain="[('contract_type', '=', 'terminated')]"/>
+                <separator/>
+                <filter string="Terminate Date" name="filter_terminate_date" date="terminate_date"/>
+                <group>
+                    <filter string="Customer" name="group_partner" context="{'group_by': 'tenancy_id'}"/>
+                    <filter string="Building" name="group_building" context="{'group_by': 'property_project_id'}"/>
+                    <filter string="Contract Status" name="group_contract_type" context="{'group_by': 'contract_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tenancy_terminated" model="ir.actions.act_window">
+        <field name="name">Contracts &amp; Terminations</field>
+        <field name="res_model">tenancy.details</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('contract_type', 'in', ['pre_terminated', 'terminated'])]</field>
+        <field name="context">{'create': False}</field>
+        <field name="search_view_id" ref="view_tenancy_terminated_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_tenancy_terminated_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('rental_management.tenancy_details_form_view')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No terminated contracts yet
+            </p>
+            <p>
+                Contracts closed with Close Contract appear here as
+                Pre Terminated (early termination) or Terminated (released at end).
+            </p>
+        </field>
+    </record>
+</odoo>

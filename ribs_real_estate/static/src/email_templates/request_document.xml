@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_request_documents" model="mail.template">
+            <field name="name">Request Tenant Documents</field>
+            <field name="model_id" ref="model_document_request"/>
+            <field name="subject">Required Documents</field>
+            <field name="body_html">
+                <![CDATA[
+                    <div style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333;">
+                        <p>Dear <t t-out="object.contract_id.tenancy_id.name"/>,</p>
+                        <p>We hope this message finds you well. As part of our ongoing commitment to
+                        maintaining accurate records, we kindly request you to provide the following documents:</p>
+                        <ul>
+                            <t t-foreach="object.document_ids" t-as="doc">
+                                <li><t t-out="doc.name"/></li>
+                            </t>
+                        </ul>
+                        <p>Please click on the link below to upload the requested documents:</p>
+                        <a t-attf-href="#{object.upload_document_url()}" 
+                            style="background-color:#0073b7; color:#fff; padding:10px 15px; text-decoration:none; border-radius:5px; display:inline-block;">
+                            Upload Documents
+                        </a>
+
+                        <p><strong>Note:</strong> This link will expire in 30 minutes.</p>
+
+                        <p>Thank you for your prompt attention to this matter. Should you have any questions,
+                        please do not hesitate to contact us.</p>
+                        <p>Thank you,<br/></p>
+                    </div>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

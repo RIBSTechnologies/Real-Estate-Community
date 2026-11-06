@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!--
+        Header banner across the top of the Dashboard
+        (rental_management.rental_dashboard): company logo/name (dynamic -
+        see dashboardCompanyName/dashboardCompanyLogoUrl in
+        rental_dashboard_header_banner.js, resolved from the currently
+        active company, not hardcoded to any one company), a static
+        title/tagline, quick-jump nav links (plain #anchor links - no JS
+        routing risk, Odoo's webclient uses path-based routing so these
+        just scroll), and a cosmetic "As of <today>" date label (no
+        filtering behavior - see the date-filter discussion this was
+        agreed to be display-only).
+
+        Nav anchors: "Contracts" and "Payments" get their target id here
+        (both ids land on headings owned by the BASE template - "Rent
+        Contract Statics"/"Accounting Information" - so this is safe
+        regardless of other al_shafar_extended templates' apply order).
+        "Properties"/"Units"/"At a Glance" target
+        #tk-section-portfolio, whose id is set directly in
+        rental_dashboard_portfolio_overview.xml (that heading is only
+        added by that file, not the base template, so setting the id
+        there avoids depending on cross-file apply order).
+    -->
+    <t t-name="al_shafar_extended.rental_dashboard_header_banner"
+       t-inherit="rental_management.rental_dashboard"
+       t-inherit-mode="extension">
+
+        <xpath expr="//section[hasclass('tk_rental_dash')]/div[@class='container']/div[@class='row']" position="before">
+            <div class="tk-dash-banner">
+                <div class="tk-dash-banner-brand">
+                    <img t-if="this.dashboardCompanyLogoUrl" class="tk-dash-banner-logo"
+                         t-att-src="this.dashboardCompanyLogoUrl" alt="logo"/>
+                    <span class="tk-dash-banner-company" t-out="this.dashboardCompanyName"/>
+                </div>
+                <div class="tk-dash-banner-main">
+                    <h2 class="tk-dash-banner-title">Real Estate Management Dashboard</h2>
+                    <div class="tk-dash-banner-nav">
+                        <a href="#tk-section-portfolio">Properties</a>
+                        <span class="tk-dash-banner-sep">|</span>
+                        <a href="#tk-section-portfolio">Units</a>
+                        <span class="tk-dash-banner-sep">|</span>
+                        <a href="#tk-section-contracts">Contracts</a>
+                        <span class="tk-dash-banner-sep">|</span>
+                        <a href="#tk-section-accounting">Payments</a>
+                        <span class="tk-dash-banner-sep">|</span>
+                        <a href="#tk-section-portfolio">At a Glance</a>
+                    </div>
+                </div>
+                <div class="tk-dash-banner-side">
+                    <div class="tk-dash-banner-tagline">
+                        <span>Smarter Properties</span>
+                        <span>Brighter Tomorrow</span>
+                    </div>
+                    <div class="tk-dash-banner-date">
+                        <span class="tk-dash-banner-date-label">As of</span>
+                        <span class="tk-dash-banner-date-value" t-out="this.dashboardAsOfDate"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Nav anchor targets on the two base-template headings. -->
+        <xpath expr="//h4[contains(text(),'Rent Contract Statics')]/.." position="attributes">
+            <attribute name="id">tk-section-contracts</attribute>
+        </xpath>
+        <xpath expr="//h4[contains(text(),'Accounting Information')]/.." position="attributes">
+            <attribute name="id">tk-section-accounting</attribute>
+        </xpath>
+
+    </t>
+
+</templates>

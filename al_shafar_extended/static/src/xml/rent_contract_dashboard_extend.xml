@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        Extends rental_management.RentalContractDashboard (the "Contracts
+        | Status | Payment Terms" bar above the All Contracts list):
+          1. Adds a "Total" tile before "Draft" in the Status section.
+          2. Replaces the whole "Payment Terms" section with "Expiring
+             Soon Contracts", bucketed by days_left.
+        Every tile reuses the exact same card/h4/div markup and one of
+        this widget's own existing bg-* colour classes (rental_management/
+        static/src/components/rental_property_dashboard.css) - no new CSS.
+    -->
+    <t t-name="al_shafar_extended.RentalContractDashboard"
+       t-inherit="rental_management.RentalContractDashboard"
+       t-inherit-mode="extension">
+
+        <!-- 1. Total tile, before Draft -->
+        <xpath expr="//div[@t-if='this.state.tenancy_data.new_contract_count > 0']" position="before">
+            <div class="flex-grow-1" t-if="this.state.tenancy_data.total_contract_count > 0">
+                <div class="card p-3 text-center custom-rent-card bg-booked prop-cursor"
+                     t-on-click="() => this.viewAllContracts()" title="All Contracts">
+                    <h4 class="bg-booked mb-1"><t t-out="this.state.tenancy_data.total_contract_count"/></h4>
+                    <div class="fw-bold">Total</div>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- 2. Payment Terms -> Expiring Soon Contracts (day buckets) -->
+        <xpath expr="//h5[text()='Payment Terms']/../.." position="replace">
+            <div class="d-flex flex-column flex-grow-1">
+                <div class="text-center d-flex justify-content-center align-items-center mb-2">
+                    <h5 class="fw-bold mb-0 ms-2">Expiring Soon Contracts</h5>
+                </div>
+                <div class="d-flex gap-2 justify-content-between mb-3">
+                    <div class="flex-grow-1" t-if="this.state.tenancy_data.expiring_0_60_count > 0">
+                        <div class="card p-3 text-center custom-rent-card bg-sale prop-cursor"
+                             t-on-click="() => this.viewExpiringSoonBucket(null, 60, '0-60 Days')"
+                             title="Expiring within 60 Days">
+                            <h4 class="bg-sale mb-1"><t t-out="this.state.tenancy_data.expiring_0_60_count"/></h4>
+                            <div class="fw-bold">60 Days</div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1" t-if="this.state.tenancy_data.expiring_60_90_count > 0">
+                        <div class="card p-3 text-center custom-rent-card bg-booked prop-cursor"
+                             t-on-click="() => this.viewExpiringSoonBucket(60, 90, '60-90 Days')"
+                             title="Expiring in 60-90 Days">
+                            <h4 class="bg-booked mb-1"><t t-out="this.state.tenancy_data.expiring_60_90_count"/></h4>
+                            <div class="fw-bold">60-90 Days</div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1" t-if="this.state.tenancy_data.expiring_90_100_count > 0">
+                        <div class="card p-3 text-center custom-rent-card bg-draft prop-cursor"
+                             t-on-click="() => this.viewExpiringSoonBucket(90, 100, '90-100 Days')"
+                             title="Expiring in 90-100 Days">
+                            <h4 class="bg-draft mb-1"><t t-out="this.state.tenancy_data.expiring_90_100_count"/></h4>
+                            <div class="fw-bold">90-100 Days</div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1" t-if="this.state.tenancy_data.expiring_100_120_count > 0">
+                        <div class="card p-3 text-center custom-rent-card bg-total prop-cursor"
+                             t-on-click="() => this.viewExpiringSoonBucket(100, 120, '100-120 Days')"
+                             title="Expiring in 100-120 Days">
+                            <h4 class="bg-total mb-1"><t t-out="this.state.tenancy_data.expiring_100_120_count"/></h4>
+                            <div class="fw-bold">100-120 Days</div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1" t-if="this.state.tenancy_data.expiring_120_140_count > 0">
+                        <div class="card p-3 text-center custom-rent-card bg-sold prop-cursor"
+                             t-on-click="() => this.viewExpiringSoonBucket(120, 140, '120-140 Days')"
+                             title="Expiring in 120-140 Days">
+                            <h4 class="bg-sold mb-1"><t t-out="this.state.tenancy_data.expiring_120_140_count"/></h4>
+                            <div class="fw-bold">120-140 Days</div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1" t-if="this.state.tenancy_data.expiring_140_160_count > 0">
+                        <div class="card p-3 text-center custom-rent-card bg-available prop-cursor"
+                             t-on-click="() => this.viewExpiringSoonBucket(140, 160, '140-160 Days')"
+                             title="Expiring in 140-160 Days">
+                            <h4 class="bg-available mb-1"><t t-out="this.state.tenancy_data.expiring_140_160_count"/></h4>
+                            <div class="fw-bold">140-160 Days</div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1" t-if="this.state.tenancy_data.expiring_160_plus_count > 0">
+                        <div class="card p-3 text-center custom-rent-card bg-rent prop-cursor"
+                             t-on-click="() => this.viewExpiringSoonBucket(160, null, '160+ Days')"
+                             title="Expiring in more than 160 Days">
+                            <h4 class="bg-rent mb-1"><t t-out="this.state.tenancy_data.expiring_160_plus_count"/></h4>
+                            <div class="fw-bold">160+ Days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+    </t>
+
+</templates>

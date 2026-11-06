@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="contract_payment_comment_wizard_form" model="ir.ui.view">
+        <field name="name">contract.payment.comment.wizard.form</field>
+        <field name="model">contract.payment.comment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add Comment">
+                <group>
+                    <field name="comment"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                </group>
+
+                <footer>
+                    <button name="action_reject"
+                            string="Reject"
+                            type="object"
+                            class="btn-danger"/>
+
+                    <button name="action_close"
+                            string="Close"
+                            special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

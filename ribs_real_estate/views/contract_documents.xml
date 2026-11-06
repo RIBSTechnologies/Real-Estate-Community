@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="contract_document_form_view" model="ir.ui.view">
+            <field name="name">contract.documents.form.view</field>
+            <field name="model">contract.documents</field>
+            <field name="arch" type="xml">
+                <form string="Contract Documents">
+                    <sheet>
+                        <group>
+                            <field name="contract_id" invisible="1"/>
+                            <field name="document_name" invisible="1"/>
+                            <field name="document_ids" invisible="1"/>
+                            <field name="document_id" domain="[('id','in',document_ids)]"/>
+                            <field name="attachments" filename="name" widget="many2many_binary"/>
+                            <field name="expiry_date"/>
+                            <field name="include_in_email"/>
+                            <field name="notes"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="issue_clearance_certificate" model="ir.ui.view">
+            <field name="name">issue.clearance.certificate.form.view</field>
+            <field name="model">issue.clearance.certificate</field>
+            <field name="arch" type="xml">
+                <form string="Contract Documents">
+                    <sheet>
+                        <group>
+                            <field name="issue_clearance_certificate" widget="many2many_binary"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Send Issue Clearance Certificate" type="object" name="send_issue_clearance" class="btn btn-primary"/>
+                        <button string="Discard" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="document_document_list_view" model="ir.ui.view">
+            <field name="name">document.list.view</field>
+            <field name="model">document.document</field>
+            <field name="arch" type="xml">
+                <list string="Documents">
+                    <field name="name"/>
+                    <field name="document_for"/>
+                    <field name="is_mandatory"/>
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

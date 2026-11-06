@@ -1,0 +1,1273 @@
+// ============================================================
+// ERP UI/UX Professional Redesign - SCSS v2
+// Vibrant, Colorful, Premium Enterprise ERP Styling
+// ============================================================
+
+// ----- Color Palette -----
+$primary:        #4F46E5;
+$primary-dark:   #3730A3;
+$primary-hover:  #4338CA;
+$primary-light:  rgba(79, 70, 229, 0.07);
+$primary-glow:   rgba(79, 70, 229, 0.18);
+$secondary:      #7C3AED;
+$accent-pink:    #EC4899;
+$accent-teal:    #0D9488;
+$accent-amber:   #D97706;
+$success:        #059669;
+$danger:         #DC2626;
+$warning:        #D97706;
+$info:           #0284C7;
+
+$bg:             #F0F2F8;
+$card:           #FFFFFF;
+$border:         #DDE1EA;
+$border-light:   #ECEEF4;
+$text-dark:      #0F172A;
+$text-body:      #1E293B;
+$text-muted:     #64748B;
+$label:          #1E293B;
+
+$shadow-sm:  0 1px 4px rgba(0,0,0,0.06);
+$shadow-md:  0 4px 16px rgba(0,0,0,0.09);
+$shadow-lg:  0 8px 32px rgba(0,0,0,0.12);
+$radius:     12px;
+$radius-sm:  7px;
+$transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+$grad-accent:  linear-gradient(135deg, $primary, $secondary, $accent-pink);
+$grad-header:  linear-gradient(120deg, #F7F9FF 0%, #EEF2FF 50%, #FDF4FF 100%);
+$grad-card:    linear-gradient(180deg, #FFFFFF 0%, #FAFBFF 100%);
+
+// ============================================================
+// 1. FORM BACKGROUND & SHEET
+// ============================================================
+
+.o_form_view {
+  background: $bg !important;
+
+  .o_form_sheet_bg {
+    background: $bg !important;
+  }
+
+  .o_form_sheet {
+    background: $grad-card !important;
+    border: 1px solid $border !important;
+    border-radius: 16px !important;
+    box-shadow: $shadow-md !important;
+    padding: 28px 32px !important;
+    margin: 18px auto !important;
+    position: relative !important;
+    animation: erp-fade-in 0.3s ease;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: $grad-accent;
+      border-radius: 16px 16px 0 0;
+    }
+  }
+}
+
+// ============================================================
+// 2. TITLE
+// ============================================================
+
+.o_form_view .oe_title {
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1.5px solid $border-light;
+
+  h1, h1 .o_field_widget {
+    font-size: 1.6rem !important;
+    font-weight: 800 !important;
+    color: $text-dark !important;
+    letter-spacing: -0.02em !important;
+  }
+}
+
+// ============================================================
+// 3. LABELS - Bold & Dark
+// ============================================================
+
+.o_form_view {
+  .o_form_label,
+  label.o_form_label {
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    color: $label !important;
+    letter-spacing: 0.015em !important;
+    text-transform: none !important;
+  }
+}
+
+// ============================================================
+// 4. INPUTS & MONETARY FIELD - FIX AED ALIGNMENT
+// ============================================================
+
+.o_form_view {
+
+  // Base input styling: Removed to use default Odoo input styling
+
+
+  // ── MONETARY FIELD: Fix AED/currency symbol position ──
+  .o_field_monetary {
+    display: inline-flex !important;
+    // NOTE (fix): this was `stretch`. That's what pushed the currency code
+    // above the baseline and into the input's border in the screenshots.
+    // `center` is what actually keeps the number and the unit lined up.
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+
+    // Currency symbol badge (prefix: e.g. AED)
+    > .o_currency_symbol {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex: 0 0 auto !important;            // KEY: never grow or shrink
+      width: auto !important;               // KEY: only as wide as content
+      min-width: 0 !important;
+      padding: 0 10px !important;
+      background: linear-gradient(135deg, #EEF2FF, #F0F4FF) !important;
+      border: 1.5px solid $border !important;
+      border-right: none !important;
+      border-radius: $radius-sm 0 0 $radius-sm !important;
+      font-size: 0.76rem !important;
+      font-weight: 800 !important;
+      color: $primary !important;
+      letter-spacing: 0.05em !important;
+      white-space: nowrap !important;
+      line-height: 1 !important;
+    }
+
+    // Input field takes remaining space
+    > input.o_input {
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+      border-radius: 0 $radius-sm $radius-sm 0 !important;
+      border-left: none !important;
+      text-align: right !important;
+
+      &:focus {
+        border-color: $primary !important;
+        box-shadow: 0 0 0 3px $primary-glow !important;
+        z-index: 1;
+        position: relative;
+      }
+    }
+  }
+
+  // Readonly monetary (no border styling needed)
+  .o_form_readonly .o_field_monetary > .o_currency_symbol,
+  .o_field_monetary .o_readonly .o_currency_symbol {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    color: $text-muted !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    padding-right: 4px !important;
+  }
+
+  // ── MONETARY FIELD: currency badge, targeting the REAL DOM ──
+  // The block above never fires: Odoo's MonetaryField does not render a
+  // `.o_currency_symbol` class, just a bare `<span>` next to the `<input>`
+  // (after it for a suffix currency like AED, before it for a prefix one
+  // like $/₹). That's the actual reason the code was floating in a
+  // different colour on every field — nothing was ever overriding it.
+  // Left the block above in place (harmless no-op) and re-opened
+  // `.o_field_monetary` here so these child-combinator rules actually
+  // resolve against the monetary widget rather than against `.o_form_view`.
+  .o_field_monetary {
+
+    // Suffix currency (AED, USD as text, …): span comes after the input.
+    > input.o_input + span {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex: 0 0 auto !important;
+      width: auto !important;
+      min-width: 0 !important;
+      padding: 0 10px !important;
+      background: linear-gradient(135deg, #EEF2FF, #F0F4FF) !important;
+      border: 1.5px solid $border !important;
+      border-left: none !important;
+      border-radius: 0 $radius-sm $radius-sm 0 !important;
+      font-size: 0.76rem !important;
+      font-weight: 800 !important;
+      color: $primary !important;
+      letter-spacing: 0.05em !important;
+      white-space: nowrap !important;
+      line-height: 1 !important;
+      vertical-align: baseline !important;
+      position: static !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+
+    // Prefix currency ($, ₹, …): span comes before the input.
+    > span:has(+ input.o_input) {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex: 0 0 auto !important;
+      width: auto !important;
+      min-width: 0 !important;
+      padding: 0 10px !important;
+      background: linear-gradient(135deg, #EEF2FF, #F0F4FF) !important;
+      border: 1.5px solid $border !important;
+      border-right: none !important;
+      border-radius: $radius-sm 0 0 $radius-sm !important;
+      font-size: 0.76rem !important;
+      font-weight: 800 !important;
+      color: $primary !important;
+      letter-spacing: 0.05em !important;
+      white-space: nowrap !important;
+      line-height: 1 !important;
+      vertical-align: baseline !important;
+      position: static !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+
+    // Give the input the matching mirrored corner so the pill still reads
+    // as one joined control instead of two separate boxes.
+    > input.o_input:has(+ span) {          // suffix case: badge sits on the right
+      border-radius: $radius-sm 0 0 $radius-sm !important;
+      border-right: none !important;
+    }
+    > span + input.o_input {               // prefix case: badge sits on the left
+      border-radius: 0 $radius-sm $radius-sm 0 !important;
+      border-left: none !important;
+    }
+
+    // Readonly: plain muted text, no badge box, whichever side it's on.
+    &.o_readonly_modifier,
+    .o_form_readonly & {
+      > span {
+        background: transparent !important;
+        border: none !important;
+        color: $text-muted !important;
+        font-size: 0.85rem !important;
+        font-weight: 600 !important;
+        padding: 0 4px !important;
+      }
+    }
+  }
+}
+
+// ============================================================
+// 5. SEPARATOR
+// ============================================================
+
+.o_form_view .o_horizontal_separator {
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  color: $primary !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+  border-bottom: 2px solid rgba(79, 70, 229, 0.25) !important;
+  padding-bottom: 7px !important;
+  margin: 16px 0 10px !important;
+}
+
+// ============================================================
+// 6. STATUSBAR HEADER
+// ============================================================
+
+.o_form_view .o_form_statusbar {
+  background: $grad-header !important;
+  border-bottom: 2px solid transparent !important;
+  border-image: linear-gradient(to right, $border, $primary, $secondary, $border) 1 !important;
+  padding: 12px 22px !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 10 !important;
+  box-shadow: 0 2px 10px rgba(79, 70, 229, 0.06) !important;
+
+  .o_statusbar_status .o_arrow_button {
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    border-radius: 24px !important;
+    padding: 6px 20px !important;
+    transition: $transition !important;
+
+    &.o_arrow_button_current {
+      background: $primary !important;
+      color: #fff !important;
+      font-weight: 700 !important;
+      box-shadow:
+        0 5px 16px rgba(79, 70, 229, 0.38),
+        0 0 0 3px rgba(79, 70, 229, 0.14),
+        inset 0 1px 0 rgba(255,255,255,0.22) !important;
+      transform: scale(1.06) !important;
+      border: none !important;
+    }
+  }
+}
+
+// ============================================================
+// 7. BUTTONS - Vibrant & Colorful
+// ============================================================
+
+.o_form_view .o_form_statusbar,
+.o_form_view .o_cp_buttons,
+.o_control_panel .o_cp_buttons {
+
+  // ── Primary / Confirm / Save ──
+  .btn-primary,
+  .btn.oe_highlight {
+    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 8px 22px !important;
+    font-weight: 700 !important;
+    font-size: 0.84rem !important;
+    color: #fff !important;
+    letter-spacing: 0.01em !important;
+    box-shadow: 0 4px 16px rgba(79,70,229,0.40), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+    transition: $transition !important;
+
+    &:hover {
+      background: linear-gradient(135deg, #4338CA 0%, #6D28D9 100%) !important;
+      box-shadow: 0 7px 24px rgba(79,70,229,0.50) !important;
+      transform: translateY(-2px) !important;
+    }
+    &:active { transform: translateY(0) !important; box-shadow: 0 2px 8px rgba(79,70,229,0.3) !important; }
+  }
+
+  // ── Secondary / Cancel ──
+  .btn-secondary {
+    background: linear-gradient(135deg, #F8FAFF 0%, #EEF2FF 100%) !important;
+    border: 1.5px solid rgba(79,70,229,0.3) !important;
+    border-radius: 10px !important;
+    padding: 8px 20px !important;
+    font-weight: 600 !important;
+    font-size: 0.84rem !important;
+    color: #4F46E5 !important;
+    transition: $transition !important;
+    box-shadow: 0 2px 6px rgba(79,70,229,0.08) !important;
+
+    &:hover {
+      background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%) !important;
+      border-color: #4F46E5 !important;
+      box-shadow: 0 4px 12px rgba(79,70,229,0.18) !important;
+      transform: translateY(-1px) !important;
+    }
+  }
+
+  // ── Danger / Delete / Reset ──
+  .btn-danger {
+    background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 8px 20px !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(220,38,38,0.38) !important;
+    transition: $transition !important;
+
+    &:hover {
+      background: linear-gradient(135deg, #B91C1C 0%, #DC2626 100%) !important;
+      box-shadow: 0 6px 20px rgba(220,38,38,0.48) !important;
+      transform: translateY(-2px) !important;
+    }
+  }
+
+  // ── Warning / Amber action buttons ──
+  .btn-warning {
+    background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 8px 20px !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(217,119,6,0.38) !important;
+    transition: $transition !important;
+
+    &:hover {
+      background: linear-gradient(135deg, #B45309 0%, #D97706 100%) !important;
+      box-shadow: 0 6px 20px rgba(217,119,6,0.48) !important;
+      transform: translateY(-2px) !important;
+    }
+  }
+
+  // ── Success / Green ──
+  .btn-success {
+    background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 8px 20px !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(5,150,105,0.38) !important;
+    transition: $transition !important;
+
+    &:hover {
+      background: linear-gradient(135deg, #047857 0%, #059669 100%) !important;
+      box-shadow: 0 6px 20px rgba(5,150,105,0.48) !important;
+      transform: translateY(-2px) !important;
+    }
+  }
+
+  // ── Generic non-highlight buttons (fallback) ──
+  .btn:not(.oe_highlight):not(.btn-primary):not(.btn-secondary):not(.btn-danger):not(.btn-warning):not(.btn-success):not(.btn-link):not(.oe_stat_button) {
+    background: #FFFFFF !important;
+    border: 1.5px solid $border !important;
+    border-radius: 10px !important;
+    padding: 8px 18px !important;
+    font-weight: 600 !important;
+    font-size: 0.84rem !important;
+    color: $text-body !important;
+    transition: $transition !important;
+    box-shadow: $shadow-sm !important;
+
+    &:hover {
+      border-color: $primary !important;
+      color: $primary !important;
+      background: $primary-light !important;
+      box-shadow: 0 3px 10px rgba(79,70,229,0.12) !important;
+      transform: translateY(-1px) !important;
+    }
+  }
+}
+
+// ============================================================
+// 8. SMART BUTTONS (STAT BUTTONS)
+// ============================================================
+
+.o_form_view .oe_button_box {
+  border-bottom: 1px solid $border-light !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 16px !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  .oe_stat_button {
+    border-radius: 12px !important;
+    border: 1.5px solid $border-light !important;
+    padding: 10px 16px !important;
+    transition: $transition !important;
+    background: #FAFBFD !important;
+    min-width: 90px;
+
+    &:hover {
+      background: $primary-light !important;
+      border-color: rgba(79, 70, 229, 0.3) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 5px 16px rgba(79, 70, 229, 0.12) !important;
+    }
+
+    .o_button_icon { color: $primary !important; font-size: 1.25rem !important; }
+    .o_stat_text { font-size: 0.71rem !important; font-weight: 700 !important; color: $text-muted !important; text-transform: uppercase !important; letter-spacing: 0.04em !important; }
+    .o_stat_value { font-size: 1.2rem !important; font-weight: 800 !important; color: $text-dark !important; }
+  }
+}
+
+// ============================================================
+// 9. NOTEBOOK TABS
+// ============================================================
+
+.o_form_view .o_notebook {
+  margin-top: 20px;
+
+  > .nav.nav-tabs {
+    border-bottom: 2px solid $border !important;
+    gap: 4px;
+
+    .nav-item .nav-link {
+      font-size: 0.84rem !important;
+      font-weight: 600 !important;
+      color: $text-muted !important;
+      padding: 10px 22px !important;
+      border: none !important;
+      border-bottom: 3px solid transparent !important;
+      border-radius: 8px 8px 0 0 !important;
+      transition: $transition !important;
+      background: transparent !important;
+
+      &:hover {
+        color: $primary !important;
+        background: $primary-light !important;
+        border-bottom-color: rgba(79, 70, 229, 0.3) !important;
+      }
+
+      &.active {
+        color: $primary !important;
+        font-weight: 700 !important;
+        border-bottom: 3px solid $primary !important;
+        background: rgba(79, 70, 229, 0.04) !important;
+      }
+    }
+  }
+
+  .tab-content { padding: 18px 0 10px; }
+}
+
+// ============================================================
+// 10. ONE2MANY / LIST INSIDE FORM
+// ============================================================
+
+.o_form_view {
+  .o_field_one2many,
+  .o_field_many2many {
+    width: 100% !important;
+
+    .o_list_renderer {
+      border: 1.5px solid $border !important;
+      border-radius: $radius !important;
+      overflow-x: auto !important;
+      overflow-y: visible !important;
+      box-shadow: $shadow-sm !important;
+
+      .o_list_table {
+        min-width: 100%;
+        width: auto !important;
+
+        thead th {
+          background: linear-gradient(180deg, #F1F4FA, #E8ECEF) !important;
+          border-bottom: 2px solid $border !important;
+          font-size: 0.74rem !important;
+          font-weight: 700 !important;
+          color: $text-dark !important;
+          text-transform: uppercase !important;
+          letter-spacing: 0.05em !important;
+          padding: 10px 12px !important;
+          white-space: nowrap !important;
+        }
+
+        tbody tr {
+          transition: background 0.18s ease;
+
+          &:hover { background: rgba(79, 70, 229, 0.035) !important; }
+
+          td {
+            padding: 8px 12px !important;
+            font-size: 0.84rem !important;
+            border-bottom: 1px solid $border-light !important;
+            vertical-align: middle !important;
+            color: $text-body !important;
+          }
+        }
+
+        tfoot td {
+          background: linear-gradient(180deg, #F1F4FA, #E8ECEF) !important;
+          font-weight: 700 !important;
+          border-top: 2px solid $border !important;
+          padding: 10px 12px !important;
+          color: $text-dark !important;
+        }
+      }
+    }
+  }
+
+  .oe_subtotal_footer {
+    border-top: 1px solid $border-light;
+    padding-top: 14px;
+
+    .oe_subtotal_footer_separator {
+      font-size: 1.1rem !important;
+      font-weight: 800 !important;
+      color: $text-dark !important;
+      border-top: 1px solid $border !important;
+      padding-top: 10px !important;
+    }
+  }
+
+  // ── TAX TOTALS: remove blue line + fix alignment ──
+  .o_tax_totals {
+    padding: 4px 0;
+
+    table, .o_total_table { width: 100%; }
+
+    td, th { padding: 4px 6px !important; }
+
+    // Strip the link/underline/border look off the editable tax-group amount
+    a,
+    .o_tax_group,
+    span[role="button"] {
+      text-decoration: none !important;
+      border-bottom: none !important;
+      border: none !important;
+      color: $text-body !important;
+      cursor: pointer;
+
+      &:hover { color: $primary !important; }
+    }
+
+    input.o_input {
+      border: 1.5px solid $border !important;
+      border-radius: $radius-sm !important;
+      padding: 2px 6px !important;
+      text-align: right !important;
+    }
+
+    // Clean neutral separator above grand total (no aggressive blue line)
+    tr:last-child,
+    .o_total {
+      border-top: 1px solid $border !important;
+
+      td, th {
+        padding-top: 8px !important;
+        font-weight: 800 !important;
+        font-size: 1.1rem !important;
+        color: $text-dark !important;
+      }
+    }
+  }
+}
+
+// ============================================================
+// 11. BADGES & STATUS COLORS
+// ============================================================
+
+.o_form_view {
+  .badge {
+    font-size: 0.74rem !important;
+    font-weight: 700 !important;
+    padding: 5px 14px !important;
+    border-radius: 20px !important;
+  }
+
+  .text-bg-success, .bg-success { background: linear-gradient(135deg, #059669, #10B981) !important; color: #fff !important; box-shadow: 0 2px 6px rgba(5,150,105,0.28) !important; }
+  .text-bg-danger,  .bg-danger  { background: linear-gradient(135deg, #DC2626, #EF4444) !important; color: #fff !important; box-shadow: 0 2px 6px rgba(220,38,38,0.28) !important; }
+  .text-bg-warning, .bg-warning { background: linear-gradient(135deg, #D97706, #F59E0B) !important; color: #fff !important; box-shadow: 0 2px 6px rgba(217,119,6,0.28) !important; }
+  .text-bg-info,    .bg-info    { background: linear-gradient(135deg, $primary, $secondary) !important; color: #fff !important; box-shadow: 0 2px 6px rgba(79,70,229,0.28) !important; }
+}
+
+// ============================================================
+// 12. ALERTS
+// ============================================================
+
+.o_form_view .alert {
+  border-radius: $radius-sm !important;
+  font-size: 0.84rem !important;
+  padding: 12px 18px !important;
+  margin: 10px 0 !important;
+  border: none !important;
+  font-weight: 500 !important;
+
+  &.alert-info    { background: rgba(2, 132, 199, 0.08) !important;   border-left: 4px solid $info !important;    color: darken($info, 15%) !important; }
+  &.alert-warning { background: rgba(217, 119, 6, 0.08) !important;   border-left: 4px solid $warning !important; color: darken($warning, 15%) !important; }
+  &.alert-danger  { background: rgba(220, 38, 38, 0.08) !important;   border-left: 4px solid $danger !important;  color: darken($danger, 10%) !important; }
+  &.alert-success { background: rgba(5, 150, 105, 0.08) !important;   border-left: 4px solid $success !important; color: darken($success, 15%) !important; }
+}
+
+// ============================================================
+// 13. MANY2MANY TAGS
+// ============================================================
+
+.o_form_view .o_field_many2many_tags .badge {
+  background: linear-gradient(135deg, rgba(79,70,229,0.09), rgba(124,58,237,0.09)) !important;
+  color: $primary !important;
+  border: 1.5px solid rgba(79,70,229,0.22) !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  padding: 4px 12px !important;
+  margin: 2px 3px !important;
+  transition: $transition !important;
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(79,70,229,0.18), rgba(124,58,237,0.18)) !important;
+    transform: translateY(-1px) !important;
+  }
+}
+
+// ============================================================
+// 14. CONTROL PANEL
+// ============================================================
+
+.o_control_panel {
+  background: $card !important;
+  border-bottom: 1px solid $border !important;
+  box-shadow: $shadow-sm !important;
+
+  .breadcrumb-item {
+    a { color: $primary !important; font-weight: 600; text-decoration: none !important; &:hover { text-decoration: underline !important; } }
+    &.active { color: $text-dark !important; font-weight: 700; }
+  }
+}
+
+// ============================================================
+// 15. INNER GROUPS - Colorful accent borders
+// ============================================================
+
+.o_form_view .o_inner_group {
+  &.erp-group-enhanced {
+    border-left: 3px solid rgba(79, 70, 229, 0.22) !important;
+    padding-left: 16px !important;
+    margin-bottom: 10px !important;
+    border-radius: 0 6px 6px 0 !important;
+    transition: border-color 0.3s ease, background 0.3s ease !important;
+
+    &:hover {
+      border-left-color: $primary !important;
+      background: rgba(79, 70, 229, 0.015) !important;
+    }
+  }
+}
+
+// ============================================================
+// 16. READONLY FORM STATE
+// ============================================================
+
+.o_form_view.o_form_readonly {
+  .o_form_sheet { background: #FAFBFC !important; }
+
+  .o_field_widget:not(.o_field_statusbar) {
+    input, textarea, select { background: #F8F9FC !important; border-color: transparent !important; cursor: default; }
+  }
+}
+
+// ============================================================
+// 17. LIST VIEW IMPROVEMENTS
+// ============================================================
+
+.o_list_view .o_list_table {
+  thead th {
+    background: linear-gradient(180deg, #F1F4FA, #E8ECEF) !important;
+    font-size: 0.77rem !important;
+    font-weight: 700 !important;
+    color: $text-dark !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border-bottom: 2px solid $border !important;
+  }
+
+  tbody tr {
+    transition: background 0.18s ease;
+    &:hover { background: rgba(79, 70, 229, 0.04) !important; }
+
+    td { font-size: 0.85rem; vertical-align: middle; color: $text-body; }
+  }
+}
+
+// ============================================================
+// 18. CHATTER
+// ============================================================
+
+.o_form_view .o-mail-Form-chatter,
+.o_form_view .o_ChatterContainer {
+  border-top: 2px solid $border-light;
+  margin-top: 20px;
+  padding-top: 20px;
+}
+
+// ============================================================
+// 19. RESPONSIVE
+// ============================================================
+
+@media (max-width: 768px) {
+  .o_form_view .o_form_sheet {
+    padding: 18px 14px !important;
+    margin: 10px !important;
+    border-radius: 10px !important;
+  }
+  .o_form_view .o_form_statusbar { flex-wrap: wrap; gap: 6px; }
+}
+
+// ============================================================
+// 20. SCROLLBAR
+// ============================================================
+
+.o_form_view {
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: $bg; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: darken($border, 10%); border-radius: 3px; &:hover { background: darken($border, 22%); } }
+}
+
+// ============================================================
+// 21. ENTRY ANIMATION
+// ============================================================
+
+@keyframes erp-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ============================================================
+// 22. 3D STAGE CSS CLASSES (applied by JS)
+// ============================================================
+
+.o_form_view .o_form_statusbar .o_statusbar_status {
+  .o_arrow_button {
+    &.erp-stage-3d  { border: none !important; cursor: pointer !important; }
+    &.erp-stage-past { position: relative !important; }
+    &.erp-stage-future { opacity: 0.55 !important; }
+    &.erp-stage-current { animation: erp-pulse 2.5s ease-in-out infinite; }
+  }
+}
+
+@keyframes erp-pulse {
+  0%, 100% { box-shadow: var(--erp-stage-shadow); }
+  50%       { box-shadow: var(--erp-stage-shadow-pulse); }
+}
+
+// ============================================================
+// 23. PRIORITY STARS
+// ============================================================
+
+.o_form_view .o_priority .o_priority_star {
+  font-size: 1.3rem !important;
+  color: $warning !important;
+  text-shadow: 0 1px 3px rgba(217, 119, 6, 0.3) !important;
+}
+
+// ============================================================
+// 24. CONFIGURABLE INTERFACE FONT
+// ------------------------------------------------------------
+// Settings > ERP UI Redesign lets an admin pick a font; `erp_ui_enhance.js`
+// reads that choice on page load and sets TWO custom properties on <html>:
+//
+//   --bs-body-font-family  (Bootstrap 5 runtime variable)
+//     `body { font-family: var(--bs-body-font-family) }` is how Odoo 18
+//     resolves the body font at runtime — it is compiled directly into the
+//     BS5 bundle from `$font-family-base`. Overriding it on :root via an
+//     inline style (set in JS) propagates to everything that inherits from
+//     body, including the navbar, portalled dropdown panels, and dialogs —
+//     any selector list in a static SCSS file would miss at least some of
+//     them. An inline style on :root wins before specificity is evaluated.
+//     This one variable does the real work.
+//
+//   --erp-ui-font  (this module's own variable, consumed below)
+//     Kept as a fallback belt-and-braces for elements that explicitly set
+//     their own font-family (blocking plain inheritance) without going
+//     through --bs-body-font-family.
+//
+// `revert` as the var() fallback: `inherit` would pull font-family from
+// the parent even when no custom font is chosen, overriding Odoo's own
+// declarations with an inherited value. `revert` means "act as if this
+// rule didn't exist" — a true no-op until a font is actually chosen.
+// ============================================================
+:root {
+  --erp-ui-font: unset;
+}
+
+body.o_web_client,
+.o_action_manager,
+.o_form_view,
+.o_list_view,
+.o_control_panel,
+.modal-content {
+  font-family: var(--erp-ui-font, revert) !important;
+}
+
+// ============================================================
+// 25. FOCUS-ONLY ACCENT BORDER (defensive)
+// ------------------------------------------------------------
+// If an input is showing the accent-coloured border/glow all the time
+// instead of only while it's actively focused, something else in the
+// stack (another module's CSS, a decoration- class, a widget wrapper) is
+// forcing it. This block re-asserts the neutral, non-focus state with
+// higher specificity so "highlighted" only ever means "currently
+// focused," regardless of what set it off before.
+// ============================================================
+
+
+// ============================================================
+// 26. REINFORCED OVERRIDE — for when another module's CSS wins the fight
+// ------------------------------------------------------------
+// The gradient bar at the top of the "Multi Contract" wizard sheet shows
+// this module's CSS IS loading there (section 1 renders it). If the
+// currency-code float/underline bugs still show up in that same wizard
+// after that, the most likely explanation left is cascade order: your
+// Properties app almost certainly ships its own CSS for its own wizards,
+// and if that asset loads *after* this one in the bundle, an equally (or
+// more) specific rule there simply wins - `!important` alone doesn't
+// break a tie, specificity still decides it.
+//
+// This section repeats the class in each selector (`.o_field_monetary.
+// o_field_monetary`) purely to raise specificity above a plain single-
+// class rule, without resorting to `!important` stacking tricks that
+// don't actually change the outcome. It does not depend on `.o_form_view`
+// as an ancestor (dialogs/wizards keep that class in every version we've
+// seen, but this removes even that assumption) and matches on structure
+// only, so it should catch the field regardless of which module rendered
+// the wizard.
+// ============================================================
+
+.o_field_monetary.o_field_monetary,
+[class*="o_field_monetary"][class*="o_field_monetary"] {
+  display: inline-flex !important;
+  align-items: center !important;
+
+  > input.o_input.o_input,
+  > input.o_input.o_input:focus {
+    text-align: right !important;
+  }
+
+  > input.o_input.o_input + span {
+    position: static !important;
+    top: auto !important;
+    transform: none !important;
+    vertical-align: baseline !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    font-size: 0.75rem !important;
+    color: $text-muted !important;
+
+    // ── KILL SWITCH ──────────────────────────────────────────────
+    // If the currency code is STILL misaligned in your Properties
+    // wizards after this, delete the leading "//" on the next line.
+    // That hides the unit text entirely rather than positioning it -
+    // the amount alone (e.g. "0.00") will still display, just without
+    // "AED" next to it, matching the label above the field anyway.
+    // display: none !important;
+  }
+}
+
+// Tax-totals link underline: same reasoning - drop the `.o_form_view`
+// dependency and raise specificity so this wins over a later-loaded
+// stylesheet that also targets plain `<a>` tags inside a totals table.
+.o_tax_totals.o_tax_totals a,
+.oe_subtotal_footer.oe_subtotal_footer a,
+[class*="tax_total"][class*="tax_total"] a {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  color: $text-body !important;
+}
+
+// ============================================================
+// 27. THEMES
+// ------------------------------------------------------------
+// Settings > ERP UI Redesign > Visual Theme sets `data-erp-theme` on
+// <html> (via erp_ui_enhance.js). "Vibrant" is this file's original,
+// untouched look - gradients, glow, the pulsing status pill - so it
+// needs no override block at all. "Minimal" and "Classic" layer flatter
+// rules on top, keyed to that attribute, so every alignment/bug fix
+// above still applies unchanged regardless of which theme is active -
+// only decoration changes.
+// ============================================================
+
+// ── MINIMAL: flat, quiet, single accent, no motion ──
+[data-erp-theme="minimal"] {
+  .o_form_sheet {
+    background: $card !important;
+    box-shadow: $shadow-sm !important;
+    animation: none !important;
+    &::before { display: none !important; }
+  }
+
+  .o_form_statusbar {
+    background: $card !important;
+    border-bottom: 1px solid $border !important;
+    border-image: none !important;
+    box-shadow: none !important;
+  }
+
+  .btn-primary, .btn.oe_highlight {
+    background: $primary !important;
+    box-shadow: none !important;
+    &:hover { background: $primary-dark !important; transform: none !important; box-shadow: none !important; }
+  }
+  .btn-secondary, .btn-danger, .btn-warning, .btn-success,
+  .btn:not(.oe_highlight):not(.btn-primary):not(.btn-link):not(.oe_stat_button) {
+    background: $card !important;
+    box-shadow: none !important;
+    &:hover { transform: none !important; box-shadow: none !important; }
+  }
+
+  .oe_stat_button:hover { transform: none !important; box-shadow: none !important; }
+
+  .text-bg-success, .bg-success { background: $success !important; box-shadow: none !important; }
+  .text-bg-danger,  .bg-danger  { background: $danger !important;  box-shadow: none !important; }
+  .text-bg-warning, .bg-warning { background: $warning !important; box-shadow: none !important; }
+  .text-bg-info,    .bg-info    { background: $primary !important; box-shadow: none !important; }
+
+  .o_field_many2many_tags .badge {
+    background: $primary-light !important;
+    &:hover { transform: none !important; }
+  }
+
+  .o_list_view .o_list_table thead th,
+  .o_field_one2many .o_list_table thead th,
+  .o_field_many2many .o_list_table thead th {
+    background: $bg !important;
+  }
+  .o_field_one2many .o_list_table tfoot td,
+  .o_field_many2many .o_list_table tfoot td {
+    background: $bg !important;
+  }
+
+  .o_priority .o_priority_star { text-shadow: none !important; }
+
+  * { animation: none !important; }
+}
+
+// ── CLASSIC: plain native Odoo purple, minimal customisation ──
+[data-erp-theme="classic"] {
+  .o_form_sheet {
+    background: $card !important;
+    box-shadow: none !important;
+    border-radius: 4px !important;
+    animation: none !important;
+    &::before { display: none !important; }
+  }
+
+  .o_form_statusbar {
+    background: $card !important;
+    border-bottom: 1px solid $border !important;
+    border-image: none !important;
+    box-shadow: none !important;
+  }
+
+  .btn-primary, .btn.oe_highlight {
+    background: #714B67 !important;
+    border-radius: 4px !important;
+    box-shadow: none !important;
+    &:hover { background: #5b3c54 !important; transform: none !important; box-shadow: none !important; }
+  }
+  .btn-secondary, .btn-danger, .btn-warning, .btn-success,
+  .btn:not(.oe_highlight):not(.btn-primary):not(.btn-link):not(.oe_stat_button) {
+    background: $card !important;
+    border-radius: 4px !important;
+    box-shadow: none !important;
+    &:hover { transform: none !important; box-shadow: none !important; }
+  }
+
+  .oe_stat_button:hover { transform: none !important; box-shadow: none !important; }
+
+  .o_horizontal_separator, .o_notebook > .nav-tabs .nav-link.active {
+    color: #714B67 !important;
+    border-bottom-color: #714B67 !important;
+  }
+
+  .text-bg-info, .bg-info { background: #714B67 !important; box-shadow: none !important; }
+
+  .o_field_many2many_tags .badge {
+    background: rgba(113, 75, 103, 0.1) !important;
+    color: #714B67 !important;
+    &:hover { transform: none !important; }
+  }
+
+  .o_list_view .o_list_table thead th,
+  .o_field_one2many .o_list_table thead th,
+  .o_field_many2many .o_list_table thead th {
+    background: $bg !important;
+  }
+  .o_field_one2many .o_list_table tfoot td,
+  .o_field_many2many .o_list_table tfoot td {
+    background: $bg !important;
+  }
+
+  .o_priority .o_priority_star { text-shadow: none !important; }
+
+  * { animation: none !important; }
+}
+
+
+// ============================================================
+// 28. NAVBAR & DROPDOWN MENUS
+// ------------------------------------------------------------
+// Two separate problems, one section.
+//
+// (a) FONT REACH. Section 24 applies the configured font to
+//     body.o_web_client, .o_action_manager, .o_form_view,
+//     .o_list_view, .o_control_panel and .modal-content — and
+//     nothing else. font-family does inherit, so the navbar tends to
+//     pick the choice up by accident, but a dropdown PANEL does not:
+//     from Odoo 17 the Dropdown component portals its menu out of
+//     the navbar into `.o-overlay-container`, a direct child of
+//     <body>. Anything scoped under `.o_main_navbar` therefore never
+//     matches it, and any core or third-party rule setting
+//     font-family directly on `.o-dropdown--menu` beats plain
+//     inheritance. Both containers are named explicitly below.
+//
+// (b) SIZE DRIFT INSIDE ONE MENU. Checked against Odoo 18
+//     addons/web/static/src/webclient/navbar/navbar.{scss,xml}: a
+//     menu section header renders as
+//         <div class="dropdown-menu_group dropdown-header"/>
+//     and navbar.scss gives it exactly one declaration —
+//     `margin-top: 0`. Everything else about it comes from
+//     Bootstrap 5's `.dropdown-header`, which drops font-size to
+//     $font-size-sm. So the header is smaller than the items around
+//     it as a Bootstrap default, not as a design decision. Its
+//     children get `.o_dropdown_menu_group_entry.dropdown-item`,
+//     which navbar.scss only indents (padding-left) and otherwise
+//     leaves alone.
+//
+//     Net effect in a menu that mixes loose items with a grouped
+//     section — the Contract menu is exactly this shape — is three
+//     text treatments stacked in one panel with nothing tying them
+//     together.
+//
+//     Sizes below are in `em` on purpose: they resolve against
+//     `.o-dropdown--menu`'s own font-size, so the menu keeps
+//     tracking Odoo's scale instead of being pinned to a px value
+//     that drifts out of step the next time core changes it.
+//
+//     No `!important` here — `.o-dropdown--menu
+//     .dropdown-header.dropdown-menu_group` is three classes against
+//     Bootstrap's one, so specificity already settles it.
+// ============================================================
+
+// ── (a) reach ──
+.o_main_navbar,
+.o_menu_sections,
+.o-overlay-container,
+.o-dropdown--menu,
+.dropdown-menu {
+  font-family: var(--erp-ui-font, revert) !important;
+}
+
+// ── (a2) SIZE — whichever custom font is configured (Roboto by default)
+//     renders visibly larger/heavier than Odoo's own default typeface at
+//     the same nominal size, so once (a) swaps the font in, every label
+//     AND every icon glyph sized in em against it (menu items, systray
+//     icons/badges, the debug wrench, discuss/activity counters) looks
+//     oversized and crowds together. Scaled down as a percentage, not a
+//     fixed px, so it keeps tracking core's own $o-navbar-font-size
+//     instead of drifting out of step the next time core changes it -
+//     same reasoning as (b) below.
+.o_main_navbar {
+  font-size: 88% !important;
+}
+
+// ── (b) one consistent scale per menu ──
+.o-dropdown--menu {
+
+  // font-weight deliberately not set here: the apps dropdown puts
+  // `.o_app` items in this same container with intentional bolding,
+  // and flattening those would be a regression, not a fix.
+  .dropdown-item,
+  .o_dropdown_menu_group_entry.dropdown-item {
+    font-size: 1em;
+    line-height: 1.55;
+  }
+
+  // Still smaller than the items — but now reads as a label rather
+  // than as a shrunken menu entry.
+  .dropdown-header.dropdown-menu_group {
+    font-size: 0.72em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.7;
+    padding-top: 0.6em;
+    padding-bottom: 0.25em;
+  }
+
+  // Rule above a group that follows loose items, so indentation
+  // isn't the only thing separating the two halves of the menu.
+  .dropdown-item + .dropdown-header.dropdown-menu_group {
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
+    margin-top: 0.45em;
+  }
+}
+
+// Classic is "plain Odoo, no flourishes": keep the size fix, which is
+// the actual bug, and drop the uppercase/letter-spacing, which is not.
+[data-erp-theme="classic"] {
+  .o-dropdown--menu .dropdown-header.dropdown-menu_group {
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: 600;
+  }
+}
+
+// ── (c) COLOR ──
+// navbar.scss compiles `.o_main_navbar { background: $o-navbar-background; }`
+// as a plain (non-custom-property) declaration, so recoloring it takes a
+// normal override here - but every app-menu entry underneath
+// (Accounting/Contract/CRM/... ) has its OWN background that falls back to
+// that same compiled $o-navbar-background, so overriding only the bar
+// itself would leave each entry sitting on top as a solid patch of the old
+// color. Entry backgrounds/colors ARE exposed as CSS custom properties
+// though (--NavBar-entry-*, --NavBar-brand-color - see navbar.variables.scss),
+// so those are set here instead of patched with more !important rules.
+//
+// Vibrant is unscoped for the same reason as section 27 - it's this
+// file's original look. Minimal gets one flat accent, no gradient, no
+// motion. Classic has no override at all: Odoo's own default background
+// IS $o-brand-odoo (a purple), which already matches "plain native Odoo
+// purple, minimal customisation".
+//
+// Navbar-only tones (not $primary/$secondary/$accent-pink) so this stays
+// scoped to the bar - reusing the global vibrant palette here would also
+// recolor every button/badge that derives from it.
+//
+// Both a saturated blue and a deep violet gradient were tried here and
+// rejected as "too bright" - the ask was specifically for something
+// closer to the neutral grey Odoo's own list-view header already uses
+// (.o_list_view thead, styled elsewhere in this file with $bg). So the
+// bar reuses that exact same flat, light tone instead of any accent
+// color family, with a plain 1px border to separate it from section 29's
+// lavender client background instead of a shadow, and dark text since a
+// light bg needs dark-on-light contrast, not white-on-color.
+.o_main_navbar {
+  background: $bg !important;
+  border-bottom: 1px solid $border !important;
+  box-shadow: $shadow-sm;
+
+  --NavBar-entry-backgroundColor: transparent;
+  --NavBar-entry-backgroundColor--hover: rgba(15, 23, 42, 0.05);
+  --NavBar-entry-backgroundColor--focus: rgba(15, 23, 42, 0.05);
+  --NavBar-entry-backgroundColor--active: rgba(79, 70, 229, 0.1);
+  --NavBar-entry-borderColor-active: rgba(79, 70, 229, 0.18);
+  --NavBar-entry-color: #{$text-body};
+  --NavBar-entry-color--hover: #{$text-dark};
+  --NavBar-entry-color--active: #{$primary};
+  --NavBar-brand-color: #{$text-dark};
+
+  .o_menu_sections .o_nav_entry,
+  .o_menu_sections .dropdown-toggle {
+    border-radius: $radius-sm;
+    transition: $transition;
+  }
+}
+
+[data-erp-theme="minimal"] .o_main_navbar {
+  background: $primary !important;
+  border-bottom: 1px solid $primary-dark !important;
+  box-shadow: none;
+
+  --NavBar-entry-backgroundColor: transparent;
+  --NavBar-entry-backgroundColor--hover: rgba(255, 255, 255, 0.1);
+  --NavBar-entry-backgroundColor--focus: rgba(255, 255, 255, 0.1);
+  --NavBar-entry-backgroundColor--active: rgba(255, 255, 255, 0.16);
+  --NavBar-entry-borderColor-active: transparent;
+  --NavBar-entry-color: rgba(255, 255, 255, 0.85);
+  --NavBar-entry-color--hover: #FFFFFF;
+  --NavBar-entry-color--active: #FFFFFF;
+  --NavBar-brand-color: #FFFFFF;
+
+  .o_menu_sections .o_nav_entry,
+  .o_menu_sections .dropdown-toggle {
+    border-radius: 0;
+    transition: none;
+  }
+}
+
+// ============================================================
+// 29. GLOBAL BACKEND BACKGROUND
+// ------------------------------------------------------------
+// Reuses the exact soft lavender gradient Odoo's own Apps/home-menu
+// screen already ships (web_enterprise's background-light.svg), which
+// core normally scopes only to `.o_home_menu_background` while that
+// grid is open. Applied here to the whole client instead, so every app
+// sits on the same backdrop rather than just the apps grid.
+//
+// It won't look identical everywhere: list/kanban views have no opaque
+// background of their own in core, so the gradient shows through their
+// margins/gaps exactly like it does around the app icon tiles today.
+// Form views sit on section 1's opaque $bg, so there it mostly reads at
+// the outer edges - same "shows through the gaps" behaviour, just with
+// a smaller gap. Unscoped (applies under all three [data-erp-theme]
+// values) since this is Odoo's own asset, not one of this file's
+// invented palettes.
+//
+// $bg is kept as the plain background-color fallback so nothing breaks
+// if web_enterprise (Enterprise-only) is ever uninstalled - the image
+// 404s silently and this degrades to the same flat tone section 1
+// already uses for forms.
+// ============================================================
+body.o_web_client {
+  background-color: $bg !important;
+  background-image: url("/web_enterprise/static/img/background-light.svg") !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}

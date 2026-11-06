@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_company_view_form_inherit" model="ir.ui.view">
+            <field name="name">res.company.view.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="priority" eval="35"/>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="company_secretary"></field>
+                </xpath>
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="fax"></field>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

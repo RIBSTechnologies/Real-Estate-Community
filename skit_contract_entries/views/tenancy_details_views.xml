@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<!-- inherit tenancy details view to add new field-->
+        <record id="contract_tenancy_details_form_view" model="ir.ui.view">
+            <field name="name">contract.tenancy.details.form.view</field>
+            <field name="model">tenancy.details</field>
+            <field name="inherit_id" ref="rental_management.tenancy_details_form_view"/>
+            <field name="arch" type="xml">
+	           	<!-- <xpath expr="//field[@name='contract_value']" position="after">
+	           		<field name="journal_entry_id"/>
+	           	</xpath> -->
+	           	<xpath expr="//div/button[@name='action_invoices']" position="before">
+				    <button
+				        name="action_journal"
+				        type="object"
+				        class="oe_stat_button"
+				        icon="description" icon_class="oi-filled"
+				        string="Journal Entry"
+				        invisible="not journal_entry_id"
+				    />
+				</xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

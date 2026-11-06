@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="many2many_binary_field_preview.attachment_preview"
+       t-inherit="web.Many2XBinary.attachment_preview"
+       t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_image_box')]" position="replace">
+            <div class="o_image_box float-start" t-att-data-tooltip="'Preview ' + file.name">
+                <span class="o_image o_hover"
+                      t-att-data-mimetype="file.mimetype"
+                      t-att-data-ext="ext"
+                      role="img"
+                      style="cursor: zoom-in;"
+                      t-on-click="() => this.onClickPreview(file, this.props.files)"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

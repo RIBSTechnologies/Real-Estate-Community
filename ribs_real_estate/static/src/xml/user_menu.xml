@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Inherit the existing web.UserMenu template -->
+    <t t-name="web.UserMenu" t-inherit="web.UserMenu" t-inherit-mode="extension">
+        <!-- Add user name after the image inside the button -->
+        <xpath expr="//button[hasclass('o_user_menu')]" position="inside">
+            <span class="ms-2 user-display fw-bold" t-if="this.debugMode.isActive()">
+                <!-- <t t-out=""/> -->
+            </span>
+            <span class="ms-2 user-display" t-else="">
+                <t t-out="this.userName"/>
+            </span>
+        </xpath>
+    </t>
+</templates>

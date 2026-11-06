@@ -1,0 +1,2 @@
+id,name,model_id,group_id/id,operation,domain
+access_erp_ui_redesign_settings_system,erp.ui.redesign.settings.system,erp.ui.redesign.settings,base.group_system,crud,

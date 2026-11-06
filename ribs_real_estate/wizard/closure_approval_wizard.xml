@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="contract_closure_wizard_form" model="ir.ui.view">
+            <field name="name">contract.closure.approval.wizard.form</field>
+            <field name="model">contract.closure.approval.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="contract_id"/>
+                        <field name="termination_requested_person" readonly="1"/>
+                        <field name="closing_reason" readonly="1"/>
+                        <field name="closing_date" readonly="1"/>
+                        <field name="termination_type" readonly="1"/>
+                        <field name="first_level_approval_requested_to" widget="many2many_tags" readonly="1"/>
+                        <field name="final_level_approval_requested_to" widget="many2many_tags" readonly="1"/>
+                        <field name="if_penalty" readonly="1"/>
+                        <field name="penalty_amount" readonly="1" invisible="not if_penalty"/>
+                        <field name="approval_comment"/>
+                    </group>
+
+                    <footer>
+                        <button string="Approve"
+                                type="object"
+                                name="action_first_level_approve"
+                                class="btn-primary"/>
+                        <button string="Cancel"
+                                special="cancel"
+                                class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="contract_closure_wizard_action" model="ir.actions.act_window">
+            <field name="name">Close Contract Approval</field>
+            <field name="res_model">contract.closure.approval.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

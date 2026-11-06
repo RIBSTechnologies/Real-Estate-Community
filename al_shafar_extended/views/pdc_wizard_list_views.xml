@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PDC Cheque Payment list: inline Return button per row -->
+    <record id="sh_pdc_list_view_inherit_al_shafar" model="ir.ui.view">
+        <field name="name">sh.pdc.list.view.inherit.al.shafar</field>
+        <field name="model">pdc.wizard</field>
+        <field name="inherit_id" ref="sh_pdc.sh_pdc_list_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="tenancy_id" string="Contract Number"/>
+            </field>
+            <field name="state" position="after">
+                <button name="action_returned" type="object"
+                    string="Return" icon="undo" title="Return this PDC cheque"
+                    confirm="Return this PDC cheque?"
+                    invisible="state != 'registered'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Redesign of ribs_real_estate.report_uae_rental_tax_invoice.
+        - Same letterhead (web.external_layout, with logo) and green theme
+          (#145326 / #1a8a3e) as the Contract Agreement report.
+        - Building / Unit come from the analytic accounts on the invoice lines
+          (plans with customized_type 'building' / 'units'); when nothing is
+          mapped the field is not printed at all.
+        The body lives in account_extended.report_move_document (report_common.xml),
+        shared with the Credit Note report.
+    -->
+    <!-- Odoo's "PDF without Payment" is not shown in the invoice Print menu. -->
+    <record id="account.account_invoices_without_payment" model="ir.actions.report">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
+    <!-- Print menu name: "Tax Invoice" (was "UAE Rental Tax Invoice"). -->
+    <record id="ribs_real_estate.action_report_uae_rental_invoice" model="ir.actions.report">
+        <field name="name">Tax Invoice</field>
+    </record>
+
+    <template id="report_uae_rental_tax_invoice_extended"
+              inherit_id="ribs_real_estate.report_uae_rental_tax_invoice">
+
+        <xpath expr="//t[@t-call='web.external_layout_standard']" position="replace">
+            <t t-set="show_company_logo" t-value="True"/>
+            <t t-set="is_credit_note" t-value="False"/>
+            <!-- Security Deposit is not part of the tax invoice. -->
+            <t t-set="report_exclude" t-value="('deposit',)"/>
+            <t t-call="web.external_layout">
+                <t t-call="account_extended.report_move_document"/>
+            </t>
+        </xpath>
+
+    </template>
+
+</odoo>

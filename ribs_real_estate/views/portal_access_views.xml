@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tenants / buyers use Odoo's standard customer portal (/my). These
+         buttons open the standard "Grant portal access" wizard. -->
+    <record id="tenancy_details_form_view_portal_access" model="ir.ui.view">
+        <field name="name">tenancy.details.form.portal.access</field>
+        <field name="model">tenancy.details</field>
+        <field name="inherit_id" ref="rental_management.tenancy_details_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_open_portal_access" type="object" string="Portal Access"
+                        groups="base.group_partner_manager" invisible="not tenancy_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="property_vendor_form_view_portal_access" model="ir.ui.view">
+        <field name="name">property.vendor.form.portal.access</field>
+        <field name="model">property.vendor</field>
+        <field name="inherit_id" ref="rental_management.property_vendor_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_open_portal_access" type="object" string="Portal Access"
+                        groups="base.group_partner_manager" invisible="not customer_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

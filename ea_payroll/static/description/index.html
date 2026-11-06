@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payroll for Odoo 19</title>
+    <link type="text/css" rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <link type="text/css" rel="stylesheet" href="/assets/assets.css" />
+    <style>
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #0f172a;
+        }
+    </style>
+</head>
+
+<body style="font-family: 'Inter', sans-serif; background-color: #ffffff; margin: 0; padding: 0; color: #0f172a;">
+
+    <!-- Outer Wrapper -->
+    <div
+        style="position: relative; min-height: 100vh; width: 100%; margin: 0; padding: 20px 0; box-sizing: border-box; overflow: hidden; background-color: #ffffff;">
+        <div
+            style="position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 20px; box-sizing: border-box;">
+
+            <!-- Tracking Image -->
+            <div class="my-5" style="text-align: center;">
+                <img src="https://www.erpartists.com/apps_store/track/ea_payroll.png" alt="ea_payroll"
+                    style="max-width: 100%; height: auto; display: block; border-radius: 12px;" />
+            </div>
+
+            <!-- Hero Banner Section -->
+            <section style="border-radius: 28px; padding: 65px 55px; margin-bottom: 40px; background-color: #0F172A; color: #ffffff; box-shadow: 0 20px 60px rgba(15,23,42,0.25); display: block; width: 100%; box-sizing: border-box;">
+                <div style="color: #ffffff;">
+                    <!-- Badge -->
+                    <div style="display: inline-block; background-color: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 10px 18px; border-radius: 40px; font-size: 13px; font-weight: 700; margin-bottom: 24px; letter-spacing: 0.5px; text-transform: uppercase; color: #ffffff; vertical-align: middle;">
+                        <i class="fa fa-check-circle" style="color: #22C55E; margin-right: 6px; font-size: 14px; vertical-align: middle;">&#8203;</i>
+                        <span style="vertical-align: middle;">Odoo 19 Compatible</span>
+                    </div>
+
+                    <!-- Title -->
+                    <h1 style="margin: 0; font-size: 54px; line-height: 1.15; font-weight: 800; color: #ffffff; letter-spacing: -1px;">
+                        Odoo 19 Community Payroll
+                    </h1>
+
+                    <!-- Description -->
+                    <p style="margin-top: 22px; margin-bottom: 0; max-width: 820px; color: rgba(255,255,255,0.88); font-size: 18px; line-height: 1.8;">
+                        Manage employee compensation structures, draft-to-closed contracts, and dynamically compiled salary rules. Fully adapted for native Odoo 19 versioning logic.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Main Hero Image Showcase -->
+            <div style="margin-top: 1rem; margin-bottom: 4rem; box-sizing: border-box; text-align: center;">
+                <div
+                    style="border: 1px solid #cbd5e1; border-radius: 16px; background-color: #ffffff; padding: 6px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04); display: inline-block; max-width: 600px; width: 100%;">
+                    <img src="payslip_page1_high_quality.png" alt="Payroll Payslip Preview"
+                        style="border-radius: 12px; width: 100%; height: auto; display: block;" />
+                </div>
+            </div>
+
+            <!-- Features Grid Overview -->
+            <div
+                style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 24px; box-sizing: border-box; position: relative; overflow: hidden; display: inline-grid; width: 100%;">
+                <!-- Decorative Subtle BG Line -->
+                <div
+                    style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #714B67 0%, #00A09D 100%); z-index: 2;">
+                </div>
+
+                <div style="position: relative; z-index: 3; padding: 50px 40px; box-sizing: border-box; width: 100%;">
+                    <div style="text-align: center; margin-bottom: 45px;">
+                        <h2 style="font-weight: 800; font-size: 32px; color: #0f172a; margin: 0 0 10px 0;">
+                            Key Features Overview
+                        </h2>
+                        <p style="color: #475569; font-size: 16px; margin: 0 auto; max-width: 600px; line-height: 1.5;">
+                            Streamline your human resource operations with a powerful, automated payroll processing
+                            engine designed for Odoo 19.
+                        </p>
+                    </div>
+
+                    <!-- Grid -->
+                    <div class="row g-4 justify-content-center" style="box-sizing: border-box; margin: 0;">
+                        <!-- Feature 1 -->
+                        <div class="col-lg-4 col-md-6 col-12" style="padding: 10px; box-sizing: border-box;">
+                            <div
+                                style="background-color: #FAF6FA; border: 1px solid #F3E5F0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 15px rgba(113, 75, 103, 0.02); height: 100%;">
+                                <div
+                                    style="background-color: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 12px; height: 50px; width: 50px; display: block; text-align: center; line-height: 50px; margin-bottom: 16px;">
+                                    <i class="fa fa-cog" style="font-size: 20px; color: #714B67;">&#8203;</i>
+                                </div>
+                                <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+                                    Salary Rules Engine
+                                </h4>
+                                <p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.5;">
+                                    Configure Basic Salary, HRA, PF, Taxes, Bonuses, and incentives with fixed or
+                                    python-based rules.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div class="col-lg-4 col-md-6 col-12" style="padding: 10px; box-sizing: border-box;">
+                            <div
+                                style="background-color: #F1FAF9; border: 1px solid #E1F2F0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 15px rgba(0, 160, 157, 0.02); height: 100%;">
+                                <div
+                                    style="background-color: #f0fdfa; border: 1px solid #ccfbf1; border-radius: 12px; height: 50px; width: 50px; display: block; text-align: center; line-height: 50px; margin-bottom: 16px;">
+                                    <i class="fa fa-calculator" style="font-size: 20px; color: #00A09D;">&#8203;</i>
+                                </div>
+                                <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+                                    Payslip Batch Processing
+                                </h4>
+                                <p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.5;">
+                                    Generate and compute monthly payslips for all employees simultaneously using the
+                                    batch wizard.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="col-lg-4 col-md-6 col-12" style="padding: 10px; box-sizing: border-box;">
+                            <div
+                                style="background-color: #FAF6FA; border: 1px solid #F3E5F0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 15px rgba(113, 75, 103, 0.02); height: 100%;">
+                                <div
+                                    style="background-color: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 12px; height: 50px; width: 50px; display: block; text-align: center; line-height: 50px; margin-bottom: 16px;">
+                                    <i class="fa fa-book" style="font-size: 20px; color: #714B67;">&#8203;</i>
+                                </div>
+                                <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+                                    Contribution Registers
+                                </h4>
+                                <p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.5;">
+                                    Track provident funds, statutory deductions, insurance schemes, and company
+                                    compliance contributions.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 4 -->
+                        <div class="col-lg-4 col-md-6 col-12" style="padding: 10px; box-sizing: border-box;">
+                            <div
+                                style="background-color: #F1FAF9; border: 1px solid #E1F2F0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 15px rgba(0, 160, 157, 0.02); height: 100%;">
+                                <div
+                                    style="background-color: #f0fdfa; border: 1px solid #ccfbf1; border-radius: 12px; height: 50px; width: 50px; display: block; text-align: center; line-height: 50px; margin-bottom: 16px;">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 20px; color: #00A09D;">&#8203;</i>
+                                </div>
+                                <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+                                    Detailed PDF Reports
+                                </h4>
+                                <p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.5;">
+                                    Generate and print high-quality payslip PDF sheets and batch summaries with
+                                    breakdown details.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 5 -->
+                        <div class="col-lg-4 col-md-6 col-12" style="padding: 10px; box-sizing: border-box;">
+                            <div
+                                style="background-color: #FAF6FA; border: 1px solid #F3E5F0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 15px rgba(113, 75, 103, 0.02); height: 100%;">
+                                <div
+                                    style="background-color: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 12px; height: 50px; width: 50px; display: block; text-align: center; line-height: 50px; margin-bottom: 16px;">
+                                    <i class="fa fa-th-large" style="font-size: 20px; color: #714B67;">&#8203;</i>
+                                </div>
+                                <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+                                    Kanban Status Workflow
+                                </h4>
+                                <p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.5;">
+                                    Move payslips through visual stages from draft to approved, keeping track of payment
+                                    lifecycles.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 6 -->
+                        <div class="col-lg-4 col-md-6 col-12" style="padding: 10px; box-sizing: border-box;">
+                            <div
+                                style="background-color: #F1FAF9; border: 1px solid #E1F2F0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 15px rgba(0, 160, 157, 0.02); height: 100%;">
+                                <div
+                                    style="background-color: #f0fdfa; border: 1px solid #ccfbf1; border-radius: 12px; height: 50px; width: 50px; display: block; text-align: center; line-height: 50px; margin-bottom: 16px;">
+                                    <i class="fa fa-rocket" style="font-size: 20px; color: #00A09D;">&#8203;</i>
+                                </div>
+                                <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+                                    Full Odoo 19 Compatibility
+                                </h4>
+                                <p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.5;">
+                                    Built specifically for Odoo 19 Community Edition using modern database patterns.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Showcase Section 1: Salary Rules Engine -->
+            <div style="margin-top: 4rem; margin-bottom: 4rem; box-sizing: border-box;">
+                <section
+                    style="background-color: #FAF6FA; border: 1px solid #F3E5F0; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); box-sizing: border-box; position: relative; overflow: hidden; display: inline-grid; width: 100%;">
+                    <div style="position: relative; z-index: 2; padding: 45px; width: 100%; box-sizing: border-box;">
+                        <div class="row" style="margin: 0;">
+                            <!-- Text Column -->
+                            <div class="col-12 mb-4" style="padding: 10px; box-sizing: border-box;">
+                                <span
+                                    style="color: #714B67; font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 12px;">
+                                    <i class="fa fa-cogs"
+                                        style="color: #714B67; margin-right: 6px; font-size: 14px; vertical-align: middle;">&#8203;</i>
+                                    Configuration
+                                </span>
+                                <h3
+                                    style="font-size: 36px; font-weight: 800; color: #0f172a; margin: 0 0 20px 0; line-height: 1.25;">
+                                    Salary Rules Engine
+                                </h3>
+                                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0;">
+                                    Configure Basic Salary, HRA, PF, Taxes, Bonuses, and Incentives with support for
+                                    Fixed Amount, Percentage, and Python-Based Calculations. Create custom salary
+                                    computation logic without modifying source code.
+                                </p>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Configure
+                                        Basic, HRA, PF, Taxes &amp; Bonuses</span>
+                                </div>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Fixed,
+                                        Percentage &amp; Python Calculations</span>
+                                </div>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Automatic
+                                        dependency handling between rules</span>
+                                </div>
+                                <div style="display: block;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Secure
+                                        Python execution via Safe Evaluation</span>
+                                </div>
+                            </div>
+                            <!-- Image Column -->
+                            <div class="col-12 text-center" style="padding: 10px; box-sizing: border-box;">
+                                <div
+                                    style="border: 1px solid #cbd5e1; border-radius: 12px; background-color: #ffffff; padding: 6px; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04); display: inline-block; width: 100%;">
+                                    <img src="salary_configuration.png" alt="Salary Configuration Engine"
+                                        style="border-radius: 8px; width: 100%; height: auto; display: block;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Showcase Section 2: Contribution Registers -->
+            <div style="margin-top: 4rem; margin-bottom: 4rem; box-sizing: border-box;">
+                <section
+                    style="background-color: #F1FAF9; border: 1px solid #E1F2F0; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); box-sizing: border-box; position: relative; overflow: hidden; display: inline-grid; width: 100%;">
+                    <div style="position: relative; z-index: 2; padding: 45px; width: 100%; box-sizing: border-box;">
+                        <div class="row" style="margin: 0;">
+                            <!-- Text Column -->
+                            <div class="col-12 mb-4" style="padding: 10px; box-sizing: border-box;">
+                                <span
+                                    style="color: #00A09D; font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 12px;">
+                                    <i class="fa fa-book"
+                                        style="color: #00A09D; margin-right: 6px; font-size: 14px; vertical-align: middle;">&#8203;</i>
+                                    Compliance &amp; Auditing
+                                </span>
+                                <h3
+                                    style="font-size: 36px; font-weight: 800; color: #0f172a; margin: 0 0 20px 0; line-height: 1.25;">
+                                    Contribution Registers
+                                </h3>
+                                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0;">
+                                    Maintain complete visibility of payroll-related contributions and statutory
+                                    deductions. Track provident funds, professional taxes, insurance deductions, and
+                                    generate detailed compliance reports.
+                                </p>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #e6f6f6; border: 1px solid #b3e6e5; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #00807d; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Track
+                                        employee &amp; company contributions</span>
+                                </div>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #e6f6f6; border: 1px solid #b3e6e5; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #00807d; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Generate
+                                        printable payroll registers</span>
+                                </div>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #e6f6f6; border: 1px solid #b3e6e5; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #00807d; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Export
+                                        data easily for auditing purposes</span>
+                                </div>
+                                <div style="display: block;">
+                                    <div
+                                        style="display: inline-block; background-color: #e6f6f6; border: 1px solid #b3e6e5; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #00807d; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Summaries
+                                        compiled for admin checkups</span>
+                                </div>
+                            </div>
+                            <!-- Image Column -->
+                            <div class="col-12 text-center" style="padding: 10px; box-sizing: border-box;">
+                                <div
+                                    style="border: 1px solid #cbd5e1; border-radius: 12px; background-color: #ffffff; padding: 6px; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04); display: inline-block; width: 100%;">
+                                    <img src="contribution.png" alt="Contribution Registers"
+                                        style="border-radius: 8px; width: 100%; height: auto; display: block;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Showcase Section 3: Payslip Lifecycle -->
+            <div style="margin-top: 4rem; margin-bottom: 4rem; box-sizing: border-box;">
+                <section
+                    style="background-color: #FAF6FA; border: 1px solid #F3E5F0; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); box-sizing: border-box; position: relative; overflow: hidden; display: inline-grid; width: 100%;">
+                    <div style="position: relative; z-index: 2; padding: 45px; width: 100%; box-sizing: border-box;">
+                        <div class="row" style="margin: 0;">
+                            <!-- Text Column -->
+                            <div class="col-12 mb-4" style="padding: 10px; box-sizing: border-box;">
+                                <span
+                                    style="color: #714B67; font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 12px;">
+                                    <i class="fa fa-th-large"
+                                        style="color: #714B67; margin-right: 6px; font-size: 14px; vertical-align: middle;">&#8203;</i>
+                                    Process Flow
+                                </span>
+                                <h3
+                                    style="font-size: 36px; font-weight: 800; color: #0f172a; margin: 0 0 20px 0; line-height: 1.25;">
+                                    Payslip Lifecycle
+                                </h3>
+                                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0;">
+                                    Manage payroll processing through a structured workflow. Payslips move through
+                                    Draft, Waiting, Approved, Done, and Rejected stages with complete transparency.
+                                </p>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Visual
+                                        Kanban workflow for processing</span>
+                                </div>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Track
+                                        payroll status stages in real-time</span>
+                                </div>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Prevent
+                                        duplicate payroll calculations</span>
+                                </div>
+                                <div style="display: block;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Organize
+                                        monthly payroll batches easily</span>
+                                </div>
+                            </div>
+                            <!-- Image Column -->
+                            <div class="col-12 text-center" style="padding: 10px; box-sizing: border-box;">
+                                <div
+                                    style="border: 1px solid #cbd5e1; border-radius: 12px; background-color: #ffffff; padding: 6px; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04); display: inline-block; width: 100%;">
+                                    <img src="Employee-Payslips.png" alt="Payslip Lifecycle Statuses"
+                                        style="border-radius: 8px; width: 100%; height: auto; display: block;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Showcase Section 4: Payslip Form View -->
+            <div style="margin-top: 4rem; margin-bottom: 4rem; box-sizing: border-box;">
+                <section
+                    style="background-color: #F1FAF9; border: 1px solid #E1F2F0; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); box-sizing: border-box; position: relative; overflow: hidden; display: inline-grid; width: 100%;">
+                    <div style="position: relative; z-index: 2; padding: 45px; width: 100%; box-sizing: border-box;">
+                        <div class="row" style="margin: 0;">
+                            <!-- Text Column -->
+                            <div class="col-12 mb-4" style="padding: 10px; box-sizing: border-box;">
+                                <span
+                                    style="color: #00A09D; font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 12px;">
+                                    <i class="fa fa-calculator"
+                                        style="color: #00A09D; margin-right: 6px; font-size: 14px; vertical-align: middle;">&#8203;</i>
+                                    Details View
+                                </span>
+                                <h3
+                                    style="font-size: 36px; font-weight: 800; color: #0f172a; margin: 0 0 20px 0; line-height: 1.25;">
+                                    Payslip Form View
+                                </h3>
+                                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0;">
+                                    Modern high-fidelity payslip form displays computed salary lines, worked days, and
+                                    input details. Execute computations and confirm transactions directly from the form.
+                                </p>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #e6f6f6; border: 1px solid #b3e6e5; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #00807d; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Calculated
+                                        lines and deductions in real-time</span>
+                                </div>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #e6f6f6; border: 1px solid #b3e6e5; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #00807d; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Worked
+                                        days, custom inputs &amp; contract details</span>
+                                </div>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #e6f6f6; border: 1px solid #b3e6e5; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #00807d; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Toggle
+                                        manual edits or cancel confirmed slips</span>
+                                </div>
+                                <div style="display: block;">
+                                    <div
+                                        style="display: inline-block; background-color: #e6f6f6; border: 1px solid #b3e6e5; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #00807d; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Integrated
+                                        print &amp; email operations</span>
+                                </div>
+                            </div>
+                            <!-- Image Column -->
+                            <div class="col-12 text-center" style="padding: 10px; box-sizing: border-box;">
+                                <div
+                                    style="border: 1px solid #cbd5e1; border-radius: 12px; background-color: #ffffff; padding: 6px; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04); display: inline-block; width: 100%;">
+                                    <img src="payslip_form_ultra_quality.png" alt="Payslip Form Management"
+                                        style="border-radius: 8px; width: 100%; height: auto; display: block;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Showcase Section 5: Professional PDF Reports -->
+            <div style="margin-top: 4rem; margin-bottom: 4rem; box-sizing: border-box;">
+                <section
+                    style="background-color: #FAF6FA; border: 1px solid #F3E5F0; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); box-sizing: border-box; position: relative; overflow: hidden; display: inline-grid; width: 100%;">
+                    <div style="position: relative; z-index: 2; padding: 45px; width: 100%; box-sizing: border-box;">
+                        <div class="row" style="margin: 0;">
+                            <!-- Text Column -->
+                            <div class="col-12 mb-4" style="padding: 10px; box-sizing: border-box;">
+                                <span
+                                    style="color: #714B67; font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 12px;">
+                                    <i class="fa fa-file-pdf-o"
+                                        style="color: #714B67; margin-right: 6px; font-size: 14px; vertical-align: middle;">&#8203;</i>
+                                    Print &amp; Share
+                                </span>
+                                <h3
+                                    style="font-size: 36px; font-weight: 800; color: #0f172a; margin: 0 0 20px 0; line-height: 1.25;">
+                                    Professional PDF Reports
+                                </h3>
+                                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0;">
+                                    Generate high-fidelity PDF printouts for employee records. Auto-generate itemized
+                                    breakdowns of basic salary, allowances, and deductions in an attractive, clean sheet
+                                    layout.
+                                </p>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">High-fidelity
+                                        PDF outputs ready for employee distribution</span>
+                                </div>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Clearly
+                                        separated allowances and statutory deductions</span>
+                                </div>
+                                <div style="display: block; margin-bottom: 12px;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Automated
+                                        email sharing upon payslip approval</span>
+                                </div>
+                                <div style="display: block;">
+                                    <div
+                                        style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; vertical-align: middle; margin-right: 8px;">
+                                        <i class="fa fa-check" style="color: #059669; font-size: 12px;">&#8203;</i>
+                                    </div>
+                                    <span
+                                        style="color: #334155; font-size: 15px; font-weight: 500; vertical-align: middle;">Multi-language
+                                        &amp; multi-currency support ready</span>
+                                </div>
+                            </div>
+                            <!-- Image Column -->
+                            <div class="col-12 text-center" style="padding: 10px; box-sizing: border-box;">
+                                <div
+                                    style="border: 1px solid #cbd5e1; border-radius: 12px; background-color: #ffffff; padding: 6px; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04); display: inline-block; width: 100%;">
+                                    <img src="Salary_Slip_Abigail_Ultra_Quality.png" alt="High Quality Salary Slip PDF"
+                                        style="border-radius: 8px; width: 100%; height: auto; display: block;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Configuration & Setup Guide -->
+            <section
+                style="background-color: #FAF6FA; border: 1px solid #F3E5F0; border-radius: 24px; padding: 60px 45px; margin-bottom: 40px; box-sizing: border-box; display: inline-grid; width: 100%;">
+                <div style="text-align: center; margin-bottom: 45px;">
+                    <h2 style="font-weight: 800; font-size: 32px; color: #0f172a; margin: 0 0 10px 0;">
+                        Configuration &amp; Setup Guide
+                    </h2>
+                    <p style="color: #475569; max-width: 650px; margin: 0 auto; font-size: 16px; line-height: 1.5;">
+                        Get up and running with the payroll configuration pipeline in five simple steps.
+                    </p>
+                </div>
+
+                <div style="max-width: 800px; margin: 0 auto; display: block;">
+                    <!-- Step 1 -->
+                    <div style="margin-bottom: 25px; display: block; overflow: hidden; width: 100%;">
+                        <div
+                            style="float: left; background-color: #714B67; color: #ffffff; font-weight: 700; width: 34px; height: 34px; border-radius: 50%; text-align: center; line-height: 34px; margin-right: 18px; box-shadow: 0 3px 6px rgba(113,75,103,0.2);">
+                            1
+                        </div>
+                        <div style="overflow: hidden; zoom: 1;">
+                            <h4 style="font-size: 18px; font-weight: 700; color: #714B67; margin: 0 0 6px 0;">Install
+                                the Payroll Module</h4>
+                            <p style="color: #475569; font-size: 14.5px; margin: 0; line-height: 1.6;">
+                                Install the Payroll module from Apps and make sure the required HR modules are
+                                available.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div style="margin-bottom: 25px; display: block; overflow: hidden; width: 100%;">
+                        <div
+                            style="float: left; background-color: #714B67; color: #ffffff; font-weight: 700; width: 34px; height: 34px; border-radius: 50%; text-align: center; line-height: 34px; margin-right: 18px; box-shadow: 0 3px 6px rgba(113,75,103,0.2);">
+                            2
+                        </div>
+                        <div style="overflow: hidden; zoom: 1;">
+                            <h4 style="font-size: 18px; font-weight: 700; color: #714B67; margin: 0 0 6px 0;">Create
+                                Employee Contracts</h4>
+                            <p style="color: #475569; font-size: 14.5px; margin: 0; line-height: 1.6;">
+                                Create employee contracts and assign salary structures, wages, and active contract
+                                dates.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div style="margin-bottom: 25px; display: block; overflow: hidden; width: 100%;">
+                        <div
+                            style="float: left; background-color: #714B67; color: #ffffff; font-weight: 700; width: 34px; height: 34px; border-radius: 50%; text-align: center; line-height: 34px; margin-right: 18px; box-shadow: 0 3px 6px rgba(113,75,103,0.2);">
+                            3
+                        </div>
+                        <div style="overflow: hidden; zoom: 1;">
+                            <h4 style="font-size: 18px; font-weight: 700; color: #714B67; margin: 0 0 6px 0;">Configure
+                                Salary Rules</h4>
+                            <p style="color: #475569; font-size: 14.5px; margin: 0; line-height: 1.6;">
+                                Set up salary components such as Basic Salary, HRA, Allowances, PF, Taxes, and other
+                                deductions.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div style="margin-bottom: 25px; display: block; overflow: hidden; width: 100%;">
+                        <div
+                            style="float: left; background-color: #714B67; color: #ffffff; font-weight: 700; width: 34px; height: 34px; border-radius: 50%; text-align: center; line-height: 34px; margin-right: 18px; box-shadow: 0 3px 6px rgba(113,75,103,0.2);">
+                            4
+                        </div>
+                        <div style="overflow: hidden; zoom: 1;">
+                            <h4 style="font-size: 18px; font-weight: 700; color: #714B67; margin: 0 0 6px 0;">Generate
+                                Payslips</h4>
+                            <p style="color: #475569; font-size: 14.5px; margin: 0; line-height: 1.6;">
+                                Create employee payslips, calculate salaries automatically, and review earnings and
+                                deductions.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Step 5 -->
+                    <div style="display: block; overflow: hidden; width: 100%;">
+                        <div
+                            style="float: left; background-color: #714B67; color: #ffffff; font-weight: 700; width: 34px; height: 34px; border-radius: 50%; text-align: center; line-height: 34px; margin-right: 18px; box-shadow: 0 3px 6px rgba(113,75,103,0.2);">
+                            5
+                        </div>
+                        <div style="overflow: hidden; zoom: 1;">
+                            <h4 style="font-size: 18px; font-weight: 700; color: #714B67; margin: 0 0 6px 0;">Process
+                                Payroll &amp; Reports</h4>
+                            <p style="color: #475569; font-size: 14.5px; margin: 0; line-height: 1.6;">
+                                Confirm payslips, process payroll batches, print reports, and share salary slips with
+                                employees.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQs Section -->
+            <section style="margin-top: 4rem; margin-bottom: 4rem; box-sizing: border-box;">
+                <div style="text-align: center; margin-bottom: 35px;">
+                    <h2 style="font-size: 32px; font-weight: 800; color: #0f172a; margin: 0 0 10px 0;">
+                        Frequently Asked Questions
+                    </h2>
+                    <p style="color: #475569; max-width: 600px; margin: 0 auto; font-size: 16px; line-height: 1.5;">
+                        Common questions about the custom Odoo 19 payroll feature configuration.
+                    </p>
+                </div>
+
+                <div style="max-width: 850px; margin: 0 auto; box-sizing: border-box;">
+                    <!-- FAQ 1 -->
+                    <div
+                        style="background-color: #FAF6FA; border: 1px solid #F3E5F0; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-sizing: border-box;">
+                        <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #714B67;">
+                            Can I manually edit calculated payslip lines?
+                        </h4>
+                        <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.6;">
+                            Yes. Under general Settings, enable <strong>"Allow editing payslip lines"</strong> to grant
+                            authorized users the flexibility to manually modify individual values on generated payslip
+                            lines.
+                        </p>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div
+                        style="background-color: #F1FAF9; border: 1px solid #E1F2F0; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-sizing: border-box;">
+                        <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #00A09D;">
+                            Is there an option to cancel confirmed payslips?
+                        </h4>
+                        <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.6;">
+                            Yes. Enable <strong>"Allow canceling confirmed payslips"</strong> in configurations. Once
+                            active, confirmed or done payslips can be reverted as needed.
+                        </p>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div
+                        style="background-color: #FAF6FA; border: 1px solid #F3E5F0; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-sizing: border-box;">
+                        <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #714B67;">
+                            Can I represent leave days/hours as positive values?
+                        </h4>
+                        <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.6;">
+                            Absolutely. Enable <strong>"Leaves with positive values"</strong> in payroll settings to
+                            show leaves as positive values rather than negative.
+                        </p>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div
+                        style="background-color: #F1FAF9; border: 1px solid #E1F2F0; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-sizing: border-box;">
+                        <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #00A09D;">
+                            How do I prevent payslips from automatically recomputing upon confirmation?
+                        </h4>
+                        <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.6;">
+                            Activate <strong>"Confirm payslips without recomputing"</strong> to lock calculated values
+                            exactly as they are during confirmation, bypassing any automatic recalculation.
+                        </p>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div
+                        style="background-color: #FAF6FA; border: 1px solid #F3E5F0; border-radius: 12px; padding: 20px; box-sizing: border-box;">
+                        <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #714B67;">
+                            Is there support for batch state transitions?
+                        </h4>
+                        <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.6;">
+                            Yes. A custom <strong>"Change state of a payslip"</strong> wizard lets you select multiple
+                            payslips in list view and update their status (Draft, Compute, Confirm, or Cancel) in bulk.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <div class="my-5">
+                <section id="services" class="mt-5"
+                    style="border-radius:16px; border:1px solid #EBEEF2; background-color:#FFF; box-shadow:0px 5px 20px -11px rgba(0,0,0,0.25); position: relative; overflow: hidden; display: inline-grid; width: 100%;">
+                    <div
+                        style="position: relative; z-index: 2; padding: 60px 40px; width: 100%; box-sizing: border-box;">
+                        <div class="text-center mt-4">
+                            <h3 class="mb-0"
+                                style="color:#000; text-align:center; font-family:Montserrat; font-size:40px; font-weight:700; text-transform:uppercase; padding-bottom:50px;">
+                                Our Services</h3>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-3 col-sm-12 mb-3">
+                                <a href="mailto:contact@erpartists.com" style="text-decoration:none">
+                                    <div class="btn-lg btn-block p-4 mb-2"
+                                        style="background-color:#FFE2E5; margin:auto; border-radius:8px; display: block; text-align: center;">
+                                        <div class="d-flex justify-content-center align-items-center"
+                                            style="background-color:#FA5A7D; border-radius:50%; height:56px; width:56px">
+                                            <i class="fa fa-wrench" style="color:#fff; font-size:22px;">&#8203;</i>
+                                        </div>
+                                        <span
+                                            style="font-size:16px; color:#121212; font-weight:700; display: block;">Odoo
+                                            Customization</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-sm-12 mb-3">
+                                <a href="mailto:contact@erpartists.com" style="text-decoration:none">
+                                    <div class="btn-lg btn-block p-4 mb-2"
+                                        style="background-color:#FFF4DE; margin:auto; border-radius:8px; display: block; text-align: center;">
+                                        <div class="d-flex justify-content-center align-items-center"
+                                            style="background-color:#FF947A; border-radius:50%; height:56px; width:56px">
+                                            <i class="fa fa-cogs" style="color:#fff; font-size:22px;">&#8203;</i>
+                                        </div>
+                                        <span
+                                            style="font-size:16px; color:#121212; font-weight:700; display: block;">Odoo
+                                            Implementation</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-sm-12 mb-3">
+                                <a href="mailto:contact@erpartists.com" style="text-decoration:none">
+                                    <div class="btn-lg btn-block p-4 mb-2"
+                                        style="background-color:#DCFCE7; margin:auto; border-radius:8px; display: block; text-align: center;">
+                                        <div class="d-flex justify-content-center align-items-center"
+                                            style="background-color:#3CD856; border-radius:50%; height:56px; width:56px">
+                                            <i class="fa fa-support" style="color:#fff; font-size:22px;">&#8203;</i>
+                                        </div>
+                                        <span
+                                            style="font-size:16px; color:#121212; font-weight:700; display: block;">Odoo
+                                            Support</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-sm-12 mb-3">
+                                <a href="mailto:contact@erpartists.com" style="text-decoration:none">
+                                    <div class="btn-lg btn-block p-4 mb-2"
+                                        style="background-color:#F3E8FF; margin:auto; border-radius:8px; display: block; text-align: center;">
+                                        <div class="d-flex justify-content-center align-items-center"
+                                            style="background-color:#BF83FF; border-radius:50%; height:56px; width:56px">
+                                            <i class="fa fa-exchange" style="color:#fff; font-size:22px;">&#8203;</i>
+                                        </div>
+                                        <span
+                                            style="font-size:16px; color:#121212; font-weight:700; display: block;">Odoo
+                                            Migration</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-sm-12 mb-3">
+                                <a href="mailto:contact@erpartists.com" style="text-decoration:none">
+                                    <div class="btn-lg btn-block p-4 mb-2"
+                                        style="background-color:#F1F9FF; margin:auto; border-radius:8px; display: block; text-align: center;">
+                                        <div class="d-flex justify-content-center align-items-center"
+                                            style="background-color:#01649C; border-radius:50%; height:56px; width:56px">
+                                            <i class="fa fa-puzzle-piece"
+                                                style="color:#fff; font-size:22px;">&#8203;</i>
+                                        </div>
+                                        <span
+                                            style="font-size:16px; color:#121212; font-weight:700; display: block;">Odoo
+                                            Integration</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-sm-12 mb-3">
+                                <a href="mailto:contact@erpartists.com" style="text-decoration:none">
+                                    <div class="btn-lg btn-block p-4 mb-2"
+                                        style="background-color:#EDF8ED; margin:auto; border-radius:8px; display: block; text-align: center;">
+                                        <div class="d-flex justify-content-center align-items-center"
+                                            style="background-color:#69CC70; border-radius:50%; height:56px; width:56px">
+                                            <i class="fa fa-comments" style="color:#fff; font-size:22px;">&#8203;</i>
+                                        </div>
+                                        <span
+                                            style="font-size:16px; color:#121212; font-weight:700; display: block;">Odoo
+                                            Consultancy</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-sm-12 mb-3">
+                                <a href="mailto:contact@erpartists.com" style="text-decoration:none">
+                                    <div class="btn-lg btn-block p-4 mb-2"
+                                        style="background-color:#F1F6FF; margin:auto; border-radius:8px; display: block; text-align: center;">
+                                        <div class="d-flex justify-content-center align-items-center"
+                                            style="background-color:#2E4556; border-radius:50%; height:56px; width:56px">
+                                            <i class="fa fa-key" style="color:#fff; font-size:22px;">&#8203;</i>
+                                        </div>
+                                        <span
+                                            style="font-size:16px; color:#121212; font-weight:700; display: block;">Odoo
+                                            Licensing</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-sm-12 mb-3">
+                                <a href="mailto:contact@erpartists.com" style="text-decoration:none">
+                                    <div class="btn-lg btn-block p-4 mb-2"
+                                        style="background-color:#FAF6EA; margin:auto; border-radius:8px; display: block; text-align: center;">
+                                        <div class="d-flex justify-content-center align-items-center"
+                                            style="background-color:#FCD12C; border-radius:50%; height:56px; width:56px">
+                                            <i class="fa fa-user" style="color:#fff; font-size:22px;">&#8203;</i>
+                                        </div>
+                                        <span
+                                            style="font-size:16px; color:#121212; font-weight:700; display: block;">Hire
+                                            Odoo
+                                            Developer</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

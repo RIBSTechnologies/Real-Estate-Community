@@ -1,0 +1,130 @@
+/* ============================================================
+   al_shafar_extended/static/src/css/rental_dashboard_header_banner.css
+
+   Banner across the top of the Dashboard - see
+   rental_dashboard_header_banner.xml/js. Plain gradient (no background
+   photo/asset), company logo/name pulled dynamically per company.
+   ============================================================ */
+
+.tk-dash-banner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 24px;
+    padding: 20px 0;
+    border-radius: 0;
+    color: #2b3648;
+    background: #eef0f2;
+    border: none;
+    border-bottom: 2px solid #dcdfe4;
+    box-shadow: none;
+}
+
+.tk-dash-banner-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: none;
+}
+
+.tk-dash-banner-logo {
+    height: 36px;
+    width: 36px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #ffffff;
+    padding: 2px;
+}
+
+.tk-dash-banner-company {
+    font-weight: 700;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.tk-dash-banner-main {
+    flex: 1 1 auto;
+    min-width: 220px;
+}
+
+.tk-dash-banner-title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.tk-dash-banner-nav {
+    margin-top: 4px;
+    font-size: 0.82rem;
+    opacity: 0.92;
+}
+
+.tk-dash-banner-nav a {
+    color: #3a4a63;
+    text-decoration: none;
+}
+
+.tk-dash-banner-nav a:hover {
+    text-decoration: underline;
+}
+
+.tk-dash-banner-sep {
+    margin: 0 6px;
+    opacity: 0.6;
+}
+
+.tk-dash-banner-side {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.tk-dash-banner-tagline {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: right;
+    opacity: 0.95;
+}
+
+.tk-dash-banner-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid #dcdfe4;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.tk-dash-banner-date-label {
+    font-size: 0.68rem;
+    opacity: 0.85;
+}
+
+.tk-dash-banner-date-value {
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+@media (max-width: 767px) {
+    .tk-dash-banner {
+        justify-content: center;
+        text-align: center;
+    }
+    .tk-dash-banner-main {
+        text-align: center;
+    }
+    .tk-dash-banner-tagline {
+        text-align: center;
+    }
+}

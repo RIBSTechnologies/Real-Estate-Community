@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Purchase Order Form - Professional Redesign                   -->
+    <!-- Only rearranges fields, improves visual grouping.             -->
+    <!-- No fields removed, no backend logic changed.                  -->
+    <!-- ============================================================ -->
+
+    <record id="erp_purchase_order_form_redesign" model="ir.ui.view">
+        <field name="name">purchase.order.form.erp.redesign</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+
+            <!-- Add a custom CSS class to the form for targeted styling -->
+            <xpath expr="//form" position="attributes">
+                <attribute name="class">o_purchase_order erp_redesigned_form</attribute>
+            </xpath>
+
+            <!-- ======================================== -->
+            <!-- Move Payment Terms & Fiscal Position     -->
+            <!-- from "Other Info" tab into the main      -->
+            <!-- header group for better visibility       -->
+            <!-- ======================================== -->
+
+            <!-- Payment Terms: already in the main group since Odoo 20 -->
+
+            <!-- Add Fiscal Position to RIGHT group -->
+            <xpath expr="//div[@name='reminder']" position="after">
+                <field name="fiscal_position_id"
+                       options="{'no_create': True}"
+                       readonly="invoice_status == 'invoiced' or locked"
+                       string="Fiscal Position"/>
+            </xpath>
+
+            <!-- Hide the duplicated fields in Other Info tab -->
+            <xpath expr="//page[@name='purchase_delivery_invoice']//field[@name='fiscal_position_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Lock Agreement field at final state -->
+            <xpath expr="//field[@name='requisition_id']" position="attributes">
+                <attribute name="readonly">state in ['done', 'cancel']</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

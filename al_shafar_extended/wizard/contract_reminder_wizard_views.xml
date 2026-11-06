@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_contract_reminder_wizard_form" model="ir.ui.view">
+        <field name="name">contract.reminder.wizard.form</field>
+        <field name="model">contract.reminder.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Send Contract Renewal Reminder" class="o_reminder_wizard_form">
+                <p class="text-muted">
+                    Review the proposed rent change for each contract below -
+                    edit Amount/Percentage, Duration or dates as needed. Only
+                    the checked rows in the <strong>Send</strong> column will
+                    actually be emailed and have their rent change saved -
+                    uncheck any you want to skip, then confirm below.
+                </p>
+                <group string="Apply to All">
+                    <field name="currency_id" invisible="1"/>
+                    <group>
+                        <field name="bulk_amount_or_percentage"/>
+                    </group>
+                    <group>
+                        <field name="bulk_percentage"
+                               invisible="bulk_amount_or_percentage != 'percentage'"/>
+                        <field name="bulk_amount" widget="monetary"
+                               invisible="bulk_amount_or_percentage != 'amount'"/>
+                    </group>
+                </group>
+                <field name="line_ids">
+                    <list editable="bottom" create="false" delete="false" limit="200">
+                        <!-- required by the model / read by action_send(), but
+                             never otherwise shown - kept in the view (hidden)
+                             so the client still tracks and saves their value. -->
+                        <field name="contract_id" column_invisible="1" readonly="1"/>
+                        <field name="update_register_id" column_invisible="1" readonly="1"/>
+                        <field name="currency_id" column_invisible="1"/>
+                        <field name="selected" widget="boolean_toggle" string="Send"/>
+                        <field name="tenancy_seq"/>
+                        <field name="customer_id"/>
+                        <field name="email" optional="hide"/>
+                        <field name="days_left"/>
+                        <field name="amount_or_percentage"/>
+                        <!-- Whole COLUMN hidden (not just blanked per row) based
+                             on the "Apply to All" selector above, since Apply to
+                             All keeps every row on the same Amount/Percentage
+                             mode anyway - column_invisible needs a single
+                             yes/no, so it reads the parent (wizard header)
+                             field rather than each row's own. -->
+                        <field name="percentage"
+                               column_invisible="parent.bulk_amount_or_percentage != 'percentage'"/>
+                        <field name="amount" widget="monetary"
+                               column_invisible="parent.bulk_amount_or_percentage != 'amount'"/>
+                        <field name="duration_id" optional="hide"/>
+                        <field name="from_date" optional="hide"/>
+                        <field name="to_date" optional="hide"/>
+                        <field name="current_rent_monthly" widget="monetary" readonly="1"/>
+                        <field name="current_rent_annually" widget="monetary" optional="hide" readonly="1"/>
+                        <field name="new_rent_monthly" widget="monetary"/>
+                        <field name="new_rent_annually" widget="monetary" optional="hide"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_send" type="object" string="Send" class="btn-primary"/>
+                    <button name="action_cancel" type="object" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--
+        The "Send Renewal Reminder" button itself lives directly on the
+        Contracts list view (views/tenancy_details_inherit_views.xml, a
+        <header> button calling tenancy.details.
+        action_open_contract_reminder_wizard()) - a standalone button next
+        to "New", not tucked into the list's Action (gear) menu.
+    -->
+
+</odoo>

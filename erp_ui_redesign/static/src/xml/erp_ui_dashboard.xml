@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- ============================================================ -->
+    <!-- ERP UI Redesign - Document Dashboard                          -->
+    <!--                                                                -->
+    <!-- Structure follows the reference component with the sidebar     -->
+    <!-- removed: the type picker is the pill row inside the header,    -->
+    <!-- so the table gets the full page width instead of losing        -->
+    <!-- 230px to a permanently-visible menu column.                    -->
+    <!-- ============================================================ -->
+
+    <t t-name="erp_ui_redesign.ErpUiDashboard">
+        <div class="o_erp_dash_wrapper" t-att-class="this.props.className">
+
+            <!-- ── HEADER: title + type pills + actions ── -->
+            <div class="o_erp_dash_header">
+
+                <div class="o_erp_dash_header_top">
+                    <div class="o_erp_dash_title">
+                        <i class="fa fa-th-large me-2"/>
+                        <span t-out="this.activeType ? this.activeType.label : 'Documents'"/>
+                        <t t-if="!this.state.recordsLoading and this.state.records.length > 0">
+                            <span class="o_erp_dash_count" t-out="this.state.records.length"/>
+                        </t>
+                    </div>
+
+                    <div class="o_erp_dash_actions">
+                        <button class="btn btn-sm btn-light me-2"
+                                title="Refresh"
+                                t-on-click="this._refresh">
+                            <i class="fa fa-refresh"/>
+                        </button>
+                        <t t-if="this.activeType">
+                            <t t-if="this.activeType.canCreate">
+                                <button class="btn btn-sm btn-primary me-2" t-on-click="this._createNew">
+                                    <i class="fa fa-plus me-1"/>New
+                                </button>
+                            </t>
+                            <button class="btn btn-sm btn-outline-secondary" t-on-click="this._openFullList">
+                                <i class="fa fa-external-link me-1"/>Open List
+                            </button>
+                        </t>
+                    </div>
+                </div>
+
+                <!-- Type picker (was the sidebar) -->
+                <div class="o_erp_dash_pills">
+                    <t t-foreach="this.docTypes" t-as="dtype" t-key="dtype.key">
+                        <t t-if="!this.state.denied[dtype.key]">
+                            <div class="o_erp_dash_pill"
+                                 t-att-class="{ 'o_erp_dash_pill_active': this.state.activeKey === dtype.key }"
+                                 t-on-click="() => this._selectType(dtype.key)">
+                                <i class="fa me-2" t-att-class="dtype.icon"/>
+                                <span t-out="dtype.label"/>
+                                <span class="o_erp_dash_pill_count" t-out="this.state.counts[dtype.key]"/>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+            </div>
+
+            <!-- ── CONTENT ── -->
+            <div class="o_erp_dash_content">
+
+                <!-- Initial load -->
+                <t t-if="this.state.loading">
+                    <div class="o_erp_dash_center">
+                        <i class="fa fa-spinner fa-spin fa-2x"/>
+                        <p class="mt-3">Loading documents...</p>
+                    </div>
+                </t>
+
+                <!-- Access / load failure -->
+                <t t-elif="this.state.error">
+                    <div class="o_erp_dash_center">
+                        <i class="fa fa-lock fa-3x"/>
+                        <p class="mt-3" t-out="this.state.error"/>
+                    </div>
+                </t>
+
+                <!-- Switching type -->
+                <t t-elif="this.state.recordsLoading">
+                    <div class="o_erp_dash_center">
+                        <i class="fa fa-spinner fa-spin fa-2x"/>
+                        <p class="mt-3">Loading records...</p>
+                    </div>
+                </t>
+
+                <!-- Records -->
+                <t t-elif="this.state.records.length > 0">
+                    <div class="o_erp_dash_table_wrap">
+                        <table class="o_erp_dash_table">
+                            <thead>
+                                <tr>
+                                    <t t-foreach="this.activeColumns" t-as="col" t-key="col.field">
+                                        <th t-att-class="this.isNumeric(col) ? 'o_erp_dash_num' : ''"
+                                            t-out="col.label"/>
+                                    </t>
+                                    <th class="o_erp_dash_action_col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="this.state.records" t-as="rec" t-key="rec.id">
+                                    <tr class="o_erp_dash_row" t-on-click="() => this._openRecord(rec.id)">
+                                        <t t-foreach="this.activeColumns" t-as="col" t-key="col.field">
+                                            <td t-att-class="this.isNumeric(col) ? 'o_erp_dash_num' : ''">
+                                                <t t-if="col.type === 'state'">
+                                                    <span t-att-class="this.stateBadgeClass(rec)"
+                                                          t-out="this.stateLabel(rec)"/>
+                                                </t>
+                                                <t t-elif="col.bold">
+                                                    <strong t-out="this.formatCell(rec, col)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span t-out="this.formatCell(rec, col)"/>
+                                                </t>
+                                            </td>
+                                        </t>
+                                        <td class="o_erp_dash_action_col">
+                                            <button class="btn btn-sm btn-light"
+                                                    title="Open"
+                                                    t-on-click.stop="() => this._openRecord(rec.id)">
+                                                <i class="fa fa-eye"/>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <t t-if="this.state.records.length >= this.recordLimit">
+                            <div class="o_erp_dash_more">
+                                Showing the most recent <t t-out="this.recordLimit"/> records.
+                                <a href="#" t-on-click.prevent="this._openFullList">Open the full list</a>
+                                to see everything.
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <!-- Empty -->
+                <t t-else="">
+                    <div class="o_erp_dash_center">
+                        <i class="fa fa-inbox fa-3x"/>
+                        <p class="mt-3">No records for this document type.</p>
+                        <t t-if="this.activeType and this.activeType.canCreate">
+                            <button class="btn btn-primary mt-2" t-on-click="this._createNew">
+                                <i class="fa fa-plus me-1"/>Create First Record
+                            </button>
+                        </t>
+                    </div>
+                </t>
+
+            </div>
+        </div>
+    </t>
+
+</templates>

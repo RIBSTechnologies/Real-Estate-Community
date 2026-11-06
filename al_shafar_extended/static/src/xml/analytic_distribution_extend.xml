@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Copy button next to the delete icon on every analytic distribution
+         row (AnalyticDistribution.copyLine in analytic_distribution_extend.js). -->
+    <t t-inherit="analytic.AnalyticDistributionPopup" t-inherit-mode="extension">
+        <xpath expr="//span[@data-icon='delete']" position="before">
+            <span class="oi cursor-pointer me-2" data-icon="content_copy" title="Copy this line"
+                  t-on-click.stop="() => this.copyLine(line_index)"/>
+        </xpath>
+        <xpath expr="//span[@data-icon='delete']/.." position="attributes">
+            <attribute name="class">text-nowrap</attribute>
+        </xpath>
+        <xpath expr="//th[hasclass('deleteColumn')]" position="attributes">
+            <attribute name="class">deleteColumn text-nowrap</attribute>
+        </xpath>
+    </t>
+
+</templates>

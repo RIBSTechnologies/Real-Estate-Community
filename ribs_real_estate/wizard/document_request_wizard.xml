@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record id="document_request_form_view" model="ir.ui.view">
+            <field name="name">document.request.form.view</field>
+            <field name="model">document.request</field>
+            <field name="arch" type="xml">
+                <form string="Document Request">
+                    <group>
+                        <field name="contract_id"/>
+                        <field name="available_document_ids" invisible="1"/>
+                        <field name="document_ids" widget="many2many_tags" domain="[('document_for', '=', 'b2b' or 'b2c')]"/>
+                    </group>
+                    <footer>
+                        <button string="Request Document" type="object" class="btn btn-primary" name="action_request_contract"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="document_request_action" model="ir.actions.act_window">
+            <field name="name">Document Request</field>
+            <field name="res_model">document.request</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="document_request_form_view"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+
+</odoo>

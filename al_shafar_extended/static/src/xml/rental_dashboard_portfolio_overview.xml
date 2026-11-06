@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!--
+        Adds a "Portfolio Overview" section to the top of the Dashboard
+        (rental_management.rental_dashboard / RentalDashboard, rental.js),
+        before the existing "Rent Contract Statics" section - same card/
+        row markup and bg-* colour classes the rest of this template
+        already uses, so no new CSS. Counts come from the backend
+        override in al_shafar_extended/models/property_details.py
+        (get_property_stats); click-through uses the new
+        viewPortfolioOverview(type) handler patched onto RentalDashboard
+        in rental_dashboard_portfolio_overview.js.
+    -->
+    <t t-name="al_shafar_extended.rental_dashboard_portfolio_overview"
+       t-inherit="rental_management.rental_dashboard"
+       t-inherit-mode="extension">
+        <xpath expr="//div[@class='container']/div[@class='row'][1]" position="before">
+            <div class="row">
+                <div class="col-12 mt32" id="tk-section-portfolio">
+                    <h4 class="tk-primary">Portfolio Overview</h4>
+                    <hr class="border-primary"/>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewPortfolioOverview('total_properties')">
+                    <div class="card info-bg p-32">
+                        <div class="card-body info-bg tk-card-body">
+                            <img alt="properties" width="40" src="/rental_management/static/src/img/building.svg"/>
+                            <h4 class="tk-st-1 info-bg">Total Properties</h4>
+                            <h6 class="tk-st-2 info-bg"><t t-out="this.state.propertyStats['total_properties_count']"/></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewPortfolioOverview('total_units')">
+                    <div class="card purple-bg p-32">
+                        <div class="card-body purple-bg tk-card-body">
+                            <img alt="units" width="40" src="/rental_management/static/src/img/real-estate.svg"/>
+                            <h4 class="tk-st-1 purple-bg">Total Units</h4>
+                            <h6 class="tk-st-2 purple-bg"><t t-out="this.state.propertyStats['total_units_count']"/></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3 mb-4 mt8 mb16">
+                    <div class="card success-bg p-32 tk-group-card">
+                        <div class="card-body success-bg tk-card-body tk-group-card-body">
+                            <div class="tk-group-header"
+                                 t-on-click="() => this.viewPortfolioOverview('normal_units')">
+                                <img alt="normal units" width="40" src="/rental_management/static/src/img/real-estate.svg"/>
+                                <div class="tk-group-header-text">
+                                    <h4 class="tk-st-1 success-bg">Normal Units</h4>
+                                    <h6 class="tk-st-2 success-bg"><t t-out="this.state.propertyStats['normal_units_count']"/></h6>
+                                </div>
+                            </div>
+                            <hr class="tk-group-divider"/>
+                            <div class="tk-group-stats-row">
+                                <div class="tk-group-stat" t-on-click="() => this.viewPortfolioOverview('normal_on_rent')">
+                                    <span class="tk-group-stat-label">On Rent</span>
+                                    <span class="tk-group-stat-value"><t t-out="this.state.propertyStats['occupied_normal_units_count']"/></span>
+                                </div>
+                                <div class="tk-group-stat" t-on-click="() => this.viewPortfolioOverview('normal_available')">
+                                    <span class="tk-group-stat-label">Available</span>
+                                    <span class="tk-group-stat-value"><t t-out="this.state.propertyStats['available_normal_units_count']"/></span>
+                                </div>
+                            </div>
+                            <div class="tk-group-stats-row">
+                                <div class="tk-group-stat" t-on-click="() => this.viewPortfolioOverview('normal_single_contracts')">
+                                    <span class="tk-group-stat-label">Single Unit Contracts</span>
+                                    <span class="tk-group-stat-value"><t t-out="this.state.propertyStats['normal_single_unit_contracts_count']"/></span>
+                                </div>
+                                <div class="tk-group-stat" t-on-click="() => this.viewPortfolioOverview('normal_multi_contracts')">
+                                    <span class="tk-group-stat-label">Multi-Unit Contracts</span>
+                                    <span class="tk-group-stat-value"><t t-out="this.state.propertyStats['normal_multi_unit_contracts_count']"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3 mb-4 mt8 mb16">
+                    <div class="card all-bg p-32 tk-group-card">
+                        <div class="card-body all-bg tk-card-body tk-group-card-body">
+                            <div class="tk-group-header"
+                                 t-on-click="() => this.viewPortfolioOverview('total_parking')">
+                                <img alt="parking units" width="40" src="/rental_management/static/src/img/park.svg"/>
+                                <div class="tk-group-header-text">
+                                    <h4 class="tk-st-1 all-bg">Parking Units</h4>
+                                    <h6 class="tk-st-2 all-bg"><t t-out="this.state.propertyStats['total_parking_units_count']"/></h6>
+                                </div>
+                            </div>
+                            <hr class="tk-group-divider"/>
+                            <div class="tk-group-stats-row">
+                                <div class="tk-group-stat" t-on-click="() => this.viewPortfolioOverview('parking_on_rent')">
+                                    <span class="tk-group-stat-label">On Rent</span>
+                                    <span class="tk-group-stat-value"><t t-out="this.state.propertyStats['occupied_parking_units_count']"/></span>
+                                </div>
+                                <div class="tk-group-stat" t-on-click="() => this.viewPortfolioOverview('parking_available')">
+                                    <span class="tk-group-stat-label">Available</span>
+                                    <span class="tk-group-stat-value"><t t-out="this.state.propertyStats['available_parking_units_count']"/></span>
+                                </div>
+                            </div>
+                            <div class="tk-group-stats-row">
+                                <div class="tk-group-stat" t-on-click="() => this.viewPortfolioOverview('parking_single_contracts')">
+                                    <span class="tk-group-stat-label">Single Unit Contracts</span>
+                                    <span class="tk-group-stat-value"><t t-out="this.state.propertyStats['parking_single_unit_contracts_count']"/></span>
+                                </div>
+                                <div class="tk-group-stat" t-on-click="() => this.viewPortfolioOverview('parking_multi_contracts')">
+                                    <span class="tk-group-stat-label">Multi-Unit Contracts</span>
+                                    <span class="tk-group-stat-value"><t t-out="this.state.propertyStats['parking_multi_unit_contracts_count']"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

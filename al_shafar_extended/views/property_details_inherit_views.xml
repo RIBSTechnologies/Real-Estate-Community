@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Unit form: Multi-contracts smart button -->
+    <record id="view_property_details_form_inherit_al_shafar" model="ir.ui.view">
+        <field name="name">property.details.form.inherit.al.shafar</field>
+        <field name="model">property.details</field>
+        <field name="inherit_id" ref="rental_management.property_details_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_multi_contracts"
+                        icon="book"
+                        invisible="multi_contract_count == 0">
+                    <field name="multi_contract_count" string="Multi Contracts" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='deposit_type']" position="after">
+                <field name="deposit_basis" widget="radio" options="{'horizontal': True}"
+                    invisible="deposit_type != 'percent'" readonly="stage not in ['draft','available']"/>
+            </xpath>
+            <xpath expr="//div[@name='usable_area']" position="after">
+                <label for="unit_m_size" class="mt-1"/>
+                <div name="unit_m_size">
+                    <field name="unit_m_size" class="oe_inline" readonly="1" force_save="1"/>
+                </div>
+            </xpath>
+            <!-- Unit Size (sq.m) input: typing here multiplies by the
+                 '1 sq.m = ? sq.ft' ratio (Settings, default 10.7639) and
+                 writes the result into the existing 'Unit Size' field
+                 (always stored in sq.ft) - see _onchange_unit_size_sqm. -->
+            <xpath expr="//div[@name='unit_size']" position="after">
+                <label for="unit_size_sqm" class="mt-1"/>
+                <div name="unit_size_sqm">
+                    <field name="unit_size_sqm" class="oe_inline"
+                           readonly="stage not in ['draft','available']"/>
+                    / sq.m
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!--
+        Unit (property.details) list view: "Create Contract" button per
+        row - same technique as the Renew Contract button added to the
+        Contracts list view (al_shafar_extended/views/
+        tenancy_details_inherit_views.xml): a <button type="object"> column
+        embedded directly in the <list>, which Odoo always calls on that
+        row's own single record, never a multi-select batch.
+
+        Reuses the EXACT same object method and visibility rule as the
+        existing "Create Contract" button already on the Unit's own form
+        view (ribs_real_estate/views/property_details_view.xml,
+        contract_wiz_action) - no duplicate business logic, no new
+        Python. sale_lease is added as a hidden field only because the
+        visibility condition needs it and this list doesn't otherwise
+        display it.
+    -->
+    <record id="view_property_details_list_inherit_al_shafar" model="ir.ui.view">
+        <field name="name">property.details.list.inherit.al.shafar</field>
+        <field name="model">property.details</field>
+        <field name="inherit_id" ref="ribs_real_estate.property_details_list_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage']" position="after">
+                <field name="sale_lease" column_invisible="1"/>
+                <button name="contract_wiz_action" type="object" string="Create Contract"
+                    title="Create Contract" icon="article"
+                    class="o_create_contract_btn"
+                    invisible="stage not in ['available'] or sale_lease not in ['for_tenancy','for_lease']"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Building form: Sync Analytic button + analytic fields -->
+    <record id="view_property_project_form_inherit_analytic" model="ir.ui.view">
+        <field name="name">property.project.form.inherit.analytic</field>
+        <field name="model">property.project</field>
+        <field name="inherit_id" ref="rental_management.property_project_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_sync_analytic_accounts"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="refresh"
+                        title="Auto-create / sync the Building and Unit analytic accounts">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Sync Analytic</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='land_number']" position="after">
+                <field name="residential_type_id" readonly="1"/>
+                <field name="property_type_account_id" invisible="1"/>
+                <field name="building_account_id" readonly="1"/>
+            </xpath>
+
+            <!-- DEWA Number hidden, replaced by a new "DM Number" field -->
+            <xpath expr="//field[@name='dewa_number']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='dewa_number']" position="after">
+                <field name="dm_number" readonly="status == 'available'"/>
+                <field name="land_area" readonly="status == 'available'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Invoice form: Re-apply Analytic button (for existing invoices) -->
+    <record id="view_account_move_form_inherit_analytic" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.analytic</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_reapply_analytic"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="refresh"
+                        invisible="move_type not in ('out_invoice', 'out_receipt')"
+                        title="Force re-apply all 4 analytic accounts to invoice lines">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Re-apply<br/>Analytic</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Journal Items tab: the line "Label" column is called "Narration". Only this
+         list is relabelled - the field itself (account.move.line.name) keeps
+         its name everywhere else (invoice lines, reports, filters). -->
+    <record id="view_move_form_journal_item_memo" model="ir.ui.view">
+        <field name="name">account.move.form.journal.item.memo</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']/list/field[@name='name']" position="attributes">
+                <attribute name="string">Narration</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

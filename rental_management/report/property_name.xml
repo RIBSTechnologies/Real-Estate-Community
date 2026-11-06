@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="property_display_value">
+        <t t-set="contract"
+        t-value="object.tenancy_id if object._name == 'account.move' else object"/>
+
+        <t t-if="contract.is_multi_contract">
+            <t t-out="', '.join(contract.unit_ids.mapped('name'))"/>
+        </t>
+        <t t-else="">
+            <t t-out="contract.property_id.name"/>
+        </t>
+    </template>
+</odoo>

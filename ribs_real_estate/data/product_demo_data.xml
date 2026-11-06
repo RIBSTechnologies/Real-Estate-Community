@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product_template_ejari_registration" model="product.template">
+            <field name="name">Ejari Registration</field>
+            <field name="type">service</field>
+            <field name="list_price">175.65</field>
+            <field name="purchase_ok">True</field>
+            <field name="sale_ok">True</field>
+        </record>
+        <record id="product_template_registration_charges_ejari" model="product.template">
+            <field name="name">Registration Charges For Ejari</field>
+            <field name="type">service</field>
+            <field name="list_price">23.19</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+    </data>
+</odoo>

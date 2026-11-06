@@ -1,0 +1,15 @@
+id,name,model_id,group_id/id,operation,domain
+access_wk_hr_payroll_structure,wk.hr.payroll.structure,wk.hr.payroll.structure,group_hr_payroll_user,crud,
+access_wk_hr_payroll_structure_hr_user,wk.hr.payroll.structure.hr.user,wk.hr.payroll.structure,hr.group_hr_user,r,
+access_wk_hr_contribution_register,wk.hr.contribution.register,wk.hr.contribution.register,group_hr_payroll_user,crud,
+access_wk_hr_salary_rule_category,wk.hr.salary.rule.category,wk.hr.salary.rule.category,group_hr_payroll_user,crud,
+hr_payroll_rule_officer,Officer and subordinates Payslip,wk.hr.payslip,group_hr_payroll_user,crud,"['|', '|', ('employee_id.user_id', '=', user.id), ('employee_id.department_id', '=', False), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
+hr_payslip_rule_manager,All Payslip,wk.hr.payslip,group_hr_payroll_manager,crud,
+access_wk_hr_payslip_line,wk.hr.payslip.line,wk.hr.payslip.line,group_hr_payroll_user,crud,
+access_wk_hr_payslip_input_user,wk.hr.payslip.input.user,wk.hr.payslip.input,group_hr_payroll_user,crud,
+access_wk_hr_payslip_worked_days_officer,wk.hr.payslip.worked_days.officer,wk.hr.payslip.worked_days,group_hr_payroll_user,crud,
+access_wk_hr_payslip_run,wk_hr.payslip.run,wk.hr.payslip.run,group_hr_payroll_manager,crud,
+access_wk_hr_rule_input_officer,wk.hr.rule.input.office,wk.hr.rule.input,group_hr_payroll_user,crud,
+access_wk_hr_salary_rule_user,wk.hr.salary.rule.user,wk.hr.salary.rule,group_hr_payroll_user,crud,
+access_wk_payslip_line_contribution_register_user,wk.payslip.lines.contribution.register.user,wk.payslip.lines.contribution.register,group_hr_payroll_user,crud,
+access_wk_hr_payslip_employees_user,wk.hr.payslip.employees.user,wk.hr.payslip.employees,group_hr_payroll_user,crud,

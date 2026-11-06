@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Not wrapped in noupdate="1": <function> calls aren't tracked by
+             xmlid/noupdate the way <record> is, so this runs on every
+             install/upgrade of this module, on every environment, and
+             self-heals if the plan/sub-plans/accounts are ever missing.
+             See AccountAnalyticPlan._ensure_sub_cost_center for the logic. -->
+        <function model="account.analytic.plan" name="_ensure_sub_cost_center" eval="[]"/>
+    </data>
+</odoo>

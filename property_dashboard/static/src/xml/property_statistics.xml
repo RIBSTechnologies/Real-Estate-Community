@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="property_dashboard.Statistics">
+        <div class="ad-dashboard-container pd-statistics">
+
+            <div class="ad-header">
+                <div class="ad-header-left">
+                    <h1 class="ad-title"><i class="fa fa-bar-chart ad-title-icon"/> Statistics</h1>
+                    <p class="ad-subtitle">
+                        <span class="ad-date-badge"><i class="fa fa-th-large"/> Al-Shafar Real Estate</span>
+                    </p>
+                </div>
+                <div class="ad-header-right">
+                    <button class="ad-refresh-btn" t-on-click="() => this.load()">
+                        <i class="fa fa-refresh"/> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="ad-dashboard-inner">
+
+                <t t-if="this.state.loading">
+                    <div class="ad-loading-overlay">
+                        <div class="ad-loading-spinner">
+                            <i class="fa fa-spinner fa-spin fa-3x"/><p>Loading Statistics...</p>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <div class="ad-chart-card" t-if="this.state.error"
+                         style="margin-bottom:14px;border-left:4px solid #EF4444;">
+                        <div class="ad-chart-header">
+                            <h3><i class="fa fa-exclamation-triangle"/> Statistics could not load</h3>
+                        </div>
+                        <div class="ad-chart-body"
+                             style="height:auto;padding:12px 18px;white-space:pre-wrap;font-size:12px;">
+                            <t t-out="this.state.error"/>
+                        </div>
+                    </div>
+
+                    <div t-if="!this.state.documentsModel &amp;&amp; !this.state.error" class="ad-chart-card"
+                         style="margin-bottom:14px;border-left:4px solid #F59E0B;">
+                        <div class="ad-chart-body"
+                             style="height:auto;padding:10px 18px;font-size:12px;">
+                            <i class="fa fa-info-circle"/>
+                            No document model found on this database, so
+                            "Documents - Not Verified" stays at 0.
+                        </div>
+                    </div>
+
+                    <t t-foreach="this.state.sections" t-as="sec" t-key="sec.title">
+                        <div class="ad-chart-header" style="margin:6px 0 14px;">
+                            <h3><i class="fa" t-att-class="sec.icon"/> <t t-out="sec.title"/></h3>
+                        </div>
+                        <div class="ad-kpi-grid" style="margin-bottom:26px;">
+                            <t t-foreach="sec.cards" t-as="card" t-key="card.key">
+                                <div class="ad-kpi-card"
+                                     t-att-class="'pd-tone-' + card.tone"
+                                     t-on-click="() => this.openCard(card)">
+                                    <div class="ad-kpi-icon-wrap">
+                                        <i class="fa" t-att-class="card.icon"/>
+                                    </div>
+                                    <div class="ad-kpi-content">
+                                        <span class="ad-kpi-label"><t t-out="card.label"/></span>
+                                        <span class="ad-kpi-value"
+                                              t-att-style="card.money ? 'font-size:20px;' : ''">
+                                            <t t-out="this.display(card)"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </t>
+                            <div t-if="!sec.cards.length" class="ad-empty">Nothing to show.</div>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

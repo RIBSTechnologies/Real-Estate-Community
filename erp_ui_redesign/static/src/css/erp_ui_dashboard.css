@@ -1,0 +1,337 @@
+/* ============================================================
+   erp_ui_redesign/static/src/css/erp_ui_dashboard.css
+
+   Ported from the reference "dynamic process menu" stylesheet.
+   The sidebar block (.o_dpm_sidebar / _sidebar_header / _menu_item
+   / _empty_side) is gone; its dark-panel palette is reused for the
+   header pill row so the look carries over without the column.
+
+   Class prefix is o_erp_dash_ rather than o_dpm_ on purpose: if the
+   original manufacturing module is ever installed on the same
+   database, both stylesheets land in the same web.assets_backend
+   bundle and identical class names would silently restyle each
+   other's screens.
+   ============================================================ */
+
+.o_erp_dash_wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background: #f4f6f9;
+    overflow: hidden;
+}
+
+/* ── Header ── */
+.o_erp_dash_header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    flex: 0 0 auto;
+}
+
+.o_erp_dash_header_top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px 12px;
+}
+
+.o_erp_dash_title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.o_erp_dash_count {
+    background: #3498db;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.o_erp_dash_actions {
+    display: flex;
+    align-items: center;
+}
+
+/* ── Type pills (replaces the sidebar) ── */
+.o_erp_dash_pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 24px 14px;
+}
+
+.o_erp_dash_pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    border-radius: 22px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #5b6b7c;
+    background: #eef2f6;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.o_erp_dash_pill:hover {
+    background: #e2e8f0;
+    color: #2c3e50;
+    border-color: #cbd5e1;
+}
+
+.o_erp_dash_pill.o_erp_dash_pill_active {
+    background: #2c3e50;
+    color: #fff;
+    border-color: #1a252f;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.22);
+}
+
+.o_erp_dash_pill_count {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.08);
+    color: inherit;
+}
+
+.o_erp_dash_pill.o_erp_dash_pill_active .o_erp_dash_pill_count {
+    background: #e74c3c;
+    color: #fff;
+}
+
+/* ── Content ── */
+.o_erp_dash_content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── Table ── */
+.o_erp_dash_table_wrap {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+}
+
+.o_erp_dash_table {
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    border-collapse: collapse;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+}
+
+.o_erp_dash_table thead th {
+    padding: 12px 16px;
+    background: #f8f9fa;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #6c757d;
+    border-bottom: 2px solid #e9ecef;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.o_erp_dash_table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+    color: #2c3e50;
+    vertical-align: middle;
+}
+
+.o_erp_dash_table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.o_erp_dash_row {
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.o_erp_dash_row:hover {
+    background: #eaf4fb;
+}
+
+.o_erp_dash_table .o_erp_dash_num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.o_erp_dash_table .o_erp_dash_action_col {
+    width: 60px;
+    text-align: center;
+}
+
+.o_erp_dash_more {
+    padding: 14px 4px 4px;
+    font-size: 12px;
+    color: #7f8c8d;
+    text-align: center;
+}
+
+/* ── State badges ──
+   Own classes rather than Bootstrap's. The reference component
+   emitted BS4 names (badge-success, badge-warning, ...), which
+   Bootstrap 5 - what Odoo 17+ ships - dropped in favour of
+   text-bg-*, so those pills rendered colourless. */
+.o_erp_dash_badge {
+    display: inline-block;
+    padding: 3px 11px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    line-height: 1.5;
+}
+
+.o_erp_dash_badge_muted {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.o_erp_dash_badge_info {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.o_erp_dash_badge_warn {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.o_erp_dash_badge_ok {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.o_erp_dash_badge_bad {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* ── Center states (loading / empty / error) ── */
+.o_erp_dash_center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    color: #95a5a6;
+    text-align: center;
+}
+
+.o_erp_dash_center p {
+    margin: 0;
+    color: #7f8c8d;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .o_erp_dash_header_top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .o_erp_dash_pills {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    .o_erp_dash_table_wrap {
+        padding: 12px;
+    }
+}
+
+/* ============================================================
+   FIXED-WIDTH ONE2MANY COLUMNS (reusable)
+   ------------------------------------------------------------
+   The reference stylesheet ended with a block that stopped an
+   embedded one2many list from reflowing its columns - table-layout
+   fixed, nowrap + ellipsis, and per-field widths forced by
+   attribute selector. That block named manufacturing fields
+   (scrap_qty, produced_qty, operation_id, ...) which mean nothing
+   here, so the technique is kept and the field names are not.
+
+   Odoo has moved this attribute between releases - `name` on the
+   cell in some versions, `data-name` on the header in others - so
+   both are matched, as the original did.
+
+   Usage: add the class to the list inside the one2many, then set
+   widths for the specific fields in your own view/stylesheet.
+
+       <field name="order_line">
+           <list class="o_erp_fixed_cols" editable="bottom">
+               ...
+           </list>
+       </field>
+
+   Optional per-field widths, if the defaults spread badly:
+
+       .o_erp_fixed_cols th[data-name="product_id"],
+       .o_erp_fixed_cols td[name="product_id"] { width: 34% !important; }
+   ============================================================ */
+
+.o_erp_fixed_cols .o_list_renderer table,
+.o_erp_fixed_cols.o_list_renderer table,
+table.o_erp_fixed_cols {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.o_erp_fixed_cols th,
+.o_erp_fixed_cols td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Record-selector / handle column stays narrow instead of taking an
+   equal share of a fixed-layout table. */
+.o_erp_fixed_cols th.o_list_record_selector,
+.o_erp_fixed_cols td.o_list_record_selector,
+.o_erp_fixed_cols th.o_handle_cell,
+.o_erp_fixed_cols td.o_handle_cell {
+    width: 3%;
+}
+
+/* Numeric columns right-align without needing a per-field rule. */
+.o_erp_fixed_cols th.o_list_number_th,
+.o_erp_fixed_cols td.o_list_number,
+.o_erp_fixed_cols td.o_data_cell.o_list_number {
+    text-align: right !important;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Trailing optional-columns toggle column. */
+.o_erp_fixed_cols th.o_list_controller_optional,
+.o_erp_fixed_cols td.o_list_controller_optional {
+    width: 32px;
+}

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+<odoo>
+    <data>
+        <!-- payslip runs -->
+        <record id="wk_hr_payslip_run_filter" model="ir.ui.view">
+            <field name="name">wk.hr.payslip.run.search</field>
+            <field name="model">wk.hr.payslip.run</field>
+            <field name="arch" type="xml">
+                <search string="Search Payslip Batches">
+                    <field name="name" string="Payslip Batches"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
+                    <filter name="done_filter" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="wk_hr_payslip_run_tree" model="ir.ui.view">
+            <field name="name">wk.hr.payslip.run.tree</field>
+            <field name="model">wk.hr.payslip.run</field>
+            <field name="arch" type="xml">
+                <list string="Payslips Batches">
+                    <field name="name" decoration-bf="1"/>
+                    <field name="date_start" widget="remaining_days"/>
+                    <field name="date_end" widget="remaining_days"/>
+                    <field name="credit_note"/>
+                    <field name="state" widget="badge"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="wk_hr_payslip_run_view_kanban" model="ir.ui.view">
+            <field name="name">wk.hr.payslip.run.kanban</field>
+            <field name="model">wk.hr.payslip.run</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="card">
+                            <div class="row mb-1">
+                                <div class="col-8">
+                                    <field name="name" class="fw-bolder"/>
+                                </div>
+                                <div class="col-4 text-end">
+                                    <field name="state" class="badge rounded-pill"/>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted">
+                                <div>
+                                    <field name="date_start"/>
+                                    <span> - </span>
+                                    <field name="date_end"/>
+                                </div>
+                                <div title="Is a Blocking Reason?">
+                                    <field name="credit_note" widget="boolean"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="wk_hr_payslip_run_form" model="ir.ui.view">
+            <field name="name">wk.hr.payslip.run.form</field>
+            <field name="model">wk.hr.payslip.run</field>
+            <field name="arch" type="xml">
+                <form string="Payslips Batches"> 
+                    <header>
+                        <button name="close_payslip_run" type="object" string="Close" class="oe_highlight" invisible = "state not in ['draft']"/>
+                        <button name="%(action_hr_payslip_by_employees)d" type="action" string="Generate Payslips" class="oe_highlight" invisible = "state not in ['draft']"/>
+                        <button string="Set to Draft" name="draft_payslip_run" type="object" invisible = "state not in ['close']"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" readonly="state != 'draft'"/>
+                        </h1>
+                        <group col="4">
+                            <label for="date_start" string="Period"/>
+                            <div>
+                                <field name="date_start" readonly="state != 'draft'" class="oe_inline"/> -
+                                <field name="date_end" readonly="state != 'draft'" class="oe_inline"/>
+                            </div>
+                            <field name="credit_note" readonly="state != 'draft'"/>
+                        </group>
+                        <separator string="Payslips"/>
+                        <field name="slip_ids" readonly="state != 'draft'"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wk_hr_payslip_run_tree" model="ir.actions.act_window">
+            <field name="name">Payslips Batches</field>
+            <field name="res_model">wk.hr.payslip.run</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="search_view_id" ref="wk_hr_payslip_run_filter"/>
+        </record>
+
+        <menuitem action="action_wk_hr_payslip_run_tree" id="menu_wk_hr_payslip_run" parent="menu_payslips_tree" sequence="3"/>
+    </data>
+</odoo>

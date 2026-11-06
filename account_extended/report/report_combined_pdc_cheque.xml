@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Combined PDC Cheque - every selected cheque of ONE contract on a
+         single page, same letterhead / green theme as the Tax Invoice (see
+         report_common.xml). Values come from
+         report.account_extended.report_combined_pdc_cheque, which also
+         refuses cheques of different contracts. -->
+    <template id="report_combined_pdc_cheque_document">
+        <t t-set="state_labels" t-value="dict(docs._fields['state']._description_selection(docs.env))"/>
+        <!-- Rows in the cheque table (real + blank) so the report fills one
+             A4 page; lower it if the signatures spill onto a 2nd page. -->
+        <t t-set="total_row_target" t-value="12"/>
+
+        <div class="page ti-page">
+            <t t-call="account_extended.report_style"/>
+
+            <t t-call="account_extended.report_title_band"
+                doc_title.f="COMBINED PDC CHEQUES / شيكات مؤجلة الدفع"
+                doc_no_label.f="Contract No"
+                doc_no="contract.tenancy_seq if contract else ''"
+                doc_date_label.f="Date"
+                doc_date="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/>
+
+            <!-- ================= TENANT + CONTRACT DETAILS ================= -->
+            <table>
+                <tr>
+                    <td width="55%" style="padding:0 8px 0 0; border:none; vertical-align:top;">
+                        <t t-call="account_extended.report_partner_box" partner_box_title.f="Received From"/>
+                    </td>
+                    <td width="45%" style="padding:0 0 0 8px; border:none; vertical-align:top;">
+                        <div class="ti-box">
+                            <div class="ti-box-head">Contract Details</div>
+                            <div class="ti-box-body">
+                                <table class="ti-kv">
+                                    <tr t-if="contract">
+                                        <td class="ti-k">Contract No.</td><td class="ti-sep">:</td>
+                                        <td><t t-out="contract.tenancy_seq"/></td>
+                                    </tr>
+                                    <tr t-if="contract and contract.start_date">
+                                        <td class="ti-k">Period</td><td class="ti-sep">:</td>
+                                        <td>
+                                            <span t-field="contract.start_date" t-options='{"format": "dd/MM/yyyy"}'/> -
+                                            <span t-field="contract.end_date" t-options='{"format": "dd/MM/yyyy"}'/>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="building_name">
+                                        <td class="ti-k">Building</td><td class="ti-sep">:</td>
+                                        <td><t t-out="building_name"/></td>
+                                    </tr>
+                                    <tr t-if="unit_name">
+                                        <td class="ti-k">Unit No.</td><td class="ti-sep">:</td>
+                                        <td><t t-out="unit_name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="ti-k">No. of Cheques</td><td class="ti-sep">:</td>
+                                        <td><t t-out="len(docs)"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="height:14px;"/>
+
+            <!-- ================= CHEQUES ================= -->
+            <table class="ti-lines">
+                <thead>
+                    <tr>
+                        <th class="ti-c" style="width:5%;">#</th>
+                        <th style="width:14%;">PDC Ref.</th>
+                        <th style="width:13%;">Cheque No.</th>
+                        <th class="ti-c" style="width:12%;">Cheque Date</th>
+                        <th style="width:17%;">Remitter Bank</th>
+                        <th style="width:15%;">Beneficiary Bank</th>
+                        <th class="ti-c" style="width:10%;">Status</th>
+                        <th class="ti-r" style="width:14%;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="docs" t-as="cheque">
+                        <tr t-att-class="'ti-even' if (cheque_index + 1) % 2 == 0 else ''">
+                            <td class="ti-c"><t t-out="cheque_index + 1"/></td>
+                            <td><span t-field="cheque.name"/></td>
+                            <td><t t-out="cheque.cheque_number or cheque.reference or ''"/></td>
+                            <td class="ti-c">
+                                <span t-field="cheque.due_date" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </td>
+                            <td><t t-out="cheque.bank_id.name or cheque.remitter_bank or ''"/></td>
+                            <td><t t-out="cheque.journal_id.name or ''"/></td>
+                            <td class="ti-c"><t t-out="state_labels.get(cheque.state, '')"/></td>
+                            <td class="ti-r">
+                                <span t-field="cheque.payment_amount"
+                                      t-options='{"widget": "monetary", "display_currency": cheque.currency_id}'/>
+                            </td>
+                        </tr>
+                    </t>
+                    <!-- Blank rows so the table always reaches total_row_target
+                         rows and the report fills one A4 page. -->
+                    <t t-foreach="range(max(0, total_row_target - len(docs)))" t-as="blank">
+                        <tr t-att-class="'ti-even' if (len(docs) + blank + 1) % 2 == 0 else ''">
+                            <td> </td><td/><td/><td/><td/><td/><td/><td/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+
+            <!-- ================= TOTAL ================= -->
+            <table style="margin-top:14px; page-break-inside:avoid;">
+                <tr>
+                    <td width="55%" style="border:none; padding:0 8px 0 0; vertical-align:bottom;">
+                        <div class="ti-words">
+                            <strong>Amount in words:</strong>
+                            Dhs <t t-out="currency.amount_to_text(total_amount)"/> Only
+                        </div>
+                    </td>
+                    <td width="45%" style="border:none; padding:0 0 0 8px; vertical-align:top;">
+                        <table class="ti-totals">
+                            <tr class="ti-grand">
+                                <td>Total Cheques Amount</td>
+                                <td class="ti-r">
+                                    <span t-out="total_amount"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <t t-call="account_extended.report_signatures"/>
+        </div>
+    </template>
+
+    <template id="report_combined_pdc_cheque">
+        <t t-call="web.html_container" o="docs[:1]" show_company_logo="True">
+            <!-- One combined document for all selected cheques. -->
+            <t t-call="web.external_layout">
+                <t t-call="account_extended.report_combined_pdc_cheque_document"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_combined_pdc_cheque" model="ir.actions.report">
+        <field name="name">Combined PDC Cheque</field>
+        <field name="model">pdc.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_extended.report_combined_pdc_cheque</field>
+        <field name="print_report_name">'Combined PDC Cheque - %s' % (object.name or '').replace('/', '-')</field>
+        <field name="binding_model_id" ref="sh_pdc.model_pdc_wizard"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="ribs_real_estate.paperformat_custom_invoice"/>
+    </record>
+
+</odoo>

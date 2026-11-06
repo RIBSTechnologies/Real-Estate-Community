@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_maintenance_handover_overdue" model="mail.template">
+            <field name="name">Maintenance: Handover Overdue</field>
+            <field name="model_id" ref="maintenance.model_maintenance_request"/>
+            <field name="subject">Handover overdue: {{ object.name }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; font-size: 14px;">
+    <p>Dear <t t-out="ctx.get('manager_name') or 'Manager'"/>,</p>
+    <p>
+        The maintenance request below was scheduled
+        <t t-out="ctx.get('handover_overdue_days') or 3"/> or more days ago and has not been handed over yet.
+    </p>
+    <table style="border-collapse: collapse;" cellpadding="4">
+        <tr><td><b>Request</b></td><td><t t-out="object.name"/></td></tr>
+        <tr t-if="object.building_id_parent"><td><b>Building</b></td><td><t t-out="object.building_id_parent.name"/></td></tr>
+        <tr t-if="object.property_id"><td><b>Unit</b></td><td><t t-out="object.property_id.name"/></td></tr>
+        <tr><td><b>Scheduled Date</b></td><td><t t-out="object.schedule_date" t-options="{'widget': 'datetime'}"/></td></tr>
+        <tr><td><b>Current Stage</b></td><td><t t-out="object.stage_id.name"/></td></tr>
+        <tr t-if="object.user_id"><td><b>Technician</b></td><td><t t-out="object.user_id.name"/></td></tr>
+    </table>
+    <p style="margin-top: 16px;">
+        <a t-att-href="'%s/odoo/action-maintenance.hr_equipment_request_action/%s' % (object.get_base_url(), object.id)"
+           style="background-color: #875A7B; padding: 8px 16px; color: #fff; text-decoration: none; border-radius: 4px;">
+            View Request
+        </a>
+    </p>
+    <p>Regards,<br/><t t-out="object.company_id.name"/></p>
+</div>
+            </field>
+        </record>
+
+        <record id="ir_cron_maintenance_handover_overdue" model="ir.cron">
+            <field name="name">Maintenance: Handover Overdue Alert</field>
+            <field name="model_id" ref="maintenance.model_maintenance_request"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_handover_overdue_alert()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+        </record>
+
+        <record id="config_handover_overdue_days" model="ir.config_parameter">
+            <field name="key">al_shafar_extended.handover_overdue_days</field>
+            <field name="value">3</field>
+        </record>
+    </data>
+</odoo>

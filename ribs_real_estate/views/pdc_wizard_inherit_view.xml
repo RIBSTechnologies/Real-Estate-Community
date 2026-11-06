@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sh_pdc_wizard_form_wizard_inherit" model="ir.ui.view">
+        <field name="name">sh.pdc.wizard</field>
+        <field name="model">pdc.wizard</field>
+        <field name="inherit_id" ref="sh_pdc.sh_pdc_wizard_form_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bank_id']" position="after">
+                <field name="remitter_bank"/>
+                <field name="bank_account"/>
+                <field name="pdc_location"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="sh_pdc_payment_form_view_inherit" model="ir.ui.view">
+        <field name="name">sh.pdc.wizard</field>
+        <field name="model">pdc.wizard</field>
+        <field name="inherit_id" ref="sh_pdc.sh_pdc_payment_form_view"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//button[@name='action_bounced']" position="replace">
+                <button name="action_bounce_redirect" class="oe_highlight" invisible="state != 'deposited'" string="Bounce" type="object" />
+            </xpath> -->
+            <xpath expr="//field[@name='bank_id']" position="after">
+                <field name="remitter_bank"/>
+                <field name="bank_account"/>
+                <field name="pdc_location"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sh_pdc_filter_inherit" model="ir.ui.view">
+        <field name="name">sh.pdc.wizard</field>
+        <field name="model">pdc.wizard</field>
+        <field name="inherit_id" ref="sh_pdc.view_sh_pdc_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                    <filter name="group_by_pdc_location" string="Location" context="{'group_by':'pdc_location'}" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

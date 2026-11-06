@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Custom Landscape Paperformat for PDC Report -->
+    <record id="paperformat_pdc_report_landscape" model="report.paperformat">
+        <field name="name">PDC Report Landscape A4</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">12</field>
+        <field name="margin_bottom">12</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Report Action -->
+    <record id="action_report_pdc_cheque_pdf" model="ir.actions.report">
+        <field name="name">PDC Cheque Payment Report</field>
+        <field name="model">pdc.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pdc_report.report_pdc_cheque_template</field>
+        <field name="paperformat_id" ref="paperformat_pdc_report_landscape"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb Template -->
+    <template id="report_pdc_cheque_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="article page" t-att-data-oe-model="doc._name" t-att-data-oe-id="doc.id">
+
+                    <!-- Custom Styles -->
+                    <style>
+                        .pdc-header-container {
+                            border-bottom: 2px solid #1E3A8A;
+                            padding-bottom: 8px;
+                            margin-bottom: 12px;
+                        }
+                        .pdc-title-banner {
+                            background-color: #1E3A8A;
+                            color: #FFFFFF;
+                            padding: 8px 14px;
+                            border-radius: 4px;
+                            margin-bottom: 12px;
+                        }
+                        .pdc-meta-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 15px;
+                            font-size: 11px;
+                        }
+                        .pdc-meta-table td {
+                            padding: 4px 8px;
+                            border: 1px solid #CBD5E1;
+                        }
+                        .pdc-meta-label {
+                            background-color: #F1F5F9;
+                            font-weight: bold;
+                            color: #1E293B;
+                            width: 15%;
+                            text-align: right;
+                        }
+                        .pdc-meta-value {
+                            background-color: #FFFFFF;
+                            color: #0F172A;
+                            width: 18%;
+                        }
+                        .pdc-data-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 10px;
+                            margin-bottom: 15px;
+                        }
+                        .pdc-data-table th {
+                            background-color: #1E3A8A;
+                            color: #FFFFFF;
+                            padding: 6px 4px;
+                            text-align: center;
+                            font-weight: bold;
+                            border: 1px solid #0F172A;
+                        }
+                        .pdc-data-table td {
+                            padding: 5px 4px;
+                            border: 1px solid #CBD5E1;
+                            vertical-align: middle;
+                        }
+                        .pdc-badge {
+                            display: inline-block;
+                            padding: 2px 6px;
+                            border-radius: 3px;
+                            font-size: 9px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                        }
+                        .badge-draft { background-color: #E2E8F0; color: #475569; }
+                        .badge-registered { background-color: #DBEAFE; color: #1E40AF; }
+                        .badge-hold { background-color: #FEF3C7; color: #92400E; }
+                        .badge-deposited { background-color: #E0E7FF; color: #3730A3; }
+                        .badge-bounced { background-color: #FEE2E2; color: #991B1B; }
+                        .badge-done { background-color: #DCFCE7; color: #166534; }
+                        .badge-returned { background-color: #FFEDD5; color: #9A3412; }
+                        .badge-cancel { background-color: #F3F4F6; color: #6B7280; }
+
+                        .pdc-grand-total-row {
+                            background-color: #0F172A;
+                            color: #FFFFFF;
+                            font-weight: bold;
+                            font-size: 11px;
+                        }
+                        .pdc-signature-box {
+                            margin-top: 30px;
+                            width: 100%;
+                            font-size: 10px;
+                        }
+                        .pdc-signature-col {
+                            width: 30%;
+                            display: inline-block;
+                            text-align: center;
+                            vertical-align: top;
+                        }
+                        .pdc-sig-line {
+                            border-top: 1px solid #000000;
+                            margin-top: 40px;
+                            padding-top: 4px;
+                            font-weight: bold;
+                        }
+                    </style>
+
+                    <!-- Company Header -->
+                    <div class="pdc-header-container row">
+                        <div class="col-7">
+                            <h3 style="margin:0; font-weight:bold; color:#1E3A8A;" t-out="doc.company_id.name"/>
+                            <div style="font-size:10px; color:#475569; margin-top:2px;">
+                                <t t-if="doc.company_id.street"><span t-out="doc.company_id.street"/>, </t>
+                                <t t-if="doc.company_id.street2"><span t-out="doc.company_id.street2"/>, </t>
+                                <t t-if="doc.company_id.city"><span t-out="doc.company_id.city"/> </t>
+                                <t t-if="doc.company_id.zip"><span t-out="doc.company_id.zip"/>, </t>
+                                <t t-if="doc.company_id.country_id"><span t-out="doc.company_id.country_id.name"/></t>
+                                <br/>
+                                Phone: <span t-out="doc.company_id.phone or 'N/A'"/> | 
+                                Email: <span t-out="doc.company_id.email or 'N/A'"/> | 
+                                VAT / TRN: <span t-out="doc.company_id.vat or 'N/A'"/>
+                            </div>
+                        </div>
+                        <div class="col-5 text-right">
+                            <t t-if="doc.company_id.logo">
+                                <img t-att-src="image_data_uri(doc.company_id.logo)" style="max-height: 60px; max-width: 200px;" alt="Logo"/>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- Title Banner -->
+                    <div class="pdc-title-banner">
+                        <div class="row">
+                            <div class="col-8">
+                                <h4 style="margin:0; font-weight:bold; color:#FFFFFF;">POST DATED CHEQUE (PDC) PAYMENT REPORT</h4>
+                                <span style="font-size:10px; opacity:0.9;">Official Record for Bank Submission &amp; Internal Audit</span>
+                            </div>
+                            <div class="col-4 text-right" style="font-size:10px;">
+                                Printed On: <span t-out="datetime.datetime.now().strftime('%Y-%m-%d %H:%M')"/><br/>
+                                Currency: <span t-out="doc.company_id.currency_id.name"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Criteria Metadata -->
+                    <table class="pdc-meta-table">
+                        <tr>
+                            <td class="pdc-meta-label">Date From:</td>
+                            <td class="pdc-meta-value"><span t-out="doc.date_from"/></td>
+                            <td class="pdc-meta-label">Date To:</td>
+                            <td class="pdc-meta-value"><span t-out="doc.date_to"/></td>
+                            <td class="pdc-meta-label">Filter Field:</td>
+                            <td class="pdc-meta-value">
+                                <t t-if="doc.date_filter_by == 'due_date'">Cheque Due Date</t>
+                                <t t-if="doc.date_filter_by == 'payment_date'">Payment / Receipt Date</t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pdc-meta-label">Customers / Partners:</td>
+                            <td class="pdc-meta-value" colspan="3">
+                                <t t-if="doc.partner_ids">
+                                    <span t-out="', '.join(doc.partner_ids.mapped('name'))"/>
+                                </t>
+                                <t t-else="">All Customers / Partners</t>
+                            </td>
+                            <td class="pdc-meta-label">State Filter:</td>
+                            <td class="pdc-meta-value">
+                                <t t-if="doc.state_ids">
+                                    <span t-out="', '.join(doc.state_ids.mapped('name'))"/>
+                                </t>
+                                <t t-else="">All States</t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pdc-meta-label">Payment Type:</td>
+                            <td class="pdc-meta-value">
+                                <span t-out="dict(doc._fields['payment_type'].selection).get(doc.payment_type)"/>
+                            </td>
+                            <td class="pdc-meta-label">Company:</td>
+                            <td class="pdc-meta-value" colspan="3"><span t-out="doc.company_id.name"/></td>
+                        </tr>
+                    </table>
+
+                    <!-- Fetch PDC records -->
+                    <t t-set="pdc_list" t-value="doc._get_pdc_records()"/>
+                    <t t-set="state_dict" t-value="dict(env['pdc.wizard']._fields['state'].selection)"/>
+
+                    <!-- Data Table -->
+                    <table class="pdc-data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 3%;">#</th>
+                                <th style="width: 10%;">PDC Ref</th>
+                                <th style="width: 10%;">Cheque No</th>
+                                <th style="width: 20%;">Customer / Partner</th>
+                                <th style="width: 8%;">Due Date</th>
+                                <th style="width: 8%;">Payment Date</th>
+                                <th style="width: 13%;">Beneficiary Bank</th>
+                                <th style="width: 10%;">Remitter Bank</th>
+                                <th style="width: 8%; text-align:right;">Amount (<t t-out="doc.company_id.currency_id.symbol"/>)</th>
+                                <th style="width: 10%;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="sr_no" t-value="1"/>
+                            <t t-set="grand_total" t-value="0.0"/>
+                            <t t-foreach="pdc_list" t-as="pdc">
+                                <tr t-att-style="'background-color: ' + ('#F8FAFC' if sr_no % 2 == 0 else '#FFFFFF') + ';'">
+                                    <td class="text-center"><span t-out="sr_no"/></td>
+                                    <td class="text-center"><strong><span t-out="pdc.name or ''"/></strong></td>
+                                    <td class="text-center"><span t-out="pdc.reference or pdc.cheque_number or ''"/></td>
+                                    <td><span t-out="pdc.partner_id.name or ''"/></td>
+                                    <td class="text-center"><span t-out="pdc.due_date"/></td>
+                                    <td class="text-center"><span t-out="pdc.payment_date"/></td>
+                                    <td><span t-out="pdc.journal_id.name or ''"/></td>
+                                    <td><span t-out="pdc.bank_id.name or pdc.remitter_bank or ''"/></td>
+                                    <td class="text-right">
+                                        <strong><span t-out="pdc.payment_amount" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <t t-set="st_class" t-value="'badge-' + (pdc.state or 'draft')"/>
+                                        <span t-attf-class="pdc-badge {{st_class}}">
+                                            <span t-out="state_dict.get(pdc.state, pdc.state)"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <t t-set="grand_total" t-value="grand_total + (pdc.payment_amount or 0.0)"/>
+                                <t t-set="sr_no" t-value="sr_no + 1"/>
+                            </t>
+
+                            <!-- Grand Total Row -->
+                            <tr class="pdc-grand-total-row">
+                                <td colspan="8" class="text-right">
+                                    GRAND TOTAL (<t t-out="len(pdc_list)"/> Cheques):
+                                </td>
+                                <td class="text-right">
+                                    <span t-out="grand_total" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/>
+                                </td>
+                                <td class="text-center"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Summary by State -->
+                    <div style="margin-top: 15px; page-break-inside: avoid;">
+                        <h6 style="font-weight:bold; color:#1E3A8A; margin-bottom:6px;">Summary Breakdown by Cheque State</h6>
+                        <table style="width: 60%; border-collapse:collapse; font-size:10px;">
+                            <thead>
+                                <tr style="background-color:#E2E8F0; color:#1E293B;">
+                                    <th style="padding:4px 8px; border:1px solid #CBD5E1; text-align:left;">State</th>
+                                    <th style="padding:4px 8px; border:1px solid #CBD5E1; text-align:center;">Cheque Count</th>
+                                    <th style="padding:4px 8px; border:1px solid #CBD5E1; text-align:right;">Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="state_counts" t-value="{}"/>
+                                <t t-set="state_amounts" t-value="{}"/>
+                                <t t-foreach="pdc_list" t-as="pdc">
+                                    <t t-set="st" t-value="pdc.state or 'draft'"/>
+                                    <t t-set="dummy" t-value="state_counts.update({st: state_counts.get(st, 0) + 1})"/>
+                                    <t t-set="dummy" t-value="state_amounts.update({st: state_amounts.get(st, 0.0) + (pdc.payment_amount or 0.0)})"/>
+                                </t>
+                                <t t-foreach="state_counts.keys()" t-as="st_code">
+                                    <tr>
+                                        <td style="padding:4px 8px; border:1px solid #CBD5E1;">
+                                            <strong><span t-out="state_dict.get(st_code, st_code)"/></strong>
+                                        </td>
+                                        <td style="padding:4px 8px; border:1px solid #CBD5E1; text-align:center;">
+                                            <span t-out="state_counts[st_code]"/>
+                                        </td>
+                                        <td style="padding:4px 8px; border:1px solid #CBD5E1; text-align:right;">
+                                            <span t-out="state_amounts[st_code]" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Declaration & Signatures -->
+                    <div style="margin-top: 25px; page-break-inside: avoid;">
+                        <p style="font-size:9px; color:#475569; font-style:italic; margin-bottom:20px;">
+                            Declaration: We hereby confirm and certify that the Post Dated Cheques (PDCs) listed in this report are verified against official company accounting records and are submitted herewith to the bank for deposit/clearing.
+                        </p>
+                        <div class="pdc-signature-box">
+                            <div class="pdc-signature-col" style="margin-right:4%;">
+                                <div class="pdc-sig-line">Prepared By (Accountant)</div>
+                            </div>
+                            <div class="pdc-signature-col" style="margin-right:4%;">
+                                <div class="pdc-sig-line">Checked By (Finance Manager)</div>
+                            </div>
+                            <div class="pdc-signature-col">
+                                <div class="pdc-sig-line">Authorized Signatory (Company Stamp)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!--
+        New "Expiring Soon Contracts" section on the Dashboard
+        (rental_management.rental_dashboard), between "Rent Contract
+        Statics" and "Accounting Information". 7 non-overlapping day-range
+        tiles (0-60/60-90/90-100/100-120/120-140/140-160/160+), so every
+        expiring_soon contract lands in exactly one tile and the 7 tiles
+        sum to the "Expiring Soon" total - same bucket definitions as the
+        other "Expiring Soon" widget (the mini bar above the All Contracts
+        list, tenancy.details._EXPIRING_SOON_DAY_BUCKETS), computed here
+        via al_shafar_extended/models/property_details.py get_property_stats.
+        Displayed widest-window-first (160+ down to 0-60), matching the
+        reference dashboard design - colours are otherwise untouched, just
+        reordered.
+
+        Anchored on the "Accounting Information" heading's own unique
+        text rather than a row index, since two other sibling extensions
+        (rental_dashboard_portfolio_overview.xml,
+        rental_dashboard_contract_statics.xml) also insert/modify rows on
+        this same base template - a positional index would silently
+        depend on their apply order.
+
+        Also adds "Action Required" (Documents - Not Verified / Documents
+        Expired / Contracts - Unreceived Payments) as a second row in this
+        same xpath, right after "Expiring Soon Contracts" - deliberately
+        added here rather than as its own separate xpath anchored on
+        "Accounting Information" too: two different files each inserting
+        position="before" on that same anchor would leave their relative
+        order dependent on view-application priority between them, while
+        both rows living in this one xpath guarantees "Expiring Soon
+        Contracts" comes before "Action Required" simply by document
+        order. Data/click-throughs (unapproved_documents,
+        documents_expired_count, new_leads) come from
+        al_shafar_extended/models/property_details.py get_property_stats;
+        the two originals are hidden in place by
+        rental_dashboard_contract_statics.xml.
+    -->
+    <t t-name="al_shafar_extended.rental_dashboard_expiring_soon_days"
+       t-inherit="rental_management.rental_dashboard"
+       t-inherit-mode="extension">
+        <xpath expr="//h4[contains(text(),'Accounting Information')]/../.." position="before">
+            <div class="row">
+                <div class="col-12 mt32">
+                    <h4 class="tk-primary">Expiring Soon Contracts</h4>
+                    <hr class="border-primary"/>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewPropertyTenancies('expiring_160_plus')">
+                    <div class="card purple-bg p-32">
+                        <div class="card-body purple-bg tk-card-body">
+                            <img alt="expiring soon" width="40" src="/rental_management/static/src/img/warning.svg"/>
+                            <h4 class="tk-st-1 purple-bg">160+ Days</h4>
+                            <h6 class="tk-st-2 purple-bg"><t t-out="this.state.propertyStats['expiring_160_plus_count']"/></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewPropertyTenancies('expiring_140_160')">
+                    <div class="card leasing-bg p-32">
+                        <div class="card-body leasing-bg tk-card-body">
+                            <img alt="expiring soon" width="40" src="/rental_management/static/src/img/renewal_ec.svg"/>
+                            <h4 class="tk-st-1 leasing-bg">140-160 Days</h4>
+                            <h6 class="tk-st-2 leasing-bg"><t t-out="this.state.propertyStats['expiring_140_160_count']"/></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewPropertyTenancies('expiring_120_140')">
+                    <div class="card finance-bg p-32">
+                        <div class="card-body finance-bg tk-card-body">
+                            <img alt="expiring soon" width="40" src="/rental_management/static/src/img/warning.svg"/>
+                            <h4 class="tk-st-1 finance-bg">120-140 Days</h4>
+                            <h6 class="tk-st-2 finance-bg"><t t-out="this.state.propertyStats['expiring_120_140_count']"/></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewPropertyTenancies('expiring_100_120')">
+                    <div class="card success-bg p-32">
+                        <div class="card-body success-bg tk-card-body">
+                            <img alt="expiring soon" width="40" src="/rental_management/static/src/img/renewal_ec.svg"/>
+                            <h4 class="tk-st-1 success-bg">100-120 Days</h4>
+                            <h6 class="tk-st-2 success-bg"><t t-out="this.state.propertyStats['expiring_100_120_count']"/></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewPropertyTenancies('expiring_90_100')">
+                    <div class="card info-bg p-32">
+                        <div class="card-body info-bg tk-card-body">
+                            <img alt="expiring soon" width="40" src="/rental_management/static/src/img/warning.svg"/>
+                            <h4 class="tk-st-1 info-bg">90-100 Days</h4>
+                            <h6 class="tk-st-2 info-bg"><t t-out="this.state.propertyStats['expiring_90_100_count']"/></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewPropertyTenancies('expiring_60_90')">
+                    <div class="card warn-bg p-32">
+                        <div class="card-body warn-bg tk-card-body">
+                            <img alt="expiring soon" width="40" src="/rental_management/static/src/img/renewal_ec.svg"/>
+                            <h4 class="tk-st-1 warn-bg">60-90 Days</h4>
+                            <h6 class="tk-st-2 warn-bg"><t t-out="this.state.propertyStats['expiring_60_90_count']"/></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewPropertyTenancies('expiring_0_60')">
+                    <div class="card danger-bg p-32">
+                        <div class="card-body danger-bg tk-card-body">
+                            <img alt="expiring soon" width="40" src="/rental_management/static/src/img/warning.svg"/>
+                            <h4 class="tk-st-1 danger-bg">0-60 Days</h4>
+                            <h6 class="tk-st-2 danger-bg"><t t-out="this.state.propertyStats['expiring_0_60_count']"/></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mt32">
+                    <h4 class="tk-primary">Action Required</h4>
+                    <hr class="border-primary"/>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewDocs('pending')">
+                    <div class="card danger-bg p-32">
+                        <div class="card-body danger-bg tk-card-body">
+                            <img alt="documents not verified" width="40" src="/rental_management/static/src/img/unapproved-docs.svg"/>
+                            <h4 class="tk-st-1 danger-bg">Documents - Not Verified</h4>
+                            <h6 class="tk-st-2 danger-bg"><t t-out="this.state.propertyStats['unapproved_documents']"/></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                     t-on-click="() => this.viewDocs('expired')">
+                    <div class="card danger-bg p-32">
+                        <div class="card-body danger-bg tk-card-body">
+                            <img alt="documents expired" width="40" src="/rental_management/static/src/img/warning.svg"/>
+                            <h4 class="tk-st-1 danger-bg">Documents Expired</h4>
+                            <h6 class="tk-st-2 danger-bg"><t t-out="this.state.propertyStats['documents_expired_count']"/></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                     t-if="this.state.propertyStats.new_leads > 0"
+                     t-on-click="() => this.viewCRM('new_lead')">
+                    <div class="card success-bg p-32">
+                        <div class="card-body success-bg tk-card-body">
+                            <img alt="unreceived payments" width="40" src="/rental_management/static/src/img/running_c.svg"/>
+                            <h4 class="tk-st-1 success-bg">Contracts - Unreceived Payments</h4>
+                            <h6 class="tk-st-2 success-bg"><t t-out="this.state.propertyStats['new_leads']"/></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

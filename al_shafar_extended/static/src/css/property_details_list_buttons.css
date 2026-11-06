@@ -1,0 +1,58 @@
+/* ============================================================
+   al_shafar_extended/static/src/css/property_details_list_buttons.css
+
+   "Create Contract" row button on the Units (property.details) list
+   view (al_shafar_extended/views/property_details_inherit_views.xml).
+   Pure look-and-feel, targeted via the button's own `class` attribute
+   set directly in that view - no JS needed, a list-view <button> is a
+   normal DOM element and accepts a class like any other.
+
+   Shape: a right-pointing chevron/arrow, the same silhouette Odoo's own
+   statusbar stage pills use (.o_arrow_button, core navbar/form CSS) -
+   done with clip-path rather than copying that class directly, since
+   .o_arrow_button's shape assumes it's one segment butted up against
+   neighbours in a statusbar, not a standalone button.
+   Colour: Odoo's own brand purple (#714B67, the color Odoo's logo/primary
+   buttons use), not an arbitrary blue/indigo, so it reads as native
+   rather than a one-off accent color.
+   ============================================================ */
+
+.o_create_contract_btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 20px 5px 12px !important;
+    border: none !important;
+    border-radius: 4px !important;
+    background: linear-gradient(135deg, #714b67, #8b5d7e) !important;
+    color: #ffffff !important;
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(113, 75, 103, 0.4);
+    cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.o_create_contract_btn:hover,
+.o_create_contract_btn:focus {
+    color: #ffffff !important;
+    transform: translateX(2px);
+    box-shadow: 0 4px 12px rgba(113, 75, 103, 0.5);
+    filter: brightness(1.08);
+}
+
+.o_create_contract_btn:active {
+    transform: translateX(0);
+    filter: brightness(0.94);
+}
+
+/* The icon glyph inherits `color` by default, but pin it explicitly so
+   it stays white regardless of any list/table text-colour rule loaded
+   after this file. */
+.o_create_contract_btn .oi,
+.o_create_contract_btn .o_button_icon {
+    color: #ffffff !important;
+}

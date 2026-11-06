@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tax Invoice (Without Ejari) - same as the Tax Invoice (no Security
+         Deposit) also without the Ejari line; totals and amount in words
+         are those of the remaining lines. -->
+    <template id="report_rent_tax_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="show_company_logo" t-value="True"/>
+                <t t-set="is_credit_note" t-value="False"/>
+                <t t-set="report_exclude" t-value="('deposit', 'ejari')"/>
+                <t t-call="web.external_layout">
+                    <t t-call="account_extended.report_move_document"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_rent_tax_invoice" model="ir.actions.report">
+        <field name="name">Tax Invoice (Without Ejari)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_extended.report_rent_tax_invoice</field>
+        <field name="print_report_name">'Tax Invoice - %s' % (object.name or '').replace('/', '-')</field>
+        <field name="domain">[('move_type', '=', 'out_invoice')]</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="ribs_real_estate.paperformat_custom_invoice"/>
+    </record>
+
+</odoo>

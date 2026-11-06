@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PDC Cheque Payment search: filter/group by Contract Number (tenancy_id) -->
+    <record id="view_sh_pdc_filter_inherit_al_shafar" model="ir.ui.view">
+        <field name="name">pdc.payment.select.inherit.al.shafar</field>
+        <field name="model">pdc.wizard</field>
+        <field name="inherit_id" ref="sh_pdc.view_sh_pdc_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="tenancy_id" string="Contract Number"/>
+            </field>
+            <filter name="status" position="after">
+                <filter string="Contract Number" name="group_by_tenancy_id" context="{'group_by': 'tenancy_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

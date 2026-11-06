@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Standard Rated VAT -->
+        <record id="tax_sr" model="account.tax">
+            <field name="active">True</field>
+            <field name="name">SR</field>
+            <field name="description"><![CDATA[<div data-oe-version="1.2">Standard Rated Vat 5%</div>]]></field>
+            <field name="invoice_label">VAT 5%</field>
+            <field name="sequence">1</field>
+            <field name="type_tax_use">sale</field>
+            <field name="amount">5.0</field>
+            <field name="amount_type">percent</field>
+        </record>
+
+        <!-- Exempt -->
+        <record id="tax_ex" model="account.tax">
+            <field name="active">True</field>
+            <field name="name">EX</field>
+            <field name="description"><![CDATA[<div data-oe-version="1.2">Exempt</div>]]></field>
+            <field name="invoice_label">VAT Excempt</field>
+            <field name="sequence">1</field>
+            <field name="type_tax_use">sale</field>
+            <field name="amount">0.0</field>
+            <field name="amount_type">percent</field>
+        </record>
+
+        <!-- Zero Rated -->
+        <record id="tax_zr" model="account.tax">
+            <field name="active">True</field>
+            <field name="name">ZR</field>
+            <field name="description"><![CDATA[<div data-oe-version="1.2">Zero Rated</div>]]></field>
+            <field name="invoice_label">VAT 0%</field>
+            <field name="sequence">1</field>
+            <field name="type_tax_use">sale</field>
+            <field name="amount">0.0</field>
+            <field name="amount_type">percent</field>
+        </record>
+
+        <!-- Reverse Charge -->
+        <record id="tax_rc" model="account.tax">
+            <field name="active">True</field>
+            <field name="name">RC</field>
+            <field name="description"><![CDATA[<div data-oe-version="1.2">Reverse Charged</div>]]></field>
+            <field name="invoice_label">Reverse Charge 5%</field>
+            <field name="sequence">1</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="amount">5.0</field>
+            <field name="amount_type">percent</field>
+        </record>
+
+        <!-- Intra GCC -->
+        <record id="tax_ig" model="account.tax">
+            <field name="active">True</field>
+            <field name="name">IG</field>
+            <field name="description"><![CDATA[<div data-oe-version="1.2">Intra GCC</div>]]></field>
+            <field name="invoice_label">GCC</field>
+            <field name="sequence">1</field>
+            <field name="type_tax_use">sale</field>
+            <field name="amount">0.0</field>
+            <field name="amount_type">percent</field>
+        </record>
+
+        <!-- Amendments -->
+        <record id="tax_oa" model="account.tax">
+            <field name="active">True</field>
+            <field name="name">OA</field>
+            <field name="description"><![CDATA[<div data-oe-version="1.2">Amendments to Output Tax</div>]]></field>
+            <field name="invoice_label">Amendments</field>
+            <field name="sequence">1</field>
+            <field name="type_tax_use">sale</field>
+            <field name="amount">0.0</field>
+            <field name="amount_type">percent</field>
+        </record>
+    </data>
+</odoo>

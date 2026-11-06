@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Purchase Request -->
+    <record id="view_purchase_request_form_property_location" model="ir.ui.view">
+        <field name="name">purchase.request.form.property.location</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <field name="description" position="after">
+                <field name="building_id" readonly="is_editable == False" options="{'no_create': True}"/>
+                <field name="unit_id" readonly="is_editable == False" options="{'no_create': True}"/>
+                <field name="contact_person" readonly="is_editable == False"/>
+            </field>
+            <!-- The standard form has a 3rd group (Creation date / Picking Type /
+                 Company) that wraps under the left column and leaves a gap; pull
+                 its fields into the left group so the form is two even columns. -->
+            <xpath expr="//field[@name='assigned_to']" position="after">
+                <xpath expr="//field[@name='picking_type_id']/following-sibling::field[@name='company_id'][1]" position="move"/>
+                <xpath expr="//field[@name='picking_type_id']/following-sibling::field[@name='company_id'][1]" position="move"/>
+            </xpath>
+            <xpath expr="//field[@name='assigned_to']/following-sibling::field[@name='company_id'][1]" position="before">
+                <xpath expr="//field[@name='date_start']" position="move"/>
+                <xpath expr="//field[@name='picking_type_id']" position="move"/>
+            </xpath>
+            <xpath expr="//field[@name='description']/../following-sibling::group[1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_request_tree_property_location" model="ir.ui.view">
+        <field name="name">purchase.request.list.property.location</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_tree"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="building_id" optional="show"/>
+                <field name="unit_id" optional="show"/>
+                <field name="contact_person" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_purchase_request_search_property_location" model="ir.ui.view">
+        <field name="name">purchase.request.search.property.location</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_search"/>
+        <field name="arch" type="xml">
+            <field name="picking_type_id" position="after">
+                <field name="building_id"/>
+                <field name="unit_id"/>
+                <field name="contact_person"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Create RFQ popup -->
+    <record id="view_purchase_request_line_make_purchase_order_property_location" model="ir.ui.view">
+        <field name="name">purchase.request.line.make.purchase.order.property.location</field>
+        <field name="model">purchase.request.line.make.purchase.order</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_line_make_purchase_order"/>
+        <field name="arch" type="xml">
+            <field name="supplier_id" position="after">
+                <field name="building_id" options="{'no_create': True}"/>
+                <field name="unit_id" options="{'no_create': True}"/>
+                <field name="contact_person"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Purchase Order (also for POs created directly, without a request) -->
+    <record id="purchase_order_form_property_location" model="ir.ui.view">
+        <field name="name">purchase.order.form.property.location</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_ref" position="after">
+                <field name="building_id" readonly="state in ('done', 'cancel')" options="{'no_create': True}"/>
+                <field name="unit_id" readonly="state in ('done', 'cancel')" options="{'no_create': True}"/>
+                <field name="contact_person" readonly="state in ('done', 'cancel')"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="purchase_order_tree_property_location" model="ir.ui.view">
+        <field name="name">purchase.order.list.property.location</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="building_id" optional="show"/>
+                <field name="unit_id" optional="show"/>
+                <field name="contact_person" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="purchase_order_kpis_tree_property_location" model="ir.ui.view">
+        <field name="name">purchase.order.rfq.list.property.location</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="building_id" optional="show"/>
+                <field name="unit_id" optional="show"/>
+                <field name="contact_person" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="purchase_order_search_property_location" model="ir.ui.view">
+        <field name="name">purchase.order.search.property.location</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_search"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="building_id"/>
+                <field name="unit_id"/>
+                <field name="contact_person"/>
+            </field>
+        </field>
+    </record>
+</odoo>

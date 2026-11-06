@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="invoice_report_inherit" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@id='informations']" position="inside">
+                <div class="col-auto col-3 mw-100 mb-2" t-if="o.tenancy_property_id or o.sold_property_id">
+                    <strong>Building Name:</strong>
+                    <t t-if="o.tenancy_property_id">
+                        <p class="m-0" t-out="o.tenancy_property_id.property_project_id.name"/>
+                    </t>
+                </div>
+
+                <div class="col-auto col-3 mw-100 mb-2" t-if="o.tenancy_property_id or o.sold_property_id">
+                    <strong>Property Name:</strong>
+                    <t t-call="rental_management.property_display_value" object="o"/>
+                    <t t-if="o.sold_property_id">
+                        <p class="m-0" t-out="o.sold_property_id.name"/>
+                    </t>
+                </div>
+                <div class="col-auto col-3 mw-100 mb-2">
+                    <t t-if="o.tenancy_id">
+                        <strong>Tenancy Contract</strong>
+                        <p class="m-0" t-out="o.tenancy_id.tenancy_seq"/>
+                    </t>
+                    <t t-if="o.sold_id">
+                        <strong>Sold Contract</strong>
+                        <p t-out="o.sold_id.sold_seq"/>
+                    </t>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='comment']" position="before">
+                <t t-if="o.pdc_payment_ids">
+                    <div style="page-break-inside: avoid; margin-top: 12px;">
+                        <table class="table table-sm table-bordered" 
+                            style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px;">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" 
+                                        style="text-align: left; padding: 6px 4px; font-size: 13px; font-weight: 600; border-bottom: 1px solid #000;">
+                                        Payment Details
+                                    </th>
+                                </tr>
+                                <tr style="background-color: #f8f9fa;">
+                                    <th style="text-align: left; padding: 5px; font-weight: 600;">Payment Date</th>
+                                    <th style="text-align: left; padding: 5px; font-weight: 600;">Cheque Ref</th>
+                                    <th style="text-align: left; padding: 5px; font-weight: 600;">Journal</th>
+                                    <th style="text-align: left; padding: 5px; font-weight: 600;">Partner</th>
+                                    <th style="text-align: right; padding: 5px; font-weight: 600;">Amount</th>
+                                    <th style="text-align: left; padding: 5px; font-weight: 600;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.pdc_payment_ids" t-as="pdc">
+                                    <tr>
+                                        <td style="padding: 5px;"><span t-out="pdc.payment_date or ''"/></td>
+                                        <td style="padding: 5px;"><span t-out="pdc.reference or ''"/></td>
+                                        <td style="padding: 5px;"><span t-out="pdc.journal_id.display_name or ''"/></td>
+                                        <td style="padding: 5px;"><span t-out="pdc.partner_id.name or ''"/></td>
+                                        <td style="padding: 5px; text-align: right;">
+                                            <span t-out="pdc.payment_amount"
+                                                t-options="{'widget': 'monetary', 'display_currency': pdc.currency_id}"/>
+                                        </td>
+                                        <td style="padding: 5px;"><span t-out="pdc.state or ''"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </xpath>
+
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="rental_user_rent_contract_details_inherit" name="Rent Contract" inherit_id="rental_management.rental_user_rent_contract_details">
+        <xpath expr="//div/div/div[2]" position="replace">
+            <div class="col-md-4 col-sm-12 text-center">
+                <div class="d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#maintenanceToggle">
+                        Maintenance Request
+                    </button>
+                    <div class="modal fade" id="maintenanceToggle" tabindex="-1"
+                        role="dialog"
+                        aria-labelledby="maintenanceModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="maintenance">
+                            <div class="modal-content">
+                                <div
+                                    class="modal-header justify-content-between align-items-center">
+                                    <h5 class="modal-title">Maintenance Request</h5>
+                                    <button type="button" class="close btn btn-danger"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                        <span aria-hidden="true">x</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="row g-3"
+                                        action="/my/rent-contract/information/maintenance-request"
+                                        method="POST"
+                                        enctype="multipart/form-data">
+                                        <input type="hidden" name="csrf_token"
+                                            t-att-value="request.csrf_token()" />
+                                        <input type="hidden" name="rent"
+                                            t-att-value="rent.id" />
+                                        <div class="input-group">
+                                            <span class="input-group-text">Request</span>
+                                            <input type="text" class="form-control"
+                                                id="name" required="required"
+                                                name="request" />
+                                        </div>
+                                        <div class="input-group">
+                                            <label class="input-group-text"
+                                                for="type">Maintenance Type
+                                            </label>
+                                            <select class="form-select"
+                                                id="maintenance_type_id"
+                                                name="maintenance_type_id"
+                                                required="required">
+                                                <t t-foreach="maintenance_type" t-as="d">
+                                                    <option t-out="d.name"
+                                                        t-att-value="d.id" />
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Description</span>
+                                            <textarea class="form-control" name="desc"
+                                                aria-label="With textarea" />
+                                        </div>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Priority</span>
+                                            <select name="priority" class="form-select">
+                                                <option value="0">Low</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">High</option>
+                                                <option value="3">Urgent</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Prefered Date/Time</span>
+                                            <input type="datetime-local" class="form-control" name="client_preferred_time"/>
+                                        </div>
+                                        <div class="col-lg-7 col-md-8">
+                                            <input class="file" id="attachments" type="file" name="attachments"
+                                                   multiple="true" accept="image/*,application/pdf,video/*" style="width:100%"/>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                Create Request
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-success"
+                            data-bs-toggle="modal"
+                            data-bs-target="#renewalToggle">
+                        Renewal Request
+                    </button>
+                    <div class="modal fade" id="renewalToggle" tabindex="-1"
+                         role="dialog"
+                         aria-labelledby="renewalModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-between align-items-center">
+                                    <h5 class="modal-title">Renewal Request</h5>
+                                    <button type="button" class="close btn btn-danger"
+                                            data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">x</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="row g-3"
+                                          action="/my/rent-contract/renewal-request"
+                                          method="POST">
+                                        <input type="hidden" name="csrf_token"
+                                               t-att-value="request.csrf_token()" />
+                                        <input type="hidden" name="rent"
+                                               t-att-value="rent.id" />
+                                        <div class="input-group">
+                                            <span class="input-group-text">Note</span>
+                                            <textarea class="form-control"
+                                                      name="renewal_note"/>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit"
+                                                    class="btn btn-danger">
+                                                Send Mail
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#terminationToggle">
+                        Termination Request
+                    </button>
+                    <div class="modal fade" id="terminationToggle" tabindex="-1"
+                         role="dialog"
+                         aria-labelledby="terminationModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-between align-items-center">
+                                    <h5 class="modal-title">Termination Request</h5>
+                                    <button type="button" class="close btn btn-danger"
+                                            data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">x</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="row g-3"
+                                          action="/my/rent-contract/termination-request"
+                                          method="POST">
+                                        <input type="hidden" name="csrf_token"
+                                               t-att-value="request.csrf_token()" />
+                                        <input type="hidden" name="rent"
+                                               t-att-value="rent.id" />
+                                        <div class="input-group">
+                                            <span class="input-group-text">Reason</span>
+                                            <textarea class="form-control"
+                                                      name="termination_reason"
+                                                        required="1"/>
+                                        </div>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                Preferred Closing Date
+                                            </span>
+                                            <input type="date"
+                                                   class="form-control"
+                                                   name="preferred_closing_time" />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit"
+                                                    class="btn btn-danger">
+                                                Send Mail
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='rent_contract_history_log']/h2" position="replace">
+            <h2>
+                Chat with us
+            </h2>
+        </xpath>
+    </template>
+    <template id="rental_user_maintenance_details_inherit" name="Rent Contract" inherit_id="rental_management.rental_user_maintenance_details">
+        <xpath expr="//div[5]" position="after">
+            <div class="col-md-3 col-sm-12 c-field" t-if="mr.client_preferred_time">
+                <span class="c-label text-muted">Tenant Preferred Time</span>
+                <span class="c-value" t-field="mr.client_preferred_time" />
+            </div>
+            <div class="col-md-3 col-sm-12 c-field" t-if="mr.priority">
+                <span class="c-label text-muted">Priority</span>
+                <span class="c-value" t-field="mr.priority" />
+            </div>
+            <div class="col-md-12 col-sm-12 c-field"
+                 t-if="mr.attachment_ids">
+                <span class="c-label text-muted">Attachments</span>
+                <div class="c-value mt-1">
+                    <ul class="list-unstyled mb-0">
+                        <t t-foreach="mr.attachment_ids" t-as="att">
+                            <li>
+                                <a t-att-href="'/web/content/%s?download=true' % att.id"
+                                   target="_blank"
+                                   class="text-decoration-none">
+                                    <i class="oi me-1" data-icon="attach_file"></i>
+                                    <t t-out="att.name"/>
+                                </a>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='rent_maintenance_history_log']/h2" position="replace">
+            <h2>
+                Chat with us
+            </h2>
+        </xpath>
+    </template>
+</odoo>

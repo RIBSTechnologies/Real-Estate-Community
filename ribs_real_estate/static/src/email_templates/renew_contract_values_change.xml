@@ -1,0 +1,144 @@
+<odoo>
+    <data>
+
+        <record id="mail_template_renew_contract_approval" model="mail.template">
+            <field name="name">Renew Contract Change Approval Request</field>
+            <field name="model_id" ref="ribs_real_estate.model_contract_update_register"/>
+            <field name="subject">Approval Required: Contract Value Change – {{ object.contract_id.tenancy_seq or '' }}</field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Hi,</p>
+
+                <p>
+                    A contract value has been changed by <b><t t-out="object.env.user.name"/></b> and requires your approval.
+                </p>
+
+                <table style="border-collapse: collapse; width: 70%;" border="1">
+                    <tr>
+                        <td><b>Contract</b></td>
+                        <td>
+                            <t t-out="object.contract_id.tenancy_seq"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Increase / Decrease</b></td>
+                        <td>
+                            Old:
+                            <t t-if="ctx.get('changed_fields', {}).get('increase_or_decrease')">
+                                <b><t t-out="ctx.get('old_value').get('increase_or_decrease')"/></b>
+                            </t>
+                            <t t-else="">
+                                <t t-out="ctx.get('old_value').get('increase_or_decrease')"/>
+                            </t>
+                            <br/>
+                            New:
+                            <t t-if="ctx.get('changed_fields', {}).get('increase_or_decrease')">
+                                <b><t t-out="ctx.get('new_value').get('increase_or_decrease')"/></b>
+                            </t>
+                            <t t-else="">
+                                <t t-out="ctx.get('new_value').get('increase_or_decrease')"/>
+                            </t>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td><b>Type</b></td>
+                        <td>
+                            Old:
+                            <t t-if="ctx.get('changed_fields', {}).get('amount_or_percentage')">
+                                <b><t t-out="ctx.get('old_value').get('amount_or_percentage')"/></b>
+                            </t>
+                            <t t-else="">
+                                <t t-out="ctx.get('old_value').get('amount_or_percentage')"/>
+                            </t>
+                            <br/>
+                            New:
+                            <t t-if="ctx.get('changed_fields', {}).get('amount_or_percentage')">
+                                <b><t t-out="ctx.get('new_value').get('amount_or_percentage')"/></b>
+                            </t>
+                            <t t-else="">
+                                <t t-out="ctx.get('new_value').get('amount_or_percentage')"/>
+                            </t>
+                        </td>
+
+                    </tr>
+
+                    <tr t-if="object.amount_or_percentage == 'amount'">
+                        <td><b>Amount</b></td>
+                        <td>
+                            Old:
+                            <t t-if="ctx.get('changed_fields', {}).get('amount')">
+                                <b><t t-out="ctx.get('old_value').get('amount')"/></b>
+                            </t>
+                            <t t-else="">
+                                <t t-out="ctx.get('old_value').get('amount')"/>
+                            </t>
+                            <br/>
+                            New:
+                            <t t-if="ctx.get('changed_fields', {}).get('amount')">
+                                <b><t t-out="object.amount"/></b>
+                            </t>
+                            <t t-else="">
+                                <t t-out="object.amount"/>
+                            </t>
+                        </td>
+                    </tr>
+
+                    <tr t-if="object.amount_or_percentage == 'percentage'">
+                        <td><b>Percentage</b></td>
+                        <td>
+                            Old:
+                            <t t-if="ctx.get('changed_fields', {}).get('percentage')">
+                                <b><t t-out="ctx.get('old_value').get('percentage')"/> %</b>
+                            </t>
+                            <t t-else="">
+                                <t t-out="ctx.get('old_value').get('percentage')"/> %
+                            </t>
+                            <br/>
+                            New:
+                            <t t-if="ctx.get('changed_fields', {}).get('percentage')">
+                                <b><t t-out="object.percentage"/> %</b>
+                            </t>
+                            <t t-else="">
+                                <t t-out="object.percentage"/> %
+                            </t>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Approval Status</b></td>
+                        <td>
+                            <span style="color:#d35400; font-weight:bold;">
+                                Waiting for Approval
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+
+                <br/>
+
+                <p>
+                    Please review and take action using the button below:
+                </p>
+
+                <p>
+                    <a t-att-href="ctx.get('record_url')"
+                    style="
+                           background-color:#875A7B;
+                           color:#ffffff;
+                           padding:10px 18px;
+                           text-decoration:none;
+                           border-radius:4px;
+                           font-weight:bold;">
+                        Review Contract
+                    </a>
+                </p>
+                <br/>
+                <p>Thank you,<br/></p>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="email_template_mr_creation" model="mail.template">
+            <field name="name">Maintenance Request Creation</field>
+            <field name="model_id" ref="maintenance.model_maintenance_request" />
+            <field name="subject">Maintenance Request</field>
+            <field name="body_html">
+                 <![CDATA[
+                    <div style="font-family: Arial, sans-serif; color:#000; font-size:14px;">
+
+                        <p>Hello,</p>
+
+                        <p>
+                            A maintenance request has been created for
+                            <t t-out="object.rent_contract_id.tenancy_seq or 'N/A'"/>.
+                        </p>
+
+                        <div style="background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;padding-top:5px;padding-left:30px;padding-bottom:5px;padding-right:30px;">
+                            <p>
+                                <a t-attf-href="#{object.get_request_url()}">View Maintenance Request Details</a>
+                            </p>
+                        </div>
+
+                        <table cellspacing="0" cellpadding="6" style="font-size:14px;">
+                            <tr>
+                                <td><strong>Issue:</strong></td>
+                                <td><t t-out="object.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tenant Name:</strong></td>
+                                <td><t t-out="object.rent_contract_id.tenancy_id.name or 'N/A'"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Property:</strong></td>
+                                <td><t t-out="object.property_id.name or ''"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Contract:</strong></td>
+                                <td><t t-out="object.rent_contract_id.tenancy_seq or ''"/></td>
+                            </tr>
+                        </table>
+                        <p>Thank you,<br/></p>
+
+                    </div>
+                    ]]>
+            </field>
+        </record>
+    </data>
+</odoo>
+ 

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="crm_lead_view" model="ir.ui.view">
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_set_won_rainbowman']" position="after">
+                    <button name="create_contract" string= "Create Contract" type="object" 
+                    class="btn btn-outline-success" invisible="not probability == 100">
+                    </button>
+                </xpath>
+            </field>
+        </record>
+        <record id="quick_create_opportunity_form_inherit" model="ir.ui.view">
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.quick_create_opportunity_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="replace">
+                    <field name="name" placeholder="e.g. Unit Enquiry" />
+                </xpath>
+            </field>
+        </record>
+        <record id="crm_lead_view_form_inherit" model="ir.ui.view">
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="replace">
+                    <field name="name" placeholder="e.g. Unit Enquiry" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

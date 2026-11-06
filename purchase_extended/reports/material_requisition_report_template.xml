@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        "Material Requisition" (MR) report for purchase.request - a
+        plain black-bordered form, matching the original paper form
+        exactly (no colour): a tall title band, a Site/MR No./Date
+        header (Site on its own line, MR No. and Date stacked on the
+        right), a Details table, and Requested by/Approved by signature
+        lines at the bottom. Company letterhead comes from
+        web.external_layout (standard Odoo header/footer), unchanged.
+
+        Field mapping (see conversation for why each column landed where
+        it did):
+          - SITE           -> o.company_id.name (no separate "site"
+                              concept exists on purchase.request; using
+                              the company name was the confirmed choice).
+          - MR No.         -> o.name (Request Reference).
+          - DATE           -> o.date_start (Creation date).
+          - Details        -> line.name (Description).
+          - Ordered Till
+            Date           -> left blank; nothing in purchase.request.line
+                              tracks this, so nothing is fabricated here.
+          - Unit           -> line.product_uom_id.
+          - Quantity       -> line.product_qty.
+          - Date Required  -> line.date_required (exact match already on
+                              the model).
+          - Rate           -> line.estimated_cost - the only monetary
+                              field on the line; not a literal per-unit
+                              price field, closest available.
+          - Requested by / Approved by -> left blank (no o.requested_by/
+            o.assigned_to name printed) - a blank line for a handwritten
+            signature, rather than whichever user happens to be set on
+            the record (often just "Administrator").
+
+        Row padding: matches the original form's own row numbering - rows
+        are numbered 1 up to at least MIN_NUMBERED_ROWS (10) even when
+        blank, exactly like the paper form; real lines past that many are
+        still numbered in sequence, never truncated. Further blank,
+        unnumbered rows are then added so the table always reaches
+        TOTAL_ROW_TARGET rows total and covers the full page.
+    -->
+    <template id="report_material_requisition">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lines" t-value="o.line_ids"/>
+                <t t-set="line_count" t-value="len(lines)"/>
+                <t t-set="min_numbered_rows" t-value="10"/>
+                <t t-set="total_row_target" t-value="24"/>
+                <t t-set="numbered_rows" t-value="max(line_count, min_numbered_rows)"/>
+                <t t-set="blank_rows" t-value="max(0, total_row_target - numbered_rows)"/>
+
+                <!-- Company logo in the letterhead (see ribs_real_estate external_layout_standard_custom) -->
+                <t t-set="show_company_logo" t-value="True"/>
+                <t t-call="web.external_layout">
+                    <div class="page mr-page">
+                        <style>
+                            .mr-box {
+                                border: 2px solid #000;
+                            }
+                            .mr-title-band {
+                                min-height: 100px;
+                                display: table;
+                                width: 100%;
+                            }
+                            .mr-title-band-inner {
+                                display: table-cell;
+                                vertical-align: middle;
+                                text-align: center;
+                            }
+                            .mr-title {
+                                font-weight: bold;
+                                font-size: 19px;
+                                letter-spacing: 0.5px;
+                            }
+                            .mr-meta {
+                                border-top: 2px solid #000;
+                                border-bottom: 2px solid #000;
+                            }
+                            .mr-meta td {
+                                padding: 10px 16px;
+                                vertical-align: top;
+                                font-size: 13px;
+                            }
+                            .mr-underline {
+                                display: inline-block;
+                                min-width: 240px;
+                                border-bottom: 1px solid #999;
+                                padding-bottom: 5px;
+                                margin-left: 4px;
+                            }
+                            .mr-underline-short {
+                                display: inline-block;
+                                min-width: 150px;
+                                border-bottom: 1px solid #999;
+                                padding-bottom: 5px;
+                                margin-left: 4px;
+                            }
+                            .mr-meta-right {
+                                text-align: right;
+                            }
+                            .mr-table {
+                                width: 100%;
+                                border-collapse: collapse;
+                            }
+                            .mr-table th, .mr-table td {
+                                border: 1px solid #000;
+                                padding: 6px 8px;
+                                font-size: 12px;
+                                height: 24px;
+                            }
+                            .mr-table th {
+                                text-align: center;
+                                font-weight: bold;
+                            }
+                            .mr-serial {
+                                text-align: center;
+                            }
+                            .mr-signatures td {
+                                padding: 26px 16px 10px 16px;
+                                font-size: 13px;
+                            }
+                        </style>
+
+                        <div class="mr-box">
+                            <div class="mr-title-band">
+                                <div class="mr-title-band-inner">
+                                    <div class="mr-title">MATERIAL REQUISITIONS</div>
+                                </div>
+                            </div>
+
+                            <table class="mr-meta" style="width:100%;">
+                                <tr>
+                                    <td style="width:55%;">
+                                        <strong>SITE</strong>
+                                        <span class="mr-underline">
+                                            <span t-field="o.company_id.name"/>
+                                        </span>
+                                    </td>
+                                    <td class="mr-meta-right" style="width:45%;">
+                                        <strong>MR No.</strong>
+                                        <span class="mr-underline-short">
+                                            <span t-field="o.name"/>
+                                        </span>
+                                        <br/>
+                                        <br/>
+                                        <strong>DATE</strong>
+                                        <span class="mr-underline-short">
+                                            <span t-field="o.date_start"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table class="mr-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:6%;">Serial<br/>No.</th>
+                                        <th style="width:32%;">DETAILS</th>
+                                        <th style="width:12%;">Ordered<br/>Till Date</th>
+                                        <th style="width:8%;">Unit</th>
+                                        <th style="width:10%;">Quantity</th>
+                                        <th style="width:14%;">Date<br/>Required</th>
+                                        <th style="width:10%;">Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="range(numbered_rows)" t-as="row_no">
+                                        <t t-set="line" t-value="lines[row_no] if row_no &lt; line_count else False"/>
+                                        <tr>
+                                            <td class="mr-serial"><t t-out="row_no + 1"/></td>
+                                            <td><span t-if="line" t-field="line.name"/></td>
+                                            <td></td>
+                                            <td style="text-align:center;"><span t-if="line" t-field="line.product_uom_id.name"/></td>
+                                            <td style="text-align:right;"><span t-if="line" t-field="line.product_qty"/></td>
+                                            <td style="text-align:center;"><span t-if="line" t-field="line.date_required"/></td>
+                                            <td style="text-align:right;"><span t-if="line" t-field="line.estimated_cost"/></td>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="range(blank_rows)" t-as="blank_row">
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <table class="mr-signatures" style="width:100%;">
+                                <tr>
+                                    <td style="width:50%;">
+                                        Requested by:
+                                    </td>
+                                    <td style="width:50%;">
+                                        Approved by:
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,64 @@
+<odoo>
+    <data>
+        <record id="mail_template_contract_closure_first_approval_" model="mail.template">
+            <field name="name">Contract Closing Request</field>
+            <field name="model_id" ref="model_tenancy_details"/>
+            <field name="subject">Conrtact closing request for {{ object.tenancy_seq }}</field>
+            <field name="body_html">
+                <![CDATA[
+                    <p>
+                        Dear Team,
+                    </p>
+
+                    <p>
+                        A request has been submitted for
+                        <strong>first-level approval</strong>
+                        to close the tenancy contract
+                        <strong>
+                            <t t-out="object.temp_seq "/>
+                        </strong>.
+                    </p>
+
+                    <p>
+                        <strong>Requested By:</strong>
+                        <t t-out="object.termination_requested_person.name"/>
+                    </p>
+
+                    <p>
+                        <strong>Proposed Closing Date:</strong>
+                        <t t-out="object.closing_date"/>
+                    </p>
+
+                    <p>
+                        <strong>Termination Type:</strong>
+                        <t t-out="dict(object._fields['termination_type'].selection).get(object.termination_type)"/>
+                    </p>
+
+                    <p>
+                        <strong>Reason for Closure:</strong>
+                    </p>
+                    <p>
+                        <t t-out="object.closing_reason"/>
+                    </p>
+
+                    <t t-if="object.if_penalty">
+                        <p>
+                            <strong>Proposed Penalty Amount:</strong>
+                            <t t-out="object.penalty_amount"/>
+                        </p>
+                    </t>
+
+                    <p>
+                        Kindly review this
+                        <a t-att-href="ctx.get('request_url')">request</a>
+                        and provide your approval.
+                    </p>
+
+                    <p>
+                        Thank you.<br/>
+                    </p>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

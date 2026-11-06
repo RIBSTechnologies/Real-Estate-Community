@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<odoo>
+<!--    Security rule for hr announcement-->
+    <record id="ir_module_category_announcement" model="ir.module.category">
+        <field name="name">Announcement</field>
+        <field name="description">Category for Announcement</field>
+    </record>
+    <record id="res_groups_privilege_announcement" model="res.groups.privilege">
+        <field name="name">Announcement</field>
+        <field name="category_id" ref="ent_hr_reward_warning.ir_module_category_announcement"/>
+    </record>
+    <record id="res_groups_employee" model="res.groups">
+        <field name="name">Employee</field>
+        <field name="privilege_id" ref="res_groups_privilege_announcement"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+    </record>
+    <record id="res_groups_administrator" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="privilege_id" ref="res_groups_privilege_announcement"/>
+    </record>
+</odoo>

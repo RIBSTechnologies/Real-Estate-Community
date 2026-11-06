@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="property_details_form_view_inherit" model="ir.ui.view">
+            <field name="name">property.details.form.view</field>
+            <field name="model">property.details</field>
+            <field name="inherit_id" ref="rental_management.property_details_form_view"/>
+            <field name="arch" type="xml">
+                <!-- <xpath expr="//button[@name='%(rental_management.contract_wizard_action)d']" position="attributes">
+                    <attribute name="invisible">stage not in ['available','on_lease'] or sale_lease not in ['for_tenancy','for_lease']</attribute>
+                </xpath> -->
+                <xpath expr="//button[@name='%(rental_management.contract_wizard_action)d']" position="replace">
+                    <button name="contract_wiz_action" type="object"
+                        string="Create Contract" class="btn btn-success" icon="payments"
+                        invisible="stage not in ['available'] or sale_lease not in ['for_tenancy','for_lease']"/>
+                </xpath>
+                <xpath expr="//notebook/page[@name='property_details_view']" position="after">
+                    <page name="parking_slots" string="Parking Slots">
+                        <group>
+                            <label for="parking_ids" string="Parking Slot" class="mt-1"/>
+                            <div name="parking">
+                                <field name="parking_ids" widget="many2many_tags" class="oe_inline" readonly="stage not in ['draft','available']"/>
+                            </div>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//notebook/page[@name='property_documents']" position="after">
+                    <page string="Internal Notes" name="internal_notes">
+                        <field name="description" placeholder="Add a description..." readonly="stage not in ['draft','available']"/>
+                        <field name="notes" placeholder="Add a notes..." readonly="stage not in ['draft','available']"/>
+                    </page>
+                </xpath>
+
+                <xpath expr="//field[@name='sale_lease']" position="attributes">
+                    <attribute name="invisible" >1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='property_project_id']" position="before">
+                    <field name="property_for" readonly="1"/>
+                 </xpath>
+
+                <xpath expr="//field[@name='type']" position="replace">
+                    <field name="type" readonly="id"/>
+                </xpath>
+                <xpath expr="//field[@name='type']" position="after">
+                   <label for="property_subtype_id" string="Property Sub Type" invisible="type in ('land','residential','commercial','industrial')"/>
+                </xpath>
+
+                <xpath expr="//field[@name='property_subtype_id']" position="replace">
+                    <field name="property_subtype_id" invisible="not type" class="oe_inline" readonly="id"/>
+                </xpath>
+
+                <xpath expr="//div[@class='property_subtype_id']" position="after">
+                    <field name="commercial_subtype_id" invisible="type != 'commercial'"/>
+                </xpath>
+
+                <xpath expr="//field[@name='commercial_subtype_id']" position="after">
+                    <field name="property_purpose" required="1" readonly="stage not in ['draft','available']"/>
+                    <field name="plot_number" invisible="1"/>
+                    <field name="dewa_number"/>
+                    <field name="makani_number"/>
+                    <field name="unit_account_id" groups="base.group_no_one"/>
+                    <field name="default_product_id" groups="base.group_no_one"/>
+                </xpath>
+                <xpath expr="//page[@name='area_measurement']" position="attributes">
+                    <attribute name="invisible" >1</attribute>
+                </xpath>
+
+                <!-- <xpath expr="//group[1]" position="after">
+                    <group>
+                        <group>
+                            <group string="Pricing Calculations">
+                                <field name="sale_lease" readonly="1" force_save="1" invisible="1"/>
+                                <field name="pricing_type" widget="radio"
+                                       options="{'horizontal':True}" force_save="1"
+                                       readonly="stage not in ['draft','available']"/>
+                                <label for="price_per_area" class="mt-1"
+                                       invisible="pricing_type != 'area_wise'"/>
+                                <div name="price_per_area"
+                                     invisible="pricing_type != 'area_wise'">
+                                    <field name="price_per_area" class="oe_inline"
+                                           readonly="stage not in ['draft','available']"
+                                           force_save="1"/>
+                                    /
+                                    <field name="measure_unit"
+                                           class="oe_inline" readonly="1" force_save="1"/>
+                                </div>
+                                <label for="price" string="Rent"
+                                       invisible="sale_lease != 'for_tenancy'"/>
+                                <div id="rent_div"
+                                        invisible="sale_lease != 'for_tenancy'">
+                                    <field name="price" required="1" class="oe_inline"
+                                           readonly="stage not in ['draft','available']"/>
+                                    /
+
+                                    <field
+                                            name="rent_unit" class="oe_inline"
+                                            required="sale_lease == 'for_tenancy'"
+                                            readonly="stage not in ['draft','available']"
+                                            default="Year"/>
+                                </div>
+                                <label for="price" string="Sale Price"
+                                       invisible="sale_lease != 'for_sale'"/>
+                                <div invisible="sale_lease != 'for_sale'">
+                                    <field name="price" required="1" class="oe_inline"
+                                           readonly="stage not in ['draft','available']"/>
+                                </div>
+                            </group> 
+                            <separator string=""/>
+                            <group string="Area Calculations">
+                                <label for="total_area" class="mt-1"/>
+                                <div name="total_area" style="white-space: nowrap;">
+                                    <field name="total_area" class="oe_inline"
+                                           force_save="1"/>
+                                    /
+                                    <field name="measure_unit"
+                                           class="oe_inline"/>
+                                </div>
+                                <label for="usable_area" class="mt-1"/>
+                                <div name="usable_area" style="white-space: nowrap;">
+                                    <field name="usable_area" class="oe_inline"
+                                           force_save="1"/>
+                                    /
+                                    <field name="measure_unit"
+                                           class="oe_inline" readonly="1" force_save="1"/>
+                                </div>
+                            </group>
+
+                        </group>
+                        <group string="Property Details"
+                               class="oe_subtotal_footer oe_right"
+                               style="text-align: right"
+                               invisible="type in ['land']">
+                            <field name="total_floor"
+                                   invisible="type in ['land']"/>
+                            <field name="floor"
+                                   invisible="type in ['land','industrial']"/>
+                            <field name="bed"
+                                   invisible="type in ['land','industrial','commercial']"/>
+                            <field name="balcony"/>
+                            <field name="bathroom"
+                                   invisible="type in ['land','industrial']"/>
+                            <field name="maid_rooms"/>
+                            <field name="persons_allowed"/>
+                            <field name="parking"
+                                   invisible="type in ['land']"/>
+                            <field name="facing"
+                                   invisible="type in ['land']"/>
+                            <field name="furnishing_id"
+                                   options="{'no_quick_create':True,'no_create_edit':True}"
+                                   invisible="type in ['land','industrial']"/>
+                            <label for="unit_type" class="mt-1" string="BHK"
+                                   invisible="type in ['land','industrial','commercial']"/>
+                            <div name="unit_type"
+                                 invisible="type in ['land','industrial','commercial']">
+                                <field name="unit_type" class="oe_inline"
+                                       force_save="1"/>
+                                BHK
+                            </div>
+                        </group> 
+                    </group>
+                </xpath> -->
+
+                <xpath expr="//page[@name='pricing_details']/group[1]/group[1]" position="attributes">
+                    <attribute name="invisible" >1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='region_id']" position="replace">
+                    <field name="region_id" placeholder="Region" class="o_address_street" readonly="stage not in ['draft','available']"/>
+                </xpath>
+
+                <xpath expr="//field[@name='city_id']" position="replace">
+                    <field name="city_id" placeholder="City" class="o_address_city" readonly="stage not in ['draft','available']"/>
+                </xpath>
+
+                <xpath expr="//field[@name='state_id']" position="replace">
+                    <field name="state_id" class="o_address_state" placeholder="State" readonly="stage not in ['draft','available']"/>
+                </xpath>
+                <xpath expr="//field[@name='country_id']" position="replace">
+                    <field name="country_id" placeholder="Country" class="o_address_country" readonly="stage not in ['draft','available']"/>
+                </xpath>
+
+                <xpath expr="//field[@name='landlord_id']" position="replace">
+                    <field name="landlord_id" required="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='property_project_id']" position="after">
+                    <field name="security_id" readonly="1" force_save="1"
+                                       invisible="not security_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='security_id']" position="after">
+                    <field name="security_number" readonly="1" force_save="1"
+                                       invisible="not security_id"/>
+                    <field name="dm_no" readonly="stage == 'on_lease'"/>
+                </xpath>
+
+                <xpath expr="//field[@name='landlord_id']" position="before">
+                    <field name="property_owner"/>
+                </xpath>
+                <!-- <xpath expr="//label[@for='nearby_connectivity']" position="after">
+                    <field name="dewa_reading"></field>
+                    <label for="dewa_reading"></label>
+                </xpath>
+                <xpath expr="//page[@name='nearby_connectivity']" position="after">
+                    <page string="Dewa Meter Reading" name="dewa_meter_reading"
+                            invisible="not dewa_reading">
+                        <h3 style="text-align:center;color:#714B67;">
+                            <strong>Dewa Meter Reading</strong>
+                        </h3>
+                        <form>
+                            <group>
+                                <group>
+                                    <field name="meter_type"/>
+                                    <field name="reading"/>
+                                    <field name="reading_date"/>
+                                </group>
+                            </group>
+                        </form>
+                    </page>
+                </xpath> -->
+                <xpath expr="//field[@name='landlord_id']" position="after">
+                    <field name="maintenance_person_ids" widget="many2many_tags"/>
+                    <field name="property_manager"/>
+                </xpath>
+                <xpath expr="//div[@id='rent_div']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//label[@for='price']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <!-- <xpath expr="//div[@id='rent_div']" position="after"> -->
+                <!-- </xpath> -->
+                <!-- <xpath expr="//field[@name='is_maintenance_service']" position="before"> -->
+                <xpath expr="//page[@name='pricing_details']/group[1]/group[2]" position="before">
+                    <group string="Pricing Details">
+                        <field name="pricing_type" widget="radio"
+                            options="{'horizontal':True}" force_save="1"
+                            readonly="stage not in ['draft','available']"/>
+                        <label for="price_yearly" string="Rent"/>
+                        <div id="rent_div" invisible="sale_lease != 'for_tenancy'" style="white-space: nowrap;">
+                            <field name="price_yearly" required="1" class="oe_inline"
+                                    readonly="stage not in ['draft','available']"/>
+                            /
+                            Yearly
+                        </div>
+                        <field name="deposit_type"  readonly="stage not in ['draft','available']"/>
+                        <field name="deposit_percentage"
+                            invisible="deposit_type != 'percent'"  readonly="stage not in ['draft','available']"/>
+                        <field name="deposit_amount"
+                            class="oe_inline"
+                            readonly="stage not in ['draft','available']"/>
+                    </group>
+                    <group string="Area Calculations">
+                        <label for="total_area" class="mt-1"/>
+                        <div name="total_area" style="white-space: nowrap;">
+                            <field name="total_area" class="oe_inline"
+                                    force_save="1"  readonly="stage not in ['draft','available']"/>
+                            /
+                            <field name="measure_unit"
+                                    class="oe_inline"  readonly="stage not in ['draft','available']"/>
+                        </div>
+                        <label for="usable_area" class="mt-1"/>
+                        <div name="usable_area" style="white-space: nowrap;">
+                            <field name="usable_area" class="oe_inline"
+                                    force_save="1"  readonly="stage not in ['draft','available']"/>
+                            /
+                            <field name="measure_unit"
+                                    class="oe_inline" readonly="1" force_save="1"/>
+                        </div>
+                        <label for="unit_size" class="mt-1"/>
+                        <div name="unit_size" style="white-space: nowrap;">
+                            <field name="unit_size" class="oe_inline"
+                                    force_save="1"  readonly="stage not in ['draft','available']"/>
+                            /
+                            <field name="measure_unit"
+                                    class="oe_inline" readonly="1" force_save="1"/>
+                        </div>
+                    </group>
+                </xpath>
+                <!-- <xpath expr="//field[@name='floor']" position="replace">
+                    <field name="floor_char"/>
+                </xpath> -->
+           </field>
+        </record>
+
+        <record id="property_details_search_view_inherit" model="ir.ui.view">
+            <field name="name">property.details.search.view</field>
+            <field name="model">property.details</field>
+            <field name="inherit_id" ref="rental_management.property_details_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='group_by_project']" position="replace">
+                    <filter string="Buildings" name="group_by_project" domain="[]"
+                        context="{'group_by':'property_project_id'}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="property_details_action_inherit" model="ir.actions.act_window">
+            <field name="name">Units</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">property.details</field>
+            <field name="view_mode">list,kanban,form,pivot,activity</field>
+            <field name="context">{'search_default_group_by_project': 1}</field>
+        </record>
+
+        <record id="property_details_list_view_inherit" model="ir.ui.view">
+            <field name="name">property.details.list.view</field>
+            <field name="model">property.details</field>
+            <field name="inherit_id" ref="rental_management.property_details_list_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="replace">
+                    <list string="Property" js_class="rental_property_dashboard_list">
+                        <field name="property_seq"/>
+                        <field name="name"/>
+                        <field name="property_subtype_id"/>
+                        <field name="price" widget="monetary"
+                            options="{'currency_field': 'currency_id'}" />
+                        <field name="price_yearly"/>
+                        <field name="state_id"/>
+                        <field name="stage"
+                            widget="badge"
+                            decoration-info="stage == 'booked'"
+                            decoration-primary="stage == 'available'"
+                            decoration-success="stage=='sold'"
+                            decoration-warning="stage in ['on_lease','sale']"
+                        />
+                    </list>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

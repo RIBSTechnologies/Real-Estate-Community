@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Wizard Form View -->
+    <record id="view_pdc_report_wizard_form" model="ir.ui.view">
+        <field name="name">pdc.report.wizard.form</field>
+        <field name="model">pdc.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="PDC Cheque Payment Report">
+                <sheet>
+                    <div class="oe_title">
+                        <h2 style="color: #1E3A8A; font-weight: bold;">
+                            <i class="oi mr-2" data-icon="book"/>PDC Cheque Payment Report
+                        </h2>
+                        <p class="text-muted mb-3">
+                            Filter post-dated cheques by date range, customer/partner, and cheque states for bank submission.
+                        </p>
+                    </div>
+
+                    <group>
+                        <group string="Date Range Filter">
+                            <label for="date_from" string="Date Range"/>
+                            <div class="o_row">
+                                <field name="date_from" widget="date" placeholder="From Date"/>
+                                <span class="o_form_label mx-2"> to </span>
+                                <field name="date_to" widget="date" placeholder="To Date"/>
+                            </div>
+                            <field name="date_filter_by" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                        <group string="Report Options">
+                            <field name="payment_type"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <group string="Selection Filters">
+                        <field name="state_ids" widget="many2many_tags" placeholder="Select Cheque State(s)... (Leave blank for ALL states)"/>
+                        <field name="partner_ids" widget="many2many_tags" placeholder="Select Customer(s) / Partner(s)... (Leave blank for ALL partners)"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_print_pdf" string="Print PDF Report" type="object" class="btn-primary" icon="picture_as_pdf"/>
+                    <button name="action_export_xlsx" string="Export Excel (XLSX)" type="object" class="btn-success" icon="table_chart"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Window Action -->
+    <record id="action_pdc_report_wizard" model="ir.actions.act_window">
+        <field name="name">PDC Report</field>
+        <field name="res_model">pdc.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu Item in Accounting -> Reporting -->
+    <menuitem id="menu_pdc_report_wizard"
+              name="PDC Report"
+              parent="account.menu_finance_reports"
+              action="action_pdc_report_wizard"
+              sequence="55"/>
+
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record id="contract_closing_wizard_form_view" model="ir.ui.view">
+            <field name="name">contract.closing.wizard.form.view</field>
+            <field name="model">contract.closing.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Close Contract">
+                    <group>
+                        <field name="has_major_issue"/>
+                        <field name="get_first_approval_from_ids" invisible="1"/>
+                        <div class="o_form_row">
+                            <div class="o_form_label">
+                                <label for="get_first_approval_from"
+                                    string="Get Final Approval From"
+                                    invisible="has_major_issue"/>
+
+                                <label for="get_first_approval_from"
+                                    string="Get First Level Approval From"
+                                    invisible="not has_major_issue"/>
+                            </div>
+
+                            <div class="o_form_field">
+                                <field name="get_first_approval_from"
+                                    widget="many2many_tags"
+                                    domain="[('id','in',get_first_approval_from_ids)]"/>
+                            </div>
+                        </div>
+                        <!-- <field name="get_first_approval_from" widget="many2many_tags" domain="[('id','in',get_first_approval_from_ids)]"/> -->
+                        <field name="get_final_approval_from" widget="many2many_tags" invisible="not has_major_issue"/>
+                        <field name="closing_reason"/>
+                        <field name="termination_type" widget="radio"/>
+                        <field name="closing_date"/>
+                        <field name="if_penalty"/>
+                        <field name="penalty_amount" invisible="not if_penalty" required="if_penalty"/>
+                    </group>
+                    <footer>
+                        <!-- <button string="Send Mail &amp; Close Contract" type="object" class="btn btn-primary" name="action_close_contract"/> -->
+                        <button string="Request Approval" type="object" class="btn btn-primary" name="close_contract_approval"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="contract_closing_wizard_action" model="ir.actions.act_window">
+            <field name="name">Close Contract</field>
+            <field name="res_model">contract.closing.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="contract_closing_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+
+</odoo>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="contract_wizard_view_form_inherit" model="ir.ui.view">
+            <field name="name">contract.wizard.view.form</field>
+            <field name="model">contract.wizard</field>
+            <field name="inherit_id" ref="rental_management.contract_wizard_form_view"/>
+            <field name="arch" type="xml">
+
+                <!-- Grace Period fields, kept separate from the By Date / Duration /
+                     Payment Term block below. Grace Start and Grace End are always
+                     auto-calculated backward from Start Date (readonly). -->
+                <xpath expr="//field[@name='start_date']" position="before">
+                    <label for="grace_period_value" string="Grace Time"/>
+                    <div class="o_row">
+                        <field name="grace_period_value" nolabel="1"/>
+                        <field name="grace_period_unit" nolabel="1"/>
+                    </div>
+                    <field name="grace_period_start_date"/>
+                    <field name="grace_period_end_date"/>
+                    <field name="is_by_date"/>
+                </xpath>
+                <xpath expr="//field[@name='end_date']" position="attributes">
+                    <attribute name="readonly">not is_by_date</attribute>
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='days']" position="attributes">
+                    <attribute name="invisible">not is_by_date</attribute>
+                </xpath>
+                <xpath expr="//field[@name='duration_id']" position="attributes">
+                    <attribute name="invisible">is_by_date</attribute>
+                </xpath>
+                <xpath expr="//field[@name='duration_id']" position="before">
+                    <field name="duration" readonly="1" invisible="not is_by_date"/>
+                </xpath>
+
+<!--                <xpath expr="//field[@name='end_date']" position="after">-->
+<!--                    <button name="action_generate_duration"-->
+<!--                            string="Generate Duration"-->
+<!--                            type="object"-->
+<!--                            class="btn-primary"-->
+<!--                            invisible="not start_date or not end_date or not is_by_date"/>-->
+<!--                </xpath>-->
+
+                <xpath expr="//field[@name='rent_unit']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+
+                <xpath expr="//label[@for='total_rent']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//div" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath> 
+                <xpath expr="//div" position="after">
+                    <label for="total_rent_year" string="Rent"/>
+                    <div>
+                        <field name="total_rent_year" required="1" class="oe_inline"/>
+                        /
+                        Yearly
+                    </div>
+                    <field name="contract_value"></field>
+                </xpath>
+                <xpath expr="//page[2]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <!-- <xpath expr="//group[13]" position="replace">
+                </xpath> -->
+                <xpath expr="//group[5]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//group[6]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='duration_type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//group[4]" position="after">
+                    <group string="New Contract Update" invisible = "last_update_id == False">
+                        <group>
+                            <field name="update_increase_or_decrease"/>
+                            <field name="update_amount_or_percentage"/>
+                            <field name="update_amount" invisible="update_amount_or_percentage == 'percentage'"/>
+                            <field name="update_percentage" invisible="update_amount_or_percentage == 'amount'"/>
+                        </group>
+
+                        <group>
+                            <field name="update_from_date"/>
+                            <field name="update_to_date"/>
+                        </group>
+
+                        <group>
+                            <field name="update_new_rent_monthly"/>
+                            <field name="update_new_rent_annually"/>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//page[3]" position="before">
+                    <page string="Unit Discount">
+                        <group>
+                            <group>
+                                <field name="inital_rent_year" readonly="1" widget="monetary"/>
+                                <field name="total_rent_year" readonly="1" string="Current Rent (Yearly)"/>
+                                <field name="overall_discount" readonly="1"/>
+                                <!-- <field name="overall_total" readonly="1"/> -->
+                                <!-- <field name="deposit_amount" readonly="1"/>
+                                <field name="tax_id"/> -->
+                            </group>
+
+                            <group>
+                                <field name="discount_applied" readonly="1"/>
+                                <field name="discount_type"/>
+                                <field name="discount_value"/>
+                            </group>
+                        </group>
+                        <div style="display: flex; gap: 10px;">
+                            <button name="action_apply_discount"
+                                    type="object"
+                                    string="Apply Discount"
+                                    class="btn btn-primary"/>
+
+                            <button name="action_clear_discount"
+                                    type="object"
+                                    string="Remove Discount"
+                                    class="btn btn-primary"/>
+                        </div>
+                    </page>
+                </xpath>
+                <!-- <xpath expr="//group[13]" position="replace">
+                    <group string="Payment Details">
+                        <group>
+                            <field name="payment_type"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="chq_due_date" invisible="payment_type == 'cash'"/>
+                            <field name="ref"/>
+                            <field name="attachment_ids"/>
+                        </group>
+                    </group>
+                </xpath> -->
+
+                <!-- Area Calculations: the base "current_area"/"usable_area" fields only
+                     appear in the Rent Increment (contract-extend) section, which is
+                     invisible for a normal new contract. Show them always, in their own
+                     dedicated group (mirrors the Property form's "Area Calculations"
+                     section). Kept as the LAST xpath in this file: several xpaths above
+                     select groups by raw position (e.g. //group[5]) and adding a new
+                     group earlier would shift those indices onto the wrong elements. -->
+                <xpath expr="//field[@name='customer_id']/../.." position="after">
+                    <group string="Area Calculations">
+                        <label for="current_area" string="Total Area" class="mt-1"/>
+                        <div name="wizard_total_area">
+                            <field name="current_area" class="oe_inline" force_save="1" readonly="1"/>
+                            /
+                            <field name="measure_unit" class="oe_inline" readonly="1" force_save="1"/>
+                        </div>
+                        <label for="usable_area" class="mt-1"/>
+                        <div name="wizard_usable_area">
+                            <field name="usable_area" class="oe_inline" force_save="1" readonly="1"/>
+                            /
+                            <field name="measure_unit" class="oe_inline" readonly="1" force_save="1"/>
+                        </div>
+                        <field name="property_type" invisible="1"/>
+                        <field name="commercial_size" invisible="property_type != 'commercial'"/>
+                        <field name="commercial_rate" invisible="property_type != 'commercial'"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

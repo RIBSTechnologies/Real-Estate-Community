@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="property_sale_tenancy_xls_report_form_view_inherit" model="ir.ui.view">
+            <field name="name">property.xls.report.form.view</field>
+            <field name="model">property.report.wizard</field>
+            <field name="inherit_id" ref="rental_management.property_sale_tenancy_xls_report_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

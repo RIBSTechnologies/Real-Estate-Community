@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <g>
+    <!-- Outer dashboard card -->
+    <rect x="56" y="96" width="400" height="320" rx="32" fill="#eef2ff"/>
+    <rect x="56" y="96" width="400" height="72" rx="32" fill="#6366f1"/>
+
+    <!-- Card title bar dots -->
+    <circle cx="96" cy="132" r="6" fill="#ffffff"/>
+    <circle cx="120" cy="132" r="6" fill="#ffffff"/>
+    <circle cx="144" cy="132" r="6" fill="#ffffff"/>
+
+    <!-- Contract icon -->
+    <rect x="152" y="204" width="120" height="152" rx="16" fill="#ffffff"/>
+    <rect x="168" y="232" width="88" height="12" rx="6" fill="#c7d2fe"/>
+    <rect x="168" y="256" width="72" height="12" rx="6" fill="#c7d2fe"/>
+    <rect x="168" y="280" width="64" height="12" rx="6" fill="#c7d2fe"/>
+
+    <!-- Comment badge -->
+    <circle cx="336" cy="260" r="56" fill="#3b82f6"/>
+    <rect x="312" y="244" width="48" height="28" rx="10" fill="#ffffff"/>
+    <circle cx="324" cy="258" r="4" fill="#3b82f6"/>
+    <circle cx="336" cy="258" r="4" fill="#3b82f6"/>
+    <circle cx="348" cy="258" r="4" fill="#3b82f6"/>
+
+    <!-- Card lines -->
+    <rect x="120" y="336" width="220" height="14" rx="7" fill="#c7d2fe"/>
+    <rect x="120" y="360" width="180" height="14" rx="7" fill="#c7d2fe"/>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="property_subtype_form_view_inherit" model="ir.ui.view">
+            <field name="name">property.subtype.form.view</field>
+            <field name="model">property.sub.type</field>
+            <field name="inherit_id" ref="rental_management.property_sub_type_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="is_individual_building" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

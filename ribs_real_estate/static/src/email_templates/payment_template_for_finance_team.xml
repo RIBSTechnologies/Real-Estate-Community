@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="active_contract_mail_template_for_finance" model="mail.template">
+            <field name="name">Active Contract Mail Template for Finance Team</field>
+            <field name="model_id" ref="rental_management.model_tenancy_details" />
+            <field name="subject">Contract Payment Details</field>
+            <field name="email_from">{{object.property_landlord_id.email}}</field>
+            <field name="body_html" type="html">
+                <p>
+                    Dear Finance Team,
+                </p>
+
+                <p>
+                    A new tenancy contract has been activated and is now ready for your financial review
+                    and payment schedule processing.
+                </p>
+
+                <h4>Contract Details</h4>
+                <table style="width:100%; border-collapse: collapse; margin-top:10px;">
+                    <tr>
+                        <td><strong>Tenant Name:</strong></td>
+                        <td><t t-out="object.tenancy_id.name"/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Property:</strong></td>
+                        <td>
+                            <t t-call="ribs_real_estate.property_display_value"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Contract Start:</strong></td>
+                        <td><t t-out="object.start_date"/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Contract End:</strong></td>
+                        <td><t t-out="object.end_date"/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rent:</strong></td>
+                        <td><span t-field="object.total_rent"/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Rent:</strong></td>
+                        <td><span t-field="object.contract_value"/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Payment Term:</strong></td>
+                        <td><span t-field="object.payment_term"/></td>
+                    </tr>
+                    <tr>
+                        <td><a t-att-href="ctx.get('record_url')">Click here to check Payment</a></td>
+                    </tr>
+                </table>
+
+                <p>Thank you,<br/></p>
+            </field>
+<!--            <field name="report_template_ids"-->
+<!--                eval="[(4, ref('ribs_real_estate.tenancy_pdc_details_report_html'))]" />-->
+            <field name="auto_delete" eval="False" />
+        </record>
+    </data>
+</odoo>

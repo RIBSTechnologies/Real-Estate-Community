@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        "Local Purchase Order" (LPO) for purchase.order, laid out like the
+        company's printed LPO form:
+
+          header  - left: English P.O. Box / city / Tel / Fax / email / TRN
+                    centre: Arabic name, rule, English name + header mark
+                            (green leaf)
+                    right: the same contact block in Arabic (Arabic digits)
+          title   - "LOCAL PURCHASE ORDER" centred, "No. <PO number>" in red
+          To / Order No. / Date / Contact / Delivered to  (dotted lines)
+          items   - S.No. | Description | Unit | Quantity | Unit Price | Total
+                    Price, column rules, dotted row lines, Total row
+          footer  - Date of Delivery, Payment Terms, signatures, IMPORTANT note
+
+        Own header on web.basic_layout (not the shared company letterhead),
+        so this report doesn't change any other print-out. Header data comes
+        from res.company._lpo_header() - the "Purchase Order Header" tab on
+        the company form, plus phone / fax / email / Tax ID.
+
+        Field mapping:
+          To             -> partner name, then its address
+          Order No.      -> o.name          Date     -> o.date_order
+          Contact        -> partner phone / mobile
+          Delivered to   -> o.dest_address_id (drop-ship address), else blank
+          Unit / Qty     -> line.uom_id / line.product_qty
+          Unit / Total   -> line.price_unit / line.price_subtotal
+          Total          -> o.amount_total
+          Date of Delivery -> earliest line.date_planned
+          Payment Terms  -> o.payment_term_id
+    -->
+    <template id="report_local_purchase_order">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="hdr" t-value="o.company_id._lpo_header()"/>
+                <t t-set="lines" t-value="o.order_line.filtered(lambda l: not l.display_type)"/>
+                <t t-set="total_row_target" t-value="15"/>
+                <t t-set="blank_rows" t-value="max(0, total_row_target - len(lines))"/>
+                <t t-set="planned_dates" t-value="[d for d in lines.mapped('date_planned') if d]"/>
+                <t t-set="supplier_address" t-value="', '.join(filter(None, [o.partner_id.street, o.partner_id.street2, o.partner_id.city, o.partner_id.state_id.name, o.partner_id.country_id.name]))"/>
+                <t t-set="dest_address" t-value="', '.join(filter(None, [o.dest_address_id.name, o.dest_address_id.street, o.dest_address_id.street2, o.dest_address_id.city, o.dest_address_id.country_id.name])) if o.dest_address_id else ''"/>
+
+                <t t-call="web.basic_layout">
+                <div class="page lpo">
+                    <style>
+                        .lpo, .lpo * { box-sizing: border-box; }
+                        .lpo { font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #000;
+                               /* the PDF engine packs Arial letters too tightly at this dpi */
+                               letter-spacing: 0.3px; word-spacing: 1.5px; line-height: 1.3; }
+                        .lpo .caps { letter-spacing: 0.8px; }
+                        .lpo table { width: 100%; border-collapse: collapse; }
+                        /* Odoo's report styles draw a box around every table and cell;
+                           switch all of that off, then draw only the form's own lines
+                           below (each with !important so nothing overrides them). */
+                        .lpo table, .lpo thead, .lpo tbody, .lpo tr, .lpo td, .lpo th {
+                            border: 0 none !important;
+                            background: transparent !important;
+                            box-shadow: none !important;
+                        }
+                        .lpo td, .lpo th { padding: 0; }
+
+                        /* ---- header ---- */
+                        .lpo-head td { vertical-align: top; }
+                        .lpo-head .en { width: 24%; font-size: 11.5px; line-height: 1.35; }
+                        .lpo-head .ar { width: 24%; font-size: 11.5px; line-height: 1.35; text-align: right; padding-right: 3px !important; }
+                        .lpo-head .mid { width: 52%; vertical-align: middle; }
+                        .lpo-brand td { vertical-align: middle; }
+                        .lpo-brand .names { text-align: center; padding-right: 6px; }
+                        .lpo-name-ar { font-size: 20px; font-weight: bold; line-height: 1.2; letter-spacing: 0; white-space: nowrap; }
+                        .lpo-rule { border-top: 1.5px solid #000 !important; margin: 3px 0 2px 0; }
+                        .lpo-name-en { font-family: 'Times New Roman', Times, serif; font-size: 19px; font-weight: bold;
+                                       line-height: 1.1; white-space: nowrap; letter-spacing: 0; word-spacing: 0; }
+                        .lpo-logo { text-align: center; }
+                        .lpo-logo img { max-width: 100%; max-height: 95px; }
+                        .lpo-mark { width: 60px; vertical-align: top !important; padding-top: 2px !important; }
+                        .lpo-mark img { width: 54px; }
+
+                        /* ---- title ---- */
+                        .lpo-title-row { margin-top: 6px; }
+                        .lpo-title-row td { vertical-align: bottom; }
+                        .lpo-title { font-size: 15px; letter-spacing: 1px; text-align: center; }
+                        .lpo-no { text-align: right; white-space: nowrap; }
+                        .lpo-no .no { font-family: 'Old English Text MT', 'UnifrakturMaguntia', 'Times New Roman', serif;
+                                      font-size: 20px; font-weight: bold; }
+                        .lpo-no .num { color: #d01818; font-size: 22px; letter-spacing: 1px; }
+
+                        /* ---- dotted fields ---- */
+                        .lpo-fields { margin-top: 8px; }
+                        .lpo-fields td { vertical-align: top; }
+                        .lpo-line { border-bottom: 1px dotted #000 !important; height: 22px; padding-top: 6px; overflow: hidden;
+                                    white-space: nowrap; }
+                        .lpo-kv td { height: 24px; vertical-align: bottom; padding-bottom: 2px; }
+                        .lpo-kv .k { width: 1%; white-space: nowrap; padding-right: 4px; }
+                        .lpo-kv td.v { border-bottom: 1px dotted #000 !important; }
+                        .lpo-kv td.v.plain { border-bottom: 0 none !important; text-align: right; }
+
+                        /* ---- items ---- */
+                        .lpo-items { margin-top: 6px; table-layout: fixed; }
+                        .lpo .lpo-items th { font-weight: normal; font-size: 12.5px; text-align: center; padding: 6px 4px;
+                                        border-top: 1px solid #000 !important; border-bottom: 1px solid #000 !important; }
+                        .lpo .lpo-items td { height: 26px; padding: 3px 5px; font-size: 11px; vertical-align: middle;
+                                        border-bottom: 1px dotted #000 !important; word-wrap: break-word; }
+                        .lpo .lpo-items .c + .c { border-left: 1px solid #000 !important; }
+                        .lpo .lpo-items tr.last td { border-bottom: 1px solid #000 !important; }
+                        .lpo .lpo-items tr.total td { border-bottom: 1px solid #000 !important; height: 28px; }
+                        .lpo-items tr.total td.lbl { text-align: center; font-size: 12.5px; }
+                        .lpo .lpo-items tr.total td.amt { border-left: 1px solid #000 !important; text-align: right;
+                                                     font-weight: bold; }
+
+                        /* ---- footer ---- */
+                        .lpo-terms { margin-top: 10px; width: 50% !important; }
+                        .lpo-terms td { height: 24px; vertical-align: bottom; padding-bottom: 2px; }
+                        .lpo-terms .k { width: 1%; white-space: nowrap; padding-right: 4px; font-size: 13px; }
+                        .lpo .lpo-terms td.v { border-bottom: 1px dotted #000 !important; }
+                        .lpo-sign { margin-top: 8px; }
+                        .lpo-sign td { vertical-align: bottom; padding-bottom: 3px; }
+                        .lpo-sign .note { font-size: 10px; width: 50%; }
+                        .lpo-sign .who { font-weight: bold; font-size: 13px; text-align: center; }
+                        .lpo table.lpo-important { border-top: 1px solid #000 !important; margin-top: 2px; font-size: 11px;
+                                         line-height: 1.6; }
+                        .lpo-important td { vertical-align: top; padding-top: 5px; }
+                    </style>
+
+                    <!-- ================= HEADER ================= -->
+                    <table class="lpo-head">
+                        <tr>
+                            <td class="en">
+                                <div t-if="hdr['po_box']">P.O. Box <t t-out="hdr['po_box']"/></div>
+                                <div t-if="hdr['city_en']"><t t-out="hdr['city_en']"/></div>
+                                <div t-if="hdr['phone']">Tel. : <t t-out="hdr['phone']"/></div>
+                                <div t-if="hdr['fax']">Fax : <t t-out="hdr['fax']"/></div>
+                                <div t-if="hdr['email']"><t t-out="hdr['email']"/></div>
+                                <div t-if="hdr['vat']">TRN: <t t-out="hdr['vat']"/></div>
+                            </td>
+                            <td class="mid">
+                                <!-- Company logo (contains the Arabic + English names) ... -->
+                                <div t-if="hdr['logo']" class="lpo-logo">
+                                    <img t-att-src="hdr['logo']" alt=""/>
+                                </div>
+                                <!-- ... or, without a logo, the names printed as text with the mark -->
+                                <table t-else="" class="lpo-brand">
+                                    <tr>
+                                        <td class="names">
+                                            <div class="lpo-name-ar" dir="rtl" t-if="hdr['name_ar']"><t t-out="hdr['name_ar']"/></div>
+                                            <div class="lpo-rule"/>
+                                            <div class="lpo-name-en"><t t-out="hdr['name_en']"/></div>
+                                        </td>
+                                        <td class="lpo-mark">
+                                            <img t-att-src="hdr['mark']" alt=""/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="ar" dir="rtl">
+                                <div t-if="hdr['po_box']">ص.ب: <t t-out="hdr['po_box_ar']"/></div>
+                                <div t-if="hdr['city_ar']"><t t-out="hdr['city_ar']"/></div>
+                                <div t-if="hdr['phone']">تليفون : <bdo dir="ltr"><t t-out="hdr['phone_ar']"/></bdo></div>
+                                <div t-if="hdr['fax']">فاكس : <bdo dir="ltr"><t t-out="hdr['fax_ar']"/></bdo></div>
+                                <div t-if="hdr['email']" dir="ltr" style="text-align:right;"><t t-out="hdr['email']"/></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ================= TITLE ================= -->
+                    <table class="lpo-title-row">
+                        <tr>
+                            <td style="width:26%;"/>
+                            <td class="lpo-title caps" style="width:48%;">LOCAL PURCHASE ORDER</td>
+                            <td class="lpo-no" style="width:26%;">
+                                <span class="no">No.</span> <span class="num" t-out="o.name"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ================= TO / ORDER NO. / DATE / CONTACT ================= -->
+                    <table class="lpo-fields">
+                        <tr>
+                            <td style="width:52%;">
+                                <div>To,</div>
+                                <div class="lpo-line caps"><t t-out="o.partner_id.name"/></div>
+                                <div class="lpo-line"><t t-out="supplier_address"/></div>
+                            </td>
+                            <td style="width:18%;"/>
+                            <td style="width:30%;">
+                                <table class="lpo-kv">
+                                    <tr><td class="k">Order No.</td><td class="v plain"><t t-out="o.name"/></td></tr>
+                                    <tr><td class="k">Date</td><td class="v"><span t-field="o.date_order" t-options="{'widget': 'date'}"/></td></tr>
+                                    <tr><td class="k">Contact</td><td class="v"><t t-out="o.partner_id.phone or ''"/></td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="lpo-kv" style="margin-top:4px;">
+                        <tr><td class="k">Delivered to</td><td class="v"><t t-out="dest_address"/></td></tr>
+                    </table>
+
+                    <!-- ================= ITEMS ================= -->
+                    <table class="lpo-items">
+                        <colgroup>
+                            <col style="width:5.5%;"/>
+                            <col style="width:48.5%;"/>
+                            <col style="width:6%;"/>
+                            <col style="width:10%;"/>
+                            <col style="width:11%;"/>
+                            <col style="width:14%;"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="c">S.No.</th>
+                                <th class="c">Description of Item / Order</th>
+                                <th class="c">Unit</th>
+                                <th class="c">Quantity</th>
+                                <th class="c">Unit Price</th>
+                                <th class="c">Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="line">
+                                <tr t-att-class="'last' if line_last and not blank_rows else None">
+                                    <td class="c" style="text-align:center;"><t t-out="line_index + 1"/></td>
+                                    <td class="c"><t t-out="line.name"/></td>
+                                    <td class="c" style="text-align:center;"><t t-out="line.uom_id.name"/></td>
+                                    <td class="c" style="text-align:right;"><span t-field="line.product_qty"/></td>
+                                    <td class="c" style="text-align:right;"><span t-field="line.price_unit"/></td>
+                                    <td class="c" style="text-align:right;"><span t-field="line.price_subtotal"/></td>
+                                </tr>
+                            </t>
+                            <t t-foreach="range(blank_rows)" t-as="blank_row">
+                                <tr t-att-class="'last' if blank_row_last else None">
+                                    <td class="c"/><td class="c"/><td class="c"/><td class="c"/><td class="c"/><td class="c"/>
+                                </tr>
+                            </t>
+                            <tr class="total">
+                                <td colspan="4"/>
+                                <td class="lbl">Total</td>
+                                <td class="amt"><span t-field="o.amount_total"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ================= TERMS ================= -->
+                    <table class="lpo-terms">
+                        <tr>
+                            <td class="k"><b>Date of Delivery</b> (On or Before)</td>
+                            <td class="v"><t t-if="planned_dates" t-out="min(planned_dates).strftime('%d/%m/%Y')"/></td>
+                        </tr>
+                        <tr>
+                            <td class="k"><b>Payment Terms</b></td>
+                            <td class="v"><t t-out="o.payment_term_id.name or ''"/></td>
+                        </tr>
+                        <tr>
+                            <td class="v" colspan="2"/>
+                        </tr>
+                    </table>
+
+                    <!-- ================= SIGNATURES / NOTE ================= -->
+                    <table class="lpo-sign">
+                        <tr>
+                            <td class="note">Failure to Deliver material on time shall result in delayed payment</td>
+                            <td class="who" style="width:22%;">Prepared by</td>
+                            <td class="who" style="width:28%;">Authorised Signature</td>
+                        </tr>
+                    </table>
+                    <table class="lpo-important">
+                        <tr>
+                            <td class="caps" style="width:1%; white-space:nowrap; padding-right:10px;">IMPORTANT :</td>
+                            <td>
+                                Above purchase order No. must appear on all invoices and correspondence.<br/>
+                                Mail 2 copies of your invoices to <span class="caps"><t t-out="(hdr['name_en'] or '').upper()"/></span>, Dubai.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

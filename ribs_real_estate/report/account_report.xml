@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_reports.general_ledger_report" model="account.report">
+        <field name="name">General Ledger</field>
+        <field name="column_ids">
+            <record id="general_ledger_lead_reference" model="account.report.column">
+                <field name="name">Memo</field>
+                <field name="expression_label">report_ref</field>
+                <field name="figure_type">string</field>
+            </record>
+        </field>
+    </record>
+</odoo>

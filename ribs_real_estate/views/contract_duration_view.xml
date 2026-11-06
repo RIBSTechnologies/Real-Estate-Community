@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="contract_duration_list_view_inherit" model="ir.ui.view">
+            <field name="name">contract.duration.list.view</field>
+            <field name="model">contract.duration</field>
+            <field name="inherit_id" ref="rental_management.contract_duration_list_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='month']" position="after">
+                    <field name="rent_unit"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

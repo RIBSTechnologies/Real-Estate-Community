@@ -1,0 +1,353 @@
+/* ===== Smooth Resize ===== */
+#employee-section-resize,
+#employee-data-section-resize {
+    transition: width 0.4s ease;
+}
+
+/* ===== Dashboard Base ===== */
+.oh_dashboard {
+    user-select: none;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f6f7fb;
+    color: #000000;
+}
+
+/* ===== Click Tiles ===== */
+.click-tile {
+    cursor: pointer;
+    background: #ffffff;
+    width: 18%;
+    height: 80%;
+    margin-top: 1%;
+    margin-left: 1.5%;
+    border-radius: 8px;
+    display: flex;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.click-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+}
+
+/* ===== Tile Layout ===== */
+.tile-icon {
+    width: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #3b82f6;
+}
+
+.tile-details {
+    width: 55%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+/* ===== Special Tile ===== */
+.check-in-out {
+    background-color: #eef4ff !important;
+}
+
+/* ===== Enlarge Icon ===== */
+#enlarge-icon {
+    cursor: pointer;
+}
+
+/* ===== Layout Sections ===== */
+.department-leave-job-application {
+    display: flex;
+    width: 100%;
+    height: 46%;
+}
+
+.leave-job-application {
+    width: 39%;
+    height: 100%;
+    padding-left: 1%;
+}
+
+/* ===== Leave Status ===== */
+.leave-requests-status {
+    display: flex;
+    width: 100%;
+    height: 60%;
+}
+
+.leave-requests,
+.leave-today,
+.leave-month {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.leave-requests {
+    width: 50%;
+    height: 100%;
+}
+
+.leave-today,
+.leave-month {
+    width: 100%;
+    height: 50%;
+}
+
+.leave-today-month {
+    width: 100%;
+    height: 100%;
+}
+
+.stat-count {
+    margin-left: 5%;
+}
+
+/* ===== Allocation / Jobs ===== */
+.leave-allocation,
+.job-applications {
+    display: flex;
+    width: 100%;
+    height: 20%;
+    justify-content: center;
+    align-items: center;
+}
+
+.leave-allocation {
+    margin-top: 3% !important;
+}
+
+/* ===== Allocation Tile ===== */
+.leave-job-allocation-click-tile {
+    cursor: pointer;
+    background: #ffffff;
+    margin-top: 1%;
+    margin-left: 1.5%;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.leave-job-allocation-click-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+}
+
+/* ===== Main Cards ===== */
+.departments-main,
+.monthly-leave-analysis,
+.join-resign-analysis,
+.attrition-rate,
+.birthday-event-announcement,
+.my-leave-analysis {
+    background: #ffffff !important;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* ===== Departments ===== */
+.departments-main {
+    width: 93%;
+    height: 104%;
+    margin-top: 0.9%;
+    margin-left: 2.5%;
+}
+
+.departments {
+    width: 61%;
+    height: 100%;
+}
+
+/* ===== Monthly Leave ===== */
+.monthly-leave-analysis-main {
+    width: 100%;
+    margin-top: 3%;
+}
+
+.leave_graph {
+    height: 480px;
+}
+
+.monthly-leave-analysis {
+    width: 96%;
+    margin-left: 1.5%;
+}
+
+/* ===== Scroll Section ===== */
+.section {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ===== Join / Attrition ===== */
+.join-resign-attrition {
+    display: flex;
+    width: 100%;
+    height: 50%;
+}
+
+.join-resign-analysis {
+    width: 44.5%;
+    margin-left: 1.5%;
+}
+
+.attrition-rate {
+    width: 50%;
+    margin-left: 1.5%;
+}
+
+/* ===== Birthday / Events ===== */
+.birthday-event-announcement-main {
+    display: flex;
+    width: 97.5%;
+    height: 50%;
+    margin-top: 3%;
+}
+
+.birthday-event-announcement {
+    width: 33%;
+    margin-left: 1.5%;
+}
+
+/* ===== My Leave ===== */
+.my-leave-analysis-main {
+    display: flex;
+    width: 102.5%;
+    height: 70%;
+    margin-bottom: 2%;
+}
+
+.my-leave-analysis {
+    width: 100%;
+    padding: 20px;
+}
+
+/* ===== Employee Sidebar ===== */
+.employee-details {
+    width: 100%;
+    height: 29%;
+    color: #374151;
+    margin-top: 10%;
+}
+
+.employee-details p {
+    font-size: 12px;
+}
+
+/* ===== Employee Sections ===== */
+.employee-gender-age,
+.employee-country-mobile {
+    display: flex;
+    width: 100%;
+}
+
+.employee-gender,
+.employee-age,
+.employee-country,
+.employee-mobile {
+    width: 100%;
+}
+
+.employee-experience {
+    height: 40%;
+}
+
+/* ===== Alignment ===== */
+.align-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* ===== Headers ===== */
+.div-header {
+    color: #374151;
+    font-weight: 500;
+    width: 100%;
+    height: 11%;
+    display: flex;
+    align-items: center;
+    margin-left: 3%;
+}
+
+/* ===== Birthday Header ===== */
+.upcoming-birthdays-events-header-div {
+    background: #f3f4f6;
+    height: 13%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.upcoming-birthdays-events-header {
+    color: #374151;
+    font-weight: 500;
+}
+
+/* ===== Notifications ===== */
+.hr_notification {
+    background: #ffffff;
+    height: 87%;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.hr_notification .media {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+/* ===== Text ===== */
+.media-body .employee_name {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.days_left {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.birth_img {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+}
+
+/* ===== Birthday Highlight ===== */
+.birthday {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2563eb;
+}
+
+/* ===== Trend ===== */
+.leave_trend {
+    position: absolute;
+}
+
+.text-black {
+    color: #000000 !important;
+}
+
+.text-black-center {
+    color: #000000;
+    text-align: center;
+}
+
+.bg-total{
+    background-color: #f2edce !important;
+    color: #b59d05 !important;
+}

@@ -1,0 +1,17 @@
+/* Send Contract Renewal Reminder wizard - when many contracts are
+   selected, the dialog's default (small, fixed-height) size forces a
+   second, inner scrollbar just to see the rest of the lines below the
+   first few. Widen/heighten this specific dialog and let its body use
+   nearly the full viewport instead, so far fewer contracts need that
+   inner scroll/drag to come into view. Scoped via :has() to the form's
+   own o_reminder_wizard_form class so no other dialog in the app is
+   affected. */
+.modal-dialog:has(.o_reminder_wizard_form) {
+    max-width: 95vw;
+    width: 95vw;
+}
+
+.modal-dialog:has(.o_reminder_wizard_form) .modal-body {
+    max-height: 82vh;
+    overflow-y: auto;
+}

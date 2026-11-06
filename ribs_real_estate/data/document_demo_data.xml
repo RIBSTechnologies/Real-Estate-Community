@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ===================== -->
+        <!-- B2C DOCUMENTS -->
+        <!-- ===================== -->
+
+        <record id="doc_b2c_uae_visa" model="document.document">
+            <field name="name">UAE residence visa copy</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <record id="doc_b2c_emirates_id" model="document.document">
+            <field name="name">Emirates ID (both sides)</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <record id="doc_b2c_salary_certificate" model="document.document">
+            <field name="name">Salary certificate</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <record id="doc_b2c_employment_contract" model="document.document">
+            <field name="name">Employment contract</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <record id="doc_b2c_bank_statements" model="document.document">
+            <field name="name">Last 3–6 months bank statements</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <record id="doc_b2c_payslips" model="document.document">
+            <field name="name">Last 3–6 months payslips</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <record id="doc_b2c_trade_license" model="document.document">
+            <field name="name">Trade license</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <record id="doc_b2c_marriage_certificate" model="document.document">
+            <field name="name">Marriage certificate (if applicable)</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <record id="doc_b2c_noc_current_landlord" model="document.document">
+            <field name="name">No Objection Certificate (NOC) from current landlord</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <record id="doc_b2c_reference_letter" model="document.document">
+            <field name="name">Reference letter from previous landlord</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <record id="doc_b2c_photos" model="document.document">
+            <field name="name">Passport-sized photos</field>
+            <field name="document_for">b2c</field>
+        </record>
+
+        <!-- ===================== -->
+        <!-- B2B DOCUMENTS -->
+        <!-- ===================== -->
+
+        <record id="doc_b2b_trade_license_copy" model="document.document">
+            <field name="name">Trade License copy</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <record id="doc_b2b_certificate_incorporation" model="document.document">
+            <field name="name">Certificate of Incorporation / Commercial License</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <record id="doc_b2b_moa_aoa" model="document.document">
+            <field name="name">Memorandum of Association (MOA) / Articles of Association (AOA)</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <record id="doc_b2b_share_certificate" model="document.document">
+            <field name="name">Company Share Certificate (if applicable)</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <record id="doc_b2b_board_resolution" model="document.document">
+            <field name="name">Board Resolution authorizing the signatory to sign the tenancy contract</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <record id="doc_b2b_authorized_passport" model="document.document">
+            <field name="name">Passport copy of the authorized signatory</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <record id="doc_b2b_authorized_emirates_id" model="document.document">
+            <field name="name">Emirates ID copy of the authorized signatory</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <record id="doc_b2b_authorized_visa" model="document.document">
+            <field name="name">Valid UAE residence visa copy of the authorized signatory</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <record id="doc_b2b_establishment_card" model="document.document">
+            <field name="name">Establishment Card / Immigration Card of the company</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <record id="doc_b2b_power_of_attorney" model="document.document">
+            <field name="name">Tenancy Contract Power of Attorney (if signed by someone other than the owner/manager)</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <record id="doc_b2b_vat_certificate" model="document.document">
+            <field name="name">VAT Certificate</field>
+            <field name="document_for">b2b</field>
+        </record>
+
+        <!-- ===================== -->
+        <!-- WELCOME PACK DOCUMENTS -->
+        <!-- ===================== -->
+
+        <record id="doc_wp_ejari_certificate" model="document.document">
+            <field name="name">Ejari Certificate</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_signed_tenancy_contract" model="document.document">
+            <field name="name">Contract Agreement</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_dewa_connection" model="document.document">
+            <field name="name">DEWA Connection Letter / Premises Number</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_dewa_deposit" model="document.document">
+            <field name="name">DEWA Security Deposit Receipt</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_condition_report" model="document.document">
+            <field name="name">Move-In/Move-Out Condition Report (signed)</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_access_cards" model="document.document">
+            <field name="name">Access Cards / Fobs</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_parking_labels" model="document.document">
+            <field name="name">Car Parking Labels / Stickers</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_empower_connection" model="document.document">
+            <field name="name">Empower Account Number and Connection Letter (for district cooling)</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_chiller_free" model="document.document">
+            <field name="name">Chiller Free Letter (if rent is chiller-free)</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_keys_handover" model="document.document">
+            <field name="name">Keys Handover Receipt</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_rules_regulations" model="document.document">
+            <field name="name">Building/Community Rules and Regulations</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_maintenance_contacts" model="document.document">
+            <field name="name">Maintenance and Emergency Contact List</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_du_etisalat_noc" model="document.document">
+            <field name="name">NOC from Landlord/Developer (for du/Etisalat connection)</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_landlord_ids" model="document.document">
+            <field name="name">Landlord’s Passport and Emirates ID copy</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_agency_fee_invoice" model="document.document">
+            <field name="name">Agency Fee Invoice and VAT Receipt (if paid)</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_rent_payment_receipt" model="document.document">
+            <field name="name">Draft Payment</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_draft_invoice" model="document.document">
+            <field name="name">Draft Invoice</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+        <record id="doc_wp_fire_safety" model="document.document">
+            <field name="name">Fire Safety Instructions</field>
+            <field name="document_for">welcome_pack</field>
+        </record>
+
+    </data>
+</odoo>

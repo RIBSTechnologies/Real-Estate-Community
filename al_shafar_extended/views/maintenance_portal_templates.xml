@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="maintenance_tenant_feedback_block"
+              inherit_id="rental_management.rental_user_maintenance_details">
+        <xpath expr="//div[@id='maintenance_history']" position="before">
+            <div class="row mb-4" t-if="mr.is_repaired_stage and mr.tenant_resolution_confirmation == 'pending'">
+                <div class="col-md-12 col-sm-12 mb-2">
+                    <div class="card border-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">Is your issue resolved?</h5>
+                            <form t-attf-action="/my/maintenance-request/information/{{ slug(mr) }}/feedback"
+                                  method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="mb-3">
+                                    <label class="form-label">Rate the service (optional)</label>
+                                    <select name="rating" class="form-select" style="max-width: 220px;">
+                                        <option value="">Select rating</option>
+                                        <option value="5">5 - Excellent</option>
+                                        <option value="4">4 - Very Good</option>
+                                        <option value="3">3 - Good</option>
+                                        <option value="2">2 - Fair</option>
+                                        <option value="1">1 - Poor</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Comments (optional)</label>
+                                    <textarea name="comment" class="form-control" rows="2"/>
+                                </div>
+                                <button type="submit" name="resolved" value="yes" class="btn btn-success me-2">
+                                    Yes, Resolved
+                                </button>
+                                <button type="submit" name="resolved" value="no" class="btn btn-outline-danger">
+                                    No, Not Resolved
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4" t-if="mr.tenant_resolution_confirmation != 'pending'">
+                <div class="col-md-12 col-sm-12 mb-2">
+                    <span t-if="mr.tenant_resolution_confirmation == 'confirmed'"
+                          class="badge rounded-pill text-bg-success">
+                        You confirmed this issue is resolved
+                    </span>
+                    <span t-else="" class="badge rounded-pill text-bg-warning">
+                        You reported this issue is not resolved — reopened
+                    </span>
+                    <div t-if="mr.tenant_rating" class="mt-2">
+                        Your rating: <t t-out="mr.tenant_rating"/>/5
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

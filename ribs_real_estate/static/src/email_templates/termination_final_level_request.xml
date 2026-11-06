@@ -1,0 +1,96 @@
+<odoo>
+    <data>
+        <record id="mail_template_contract_closure_final_approval_" model="mail.template">
+            <field name="name">Contract Closure - Final Approval Request</field>
+            <field name="model_id" ref="model_tenancy_details"/>
+            <field name="subject">Final Approval Required</field>
+            <field name="body_html">
+                <![CDATA[
+                    <p>Dear Approver,</p>
+
+                    <t t-if="object.first_level_approved_by">
+                        <p>
+                            The tenancy contract
+                            <strong>
+                                <t t-out="object.temp_seq"/>
+                            </strong>
+                            has been approved at the <b>first level</b> and now requires your
+                            <b>final approval</b>.
+                        </p>
+                    </t>
+                    <t t-else="">
+                        <p>
+                            A request has been submitted to
+                            <b>close the tenancy contract</b>
+                            <strong>
+                                <t t-out="object.temp_seq"/>
+                            </strong>.
+                            Kindly review and provide your approval.
+                        </p>
+                    </t>
+
+                    <h4>Termination Details</h4>
+                    <ul>
+                        <li>
+                            <b>Requested By:</b>
+                            <t t-out="object.termination_requested_person.name"/>
+                        </li>
+                        <li>
+                            <b>Proposed Closing Date:</b>
+                            <t t-out="object.closing_date"/>
+                        </li>
+                        <li>
+                            <b>Termination Type:</b>
+                            <t t-out="dict(object._fields['termination_type'].selection).get(object.termination_type)"/>
+                        </li>
+                        <li>
+                            <b>Reason for Closure:</b><br/>
+                            <t t-out="object.closing_reason"/>
+                        </li>
+
+                        <t t-if="object.if_penalty">
+                            <li>
+                                <b>Penalty Amount:</b>
+                                <t t-out="object.penalty_amount"/>
+                            </li>
+                        </t>
+                    </ul>
+
+                    <hr/>
+                    <t t-if="object.first_level_approved_by">
+                        <h4>First Level Approval Details</h4>
+                        <ul>
+                            <li>
+                                <b>Approved By:</b>
+                                <t t-out="object.first_level_approved_by.name"/>
+                            </li>
+                            <li>
+                                <b>Approved On:</b>
+                                <t t-out="object.first_level_approved_date"/>
+                            </li>
+                            <t t-if="object.first_level_approval_comment">
+                                <li>
+                                    <b>Comment:</b><br/>
+                                    <t t-out="object.first_level_approval_comment"/>
+                                </li>
+                            </t>
+                        </ul>
+                    </t>
+
+                    <p>
+                        Kindly review this
+                        <a t-att-href="ctx.get('request_url')">
+                            request
+                        </a>
+                        and provide your final approval.
+                    </p>
+
+                    <p>
+                        Thank you,<br/>
+                        <t t-out="object.company_id.name"/>
+                    </p>
+                    ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

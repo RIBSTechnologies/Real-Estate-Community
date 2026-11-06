@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="send_expired_document_reminder" model="mail.template">
+            <field name="name">Expired Documents</field>
+            <field name="model_id" ref="model_tenancy_details"/>
+            <field name="subject">Expired Documents - Action Required</field>
+
+            <field name="body_html">
+                <![CDATA[
+                <p>Dear <t t-out="object.tenancy_id.name"/>,</p>
+
+                <p>
+                    We hope you are doing well. This is a gentle reminder that the following documents 
+                    related to your contract <strong><t t-out="ctx.get('contract').tenancy_seq"/></strong> have expired.
+                </p>
+
+                <p>Please take the necessary action at your earliest convenience.</p>
+
+                <t t-if="ctx.get('expired_documents')">
+                    <p><strong>Expired Documents:</strong></p>
+                    <ul>
+                        <t t-foreach="ctx['expired_documents']" t-as="doc">
+                            <li>
+                                <strong><t t-out="doc.document_id.name"/></strong> — expired on 
+                                <t t-out="doc.expiry_date"/>
+                            </li>
+                        </t>
+                    </ul>
+                </t>
+
+                <p>
+                    If you have already submitted the updated documents, kindly disregard this message.
+                </p>
+
+                <p>Thank you,<br/></p>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

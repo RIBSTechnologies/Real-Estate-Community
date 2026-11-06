@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Building blocks shared by the Tax Invoice, Credit Note and Customer
+        Payment reports so all three look the same: green theme (#145326) of
+        the Contract Agreement report, printed inside web.external_layout
+        (company logo letterhead).
+    -->
+
+    <!-- ================= STYLES ================= -->
+    <template id="report_style">
+        <style>
+            .ti-page {
+                font-family: 'Arial', 'Tahoma', sans-serif;
+                font-size: 10pt;
+                color: #222;
+                line-height: 1.4;
+            }
+            .ti-page table { width: 100%; border-collapse: collapse; }
+            .ti-title {
+                border: 2px solid #145326;
+                border-radius: 8px;
+                margin: 0 0 9px 0;
+            }
+            .ti-title td {
+                background-color: #eef5f0;
+                padding: 8px;
+                text-align: center;
+                vertical-align: middle;
+                font-weight: bold;
+            }
+            .ti-title .ti-title-side { width: 25%; font-size: 9pt; }
+            .ti-title .ti-title-main { width: 50%; font-size: 14pt; color: #145326; }
+            .ti-box { border: 1px solid #145326; border-radius: 6px; }
+            .ti-box-head {
+                background-color: #145326;
+                color: #fff;
+                font-weight: bold;
+                font-size: 9pt;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 5px 10px;
+            }
+            .ti-box-body { padding: 8px 10px; }
+            .ti-kv td { border: none; padding: 2px 0; vertical-align: top; }
+            .ti-kv .ti-k { width: 38%; color: #555; font-weight: bold; }
+            .ti-kv .ti-sep { width: 4%; color: #555; }
+            .ti-partner-name { font-size: 12pt; font-weight: bold; margin-bottom: 4px; }
+            .ti-memo {
+                border-left: 3px solid #145326;
+                background-color: #eef5f0;
+                padding: 7px 10px;
+                margin: 14px 0;
+            }
+            .ti-lines th {
+                background-color: #145326;
+                color: #fff;
+                font-size: 9pt;
+                font-weight: bold;
+                padding: 7px 8px;
+                border: 1px solid #145326;
+            }
+            .ti-lines td {
+                padding: 6px 8px;
+                border-bottom: 1px solid #d9d9d9;
+                border-left: 1px solid #d9d9d9;
+                border-right: 1px solid #d9d9d9;
+                vertical-align: top;
+            }
+            .ti-lines tr.ti-even td { background-color: #f6faf7; }
+            .ti-lines tr.ti-section td { background-color: #dcebe0; font-weight: bold; }
+            .ti-lines tr.ti-note td { font-style: italic; color: #555; }
+            .ti-totals td { padding: 6px 10px; border: 1px solid #d9d9d9; }
+            .ti-totals .ti-grand td {
+                background-color: #145326;
+                color: #fff;
+                font-weight: bold;
+                font-size: 11pt;
+                border-color: #145326;
+            }
+            .ti-words {
+                margin-top: 8px;
+                padding: 6px 10px;
+                border: 1px dashed #145326;
+                font-style: italic;
+            }
+            .ti-sign td { border: none; padding: 0 10px; vertical-align: bottom; text-align: center; }
+            .ti-sign-line { border-top: 1px solid #222; padding-top: 4px; font-weight: bold; }
+            .ti-r { text-align: right; }
+            .ti-c { text-align: center; }
+        </style>
+    </template>
+
+    <!-- ================= TITLE BAND =================
+         doc_title, doc_no_label, doc_no, doc_date_label, doc_date -->
+    <template id="report_title_band">
+        <table class="ti-title">
+            <tr>
+                <td class="ti-title-side"><t t-out="doc_no_label"/>: <t t-out="doc_no"/></td>
+                <td class="ti-title-main"><t t-out="doc_title"/></td>
+                <td class="ti-title-side"><t t-out="doc_date_label"/>: <t t-out="doc_date"/></td>
+            </tr>
+        </table>
+    </template>
+
+    <!-- ================= CUSTOMER BOX =================
+         partner, partner_box_title -->
+    <template id="report_partner_box">
+        <div class="ti-box">
+            <div class="ti-box-head"><t t-out="partner_box_title"/></div>
+            <div class="ti-box-body">
+                <div class="ti-partner-name" t-field="partner.name"/>
+                <div t-if="partner.street" t-field="partner.street"/>
+                <div t-if="partner.street2" t-field="partner.street2"/>
+                <div t-if="partner.city or partner.country_id">
+                    <t t-out="', '.join(filter(None, [partner.city, partner.state_id.name, partner.country_id.name]))"/>
+                </div>
+                <table class="ti-kv" style="margin-top:6px;">
+                    <tr t-if="partner.vat">
+                        <td class="ti-k"><t t-out="partner_trn_label or 'Customer TRN'"/></td><td class="ti-sep">:</td>
+                        <td><span t-field="partner.vat"/></td>
+                    </tr>
+                    <tr t-if="partner.phone">
+                        <td class="ti-k">Phone</td><td class="ti-sep">:</td>
+                        <td><span t-field="partner.phone"/></td>
+                    </tr>
+                    <tr t-if="partner.email">
+                        <td class="ti-k">Email</td><td class="ti-sep">:</td>
+                        <td><span t-field="partner.email"/></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </template>
+
+    <!-- ================= SIGNATURES ================= -->
+    <template id="report_signatures">
+        <table class="ti-sign" style="margin-top:60px; page-break-inside:avoid;">
+            <tr>
+                <td width="35%"><div class="ti-sign-line">Prepared By</div></td>
+                <td width="30%"/>
+                <td width="35%"><div class="ti-sign-line"><t t-out="sign_right_label or 'Received By'"/></div></td>
+            </tr>
+        </table>
+    </template>
+
+    <!-- ================= INVOICE / CREDIT NOTE / VENDOR BILL BODY =================
+         Rendered inside web.external_layout for one account.move `o`.
+         doc_kind ('invoice' / 'credit_note' / 'bill') switches titles, labels,
+         memo and the "against invoice" info; is_credit_note=True is still
+         accepted for 'credit_note'. -->
+    <template id="report_move_document">
+        <t t-set="doc_kind" t-value="doc_kind or ('credit_note' if is_credit_note else 'invoice')"/>
+        <t t-set="is_credit_note" t-value="doc_kind == 'credit_note'"/>
+        <t t-set="is_bill" t-value="doc_kind == 'bill'"/>
+        <t t-set="is_vendor_refund" t-value="is_bill and o.move_type == 'in_refund'"/>
+        <t t-set="building_name" t-value="o._get_report_building_name()"/>
+        <t t-set="unit_name" t-value="o._get_report_unit_name()"/>
+        <t t-set="tenancy" t-value="o.tenancy_id"/>
+        <t t-set="partner" t-value="o.partner_id"/>
+        <t t-set="origin_invoice" t-value="o.reversed_entry_id"/>
+        <!-- report_exclude (Tax Invoice reports): line kinds left out, e.g.
+             ('deposit',) or ('deposit', 'ejari'); the totals are then those
+             of the remaining lines. -->
+        <t t-set="report_lines" t-value="o._get_report_lines(report_exclude) if report_exclude else o.invoice_line_ids"/>
+        <t t-set="report_untaxed" t-value="sum(report_lines.mapped('price_subtotal')) if report_exclude else o.amount_untaxed"/>
+        <t t-set="report_total" t-value="sum(report_lines.mapped('price_total')) if report_exclude else o.amount_total"/>
+        <t t-set="report_tax" t-value="report_total - report_untaxed if report_exclude else o.amount_tax"/>
+        <!-- Rows in the line table (real + blank) so the document fills one
+             A4 page; lower it if the signatures spill onto a 2nd page. -->
+        <t t-set="total_row_target" t-value="12"/>
+
+        <div class="page ti-page">
+            <t t-call="account_extended.report_style"/>
+
+            <t t-call="account_extended.report_title_band"
+                doc_title="
+                    ('VENDOR REFUND / إشعار دائن من المورد' if is_vendor_refund else 'VENDOR BILL / فاتورة المورد') if is_bill
+                    else 'TAX CREDIT NOTE / إشعار دائن ضريبي' if is_credit_note
+                    else 'TAX INVOICE / فاتورة ضريبية'"
+                doc_no_label="'Refund No' if is_vendor_refund else 'Bill No' if is_bill else 'Credit Note No' if is_credit_note else 'Invoice No'"
+                doc_no="o.name"
+                doc_date_label="'Refund Date' if is_vendor_refund else 'Bill Date' if is_bill else 'Credit Note Date' if is_credit_note else 'Invoice Date'"
+                doc_date="o.invoice_date and o.invoice_date.strftime('%d/%m/%Y') or ''"/>
+
+            <!-- ================= CUSTOMER + DETAILS ================= -->
+            <table>
+                <tr>
+                    <td width="55%" style="padding:0 8px 0 0; border:none; vertical-align:top;">
+                        <t t-call="account_extended.report_partner_box"
+                            partner_box_title="'Vendor' if is_bill else 'Customer' if is_credit_note else 'Bill To'"
+                            partner_trn_label="'Vendor TRN' if is_bill else 'Customer TRN'"/>
+                    </td>
+                    <td width="45%" style="padding:0 0 0 8px; border:none; vertical-align:top;">
+                        <div class="ti-box">
+                            <div class="ti-box-head"><t t-out="'Refund Details' if is_vendor_refund else 'Bill Details' if is_bill else 'Credit Note Details' if is_credit_note else 'Invoice Details'"/></div>
+                            <div class="ti-box-body">
+                                <table class="ti-kv">
+                                    <tr>
+                                        <td class="ti-k">Currency</td><td class="ti-sep">:</td>
+                                        <td><span t-field="o.currency_id.name"/></td>
+                                    </tr>
+                                    <tr t-if="is_bill and o.ref">
+                                        <td class="ti-k">Vendor Ref.</td><td class="ti-sep">:</td>
+                                        <td><span t-field="o.ref"/></td>
+                                    </tr>
+                                    <tr t-if="is_vendor_refund and origin_invoice">
+                                        <td class="ti-k">Against Bill</td><td class="ti-sep">:</td>
+                                        <td><span t-field="origin_invoice.name"/></td>
+                                    </tr>
+                                    <tr t-if="is_credit_note and origin_invoice">
+                                        <td class="ti-k">Against Invoice</td><td class="ti-sep">:</td>
+                                        <td><span t-field="origin_invoice.name"/></td>
+                                    </tr>
+                                    <tr t-if="is_credit_note and origin_invoice.invoice_date">
+                                        <td class="ti-k">Invoice Date</td><td class="ti-sep">:</td>
+                                        <td><span t-field="origin_invoice.invoice_date" t-options='{"format": "dd/MM/yyyy"}'/></td>
+                                    </tr>
+                                    <tr t-if="not is_credit_note and o.invoice_date_due and o.invoice_date_due != o.invoice_date">
+                                        <td class="ti-k">Due Date</td><td class="ti-sep">:</td>
+                                        <td><span t-field="o.invoice_date_due" t-options='{"format": "dd/MM/yyyy"}'/></td>
+                                    </tr>
+                                    <tr t-if="tenancy and tenancy.tenancy_seq">
+                                        <td class="ti-k">Contract No.</td><td class="ti-sep">:</td>
+                                        <td><span t-field="tenancy.tenancy_seq"/></td>
+                                    </tr>
+                                    <tr t-if="building_name">
+                                        <td class="ti-k">Building</td><td class="ti-sep">:</td>
+                                        <td><t t-out="building_name"/></td>
+                                    </tr>
+                                    <tr t-if="unit_name">
+                                        <td class="ti-k">Unit No.</td><td class="ti-sep">:</td>
+                                        <td><t t-out="unit_name"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ================= MEMO ================= -->
+            <t t-if="is_bill">
+                <div class="ti-memo" t-if="building_name or unit_name or (tenancy and tenancy.tenancy_seq)">
+                    <strong>Narration :</strong>
+                    <t t-out="'Vendor Refund' if is_vendor_refund else 'Vendor Bill'"/><t t-if="tenancy.tenancy_seq"> for the Contract
+                    <span t-field="tenancy.tenancy_seq"/></t><t t-if="unit_name">, Unit # <t t-out="unit_name"/></t><t t-if="building_name">, Building Name: <t t-out="building_name"/></t>
+                </div>
+                <div t-else="" style="height:14px;"/>
+            </t>
+            <t t-elif="is_credit_note">
+                <div class="ti-memo" t-if="origin_invoice or o.ref or building_name or unit_name">
+                    <strong>Narration :</strong>
+                    Tax Credit Note<t t-if="origin_invoice"> against Invoice <span t-field="origin_invoice.name"/></t><t t-if="tenancy.tenancy_seq"> for the Contract
+                    <span t-field="tenancy.tenancy_seq"/></t><t t-if="unit_name">, Unit # <t t-out="unit_name"/></t><t t-if="building_name">, Building Name: <t t-out="building_name"/></t>
+                    <div t-if="o.ref"><strong>Reason :</strong> <span t-field="o.ref"/></div>
+                </div>
+                <div t-else="" style="height:14px;"/>
+            </t>
+            <t t-else="">
+                <div class="ti-memo" t-if="tenancy or building_name or unit_name">
+                    <strong>Narration :</strong>
+                    VAT Invoice for Rent Income<t t-if="tenancy.start_date and tenancy.end_date_copy"> for the Period from
+                    <span t-field="tenancy.start_date" t-options='{"format": "dd/MM/yyyy"}'/> to
+                    <span t-field="tenancy.end_date_copy" t-options='{"format": "dd/MM/yyyy"}'/></t><t t-if="tenancy.tenancy_seq"> for the Contract
+                    <span t-field="tenancy.tenancy_seq"/></t><t t-if="unit_name">, Unit # <t t-out="unit_name"/></t><t t-if="building_name">, Building Name: <t t-out="building_name"/></t>
+                </div>
+                <div t-else="" style="height:14px;"/>
+            </t>
+
+            <!-- ================= LINES ================= -->
+            <table class="ti-lines">
+                <thead>
+                    <tr>
+                        <th class="ti-c" style="width:5%;">#</th>
+                        <th style="width:20%;">Item</th>
+                        <th style="width:27%;">Description</th>
+                        <th class="ti-r" style="width:13%;">Amount</th>
+                        <th class="ti-c" style="width:9%;">VAT %</th>
+                        <th class="ti-r" style="width:12%;">VAT Amount</th>
+                        <th class="ti-r" style="width:14%;">Amount incl. VAT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="sl_no" t-value="0"/>
+                    <t t-foreach="report_lines" t-as="line">
+                        <tr t-if="line.display_type == 'line_section'" class="ti-section">
+                            <td colspan="7"><span t-field="line.name"/></td>
+                        </tr>
+                        <tr t-elif="line.display_type == 'line_note'" class="ti-note">
+                            <td colspan="7"><span t-field="line.name"/></td>
+                        </tr>
+                        <t t-else="">
+                            <t t-set="sl_no" t-value="sl_no + 1"/>
+                            <tr t-att-class="'ti-even' if sl_no % 2 == 0 else ''">
+                                <td class="ti-c"><t t-out="sl_no"/></td>
+                                <td><t t-out="line.product_id.name or line.account_id.name"/></td>
+                                <td><span t-field="line.name"/></td>
+                                <td class="ti-r">
+                                    <span t-field="line.price_subtotal"
+                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                                <td class="ti-c">
+                                    <t t-if="line.tax_ids">
+                                        <t t-foreach="line.tax_ids" t-as="tax">
+                                            <t t-out="'%g' % tax.amount"/>%<t t-if="not tax_last">, </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">0%</t>
+                                </td>
+                                <td class="ti-r">
+                                    <span t-out="line.price_total - line.price_subtotal"
+                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                                <td class="ti-r">
+                                    <span t-field="line.price_total"
+                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                    <!-- Blank rows so the table always reaches total_row_target
+                         rows and the document fills one A4 page. -->
+                    <t t-set="filled_rows" t-value="len(report_lines)"/>
+                    <t t-foreach="range(max(0, total_row_target - filled_rows))" t-as="blank">
+                        <tr t-att-class="'ti-even' if (filled_rows + blank + 1) % 2 == 0 else ''">
+                            <td> </td><td/><td/><td/><td/><td/><td/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+
+            <!-- ================= TOTALS ================= -->
+            <table style="margin-top:14px; page-break-inside:avoid;">
+                <tr>
+                    <td width="55%" style="border:none; padding:0 8px 0 0; vertical-align:bottom;">
+                        <div class="ti-words">
+                            <strong>Amount in words:</strong>
+                            Dhs <t t-out="o.currency_id.amount_to_text(report_total) if report_exclude else o.amount_total_words"/> Only
+                        </div>
+                    </td>
+                    <td width="45%" style="border:none; padding:0 0 0 8px; vertical-align:top;">
+                        <table class="ti-totals">
+                            <tr>
+                                <td>Total (excl. VAT)</td>
+                                <td class="ti-r">
+                                    <span t-out="report_untaxed"
+                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>VAT Amount</td>
+                                <td class="ti-r">
+                                    <span t-out="report_tax"
+                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                            <tr class="ti-grand">
+                                <td><t t-out="'Total Credit Amount' if is_credit_note else 'Total Amount After VAT'"/></td>
+                                <td class="ti-r">
+                                    <span t-out="report_total"
+                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <t t-call="account_extended.report_signatures"
+                sign_right_label="'Approved By' if is_bill else 'Received By'"/>
+        </div>
+    </template>
+
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- ERP UI Redesign settings screen.                              -->
+    <!--                                                                -->
+    <!-- v1.2 tried to inject a block into the shared General Settings -->
+    <!-- page via `inherit_id="base_setup.res_config_settings_view_    -->
+    <!-- form"` + `xpath expr="//div[hasclass('settings')]"`. That     -->
+    <!-- xpath doesn't exist in every version's settings view (Odoo    -->
+    <!-- restructured that screen more than once), so on some installs -->
+    <!-- the whole module failed to load with a ParseError.            -->
+    <!--                                                                -->
+    <!-- This version is a plain, standalone form with NO inherit_id - -->
+    <!-- it doesn't reach into any core view at all, so there is       -->
+    <!-- nothing version-specific left that can fail to parse. It's a  -->
+    <!-- little less "native-feeling" than being embedded inside       -->
+    <!-- General Settings, but it can't break on install.               -->
+    <!-- ============================================================ -->
+
+    <record id="view_erp_ui_redesign_settings_form" model="ir.ui.view">
+        <field name="name">erp.ui.redesign.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="arch" type="xml">
+            <form string="ERP UI Redesign Settings">
+                <header>
+                    <button string="Save" type="object" name="execute" class="btn-primary"/>
+                    <button string="Discard" type="object" name="cancel" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>ERP UI Redesign</h1>
+                        <p class="text-muted">
+                            Appearance settings that apply across every form
+                            and list view for all users.
+                        </p>
+                    </div>
+                    <group string="Appearance">
+                        <field name="erp_ui_font_family" widget="radio"/>
+                    </group>
+                    <p class="text-muted">
+                        Takes effect after a page refresh.
+                    </p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_erp_ui_redesign_settings" model="ir.actions.act_window">
+        <field name="name">ERP UI Redesign Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_erp_ui_redesign_settings_form"/>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Top-level fallback menu so the screen is reachable without
+         depending on the id of any existing menu (e.g. the Settings app
+         root, which also varies slightly by version). If you already have
+         a "Configuration" menu of your own (e.g. inside a property
+         management module), you can instead point a <menuitem> there at
+         action="erp_ui_redesign.action_erp_ui_redesign_settings" and
+         remove/hide this one - it's just here so the screen is guaranteed
+         to be reachable out of the box. -->
+    <menuitem id="menu_erp_ui_redesign_root"
+              name="ERP UI Redesign"
+              sequence="950"
+              groups="base.group_system"/>
+
+    <menuitem id="menu_erp_ui_redesign_settings"
+              name="Settings"
+              parent="menu_erp_ui_redesign_root"
+              action="action_erp_ui_redesign_settings"
+              sequence="10"
+              groups="base.group_system"/>
+
+</odoo>

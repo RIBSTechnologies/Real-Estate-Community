@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="discount_demo_data" model="minimum.discount">
+            <field name="discount">30</field>
+        </record>
+
+        <record id="default_terms_conditions_demo_data" model="default.terms.conditions">
+            <field name="terms_html">This is Demo terms and conditions</field>
+        </record>
+
+
+        <!-- CRM Changes -->
+        <record id="automation_rules_for_crm_activities" model="base.automation">
+            <field name="name">Lead and Opportunity</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="trigger">on_stage_set</field>
+            <field name="trg_field_ref" ref="crm.stage_lead1"/>
+            <field name="trg_date_range">1</field>
+            <field name="active">True</field>
+            <field name="action_server_ids" eval="[
+            (0, 0, {
+                'name': 'Lead and Opportunity',
+                'model_id': ref('crm.model_crm_lead'),
+                'state': 'next_activity',
+                'activity_type_id': ref('mail.mail_activity_data_todo'),
+                'activity_summary':'Discuss with client',
+                'activity_date_deadline_range': 1,
+                'activity_date_deadline_range_type': 'days',
+                'activity_user_type': 'specific',
+                'activity_user_id': ref('base.user_admin')
+            }),
+            (0, 0, {
+                'name': 'Lead and Opportunity',
+                'model_id': ref('crm.model_crm_lead'),
+                'state': 'next_activity',
+                'activity_type_id': ref('mail.mail_activity_data_todo'),
+                'activity_summary':'Property visiting',
+                'activity_date_deadline_range': 1,
+                'activity_date_deadline_range_type': 'days',
+                'activity_user_type': 'specific',
+                'activity_user_id': ref('base.user_admin')
+            }),
+            (0, 0, {
+                'name': 'Lead and Opportunity',
+                'model_id': ref('crm.model_crm_lead'),
+                'state': 'next_activity',
+                'activity_type_id': ref('mail.mail_activity_data_todo'),
+                'activity_summary':'Offer Negotiation / Accepted',
+                'activity_date_deadline_range': 1,
+                'activity_date_deadline_range_type': 'days',
+                'activity_user_type': 'specific',
+                'activity_user_id': ref('base.user_admin')
+            })
+        ]"/>
+        </record>
+
+        <!--Create Maintenance while creating contract-->
+        <record id="action_create_move_in_request" model="ir.actions.server">
+            <field name="name">Create Move-In Maintenance Request</field>
+            <field name="model_id" ref="rental_management.model_tenancy_details"/>
+            <field name="state">code</field>
+            <field name="code">
+                env['maintenance.request'].create({
+                    'name': 'Move-In Maintenance for the Builiding %s - Unit %s' % (record.property_project_id.name, record._get_property_name()),
+                    'mr_for': 'move_in',
+                    'rent_contract_id': record.id,
+                    'property_id':record._get_property_queryset().id,
+                })
+            </field>
+        </record>
+
+        <record id="action_create_move_out_request" model="ir.actions.server">
+            <field name="name">Create Move-Out Maintenance Request</field>
+            <field name="model_id" ref="rental_management.model_tenancy_details"/>
+            <field name="state">code</field>
+            <field name="code">
+                env['maintenance.request'].create({
+                    'name': 'Move-Out Maintenance for the Builiding %s - Unit %s' % (record.property_project_id.name, record._get_property_name()),
+                    'mr_for': 'move_out',
+                    'rent_contract_id': record.id,
+                    'property_id':record._get_property_queryset().id,
+                })
+            </field>
+        </record>
+
+        <record id="action_mark_activities_done" model="ir.actions.server">
+            <field name="name">Mark Activities Done</field>
+            <field name="model_id" ref="rental_management.model_tenancy_details"/>
+            <field name="state">code</field>
+            <field name="code">record.write({'activities_created': True})</field>
+        </record>
+
+        <!-- Creating a contract -->
+        <record id="automation_rules_for_contract_creation" model="base.automation">
+            <field name="name">Creating Contract</field>
+            <field name="model_id" ref="rental_management.model_tenancy_details"/>
+            <field name="trigger">on_write</field>
+            <field name="active">True</field>
+            <field name="filter_pre_domain">[('activities_created', '=', False), ('is_extended', '=', False)]</field>
+            <field name="filter_domain">[('contract_type', '=', 'running_contract'), ('activities_created', '=', False), ('is_extended', '=', False)]</field>
+            <field name="action_server_ids" eval="[
+            (0, 0, {
+                'name': 'Creating Contract',
+                'model_id': ref('rental_management.model_tenancy_details'),
+                'state': 'next_activity',
+                'activity_type_id': ref('mail.mail_activity_data_todo'),
+                'activity_summary':'Pre-Handover Inspection / Unit Readiness',
+                'activity_date_deadline_range': 1,
+                'activity_date_deadline_range_type': 'days',
+                'activity_user_type': 'specific',
+                'activity_user_id': ref('base.user_admin')
+            }),
+            (0, 0, {
+                'name': 'Creating Contract',
+                'model_id': ref('rental_management.model_tenancy_details'),
+                'state': 'next_activity',
+                'activity_type_id': ref('mail.mail_activity_data_todo'),
+                'activity_summary':'Issue Access Cards/ Car Parking',
+                'activity_date_deadline_range': 1,
+                'activity_date_deadline_range_type': 'days',
+                'activity_user_type': 'specific',
+                'activity_user_id': ref('base.user_admin')
+            }),
+            (0, 0, {
+                'name': 'Creating Contract',
+                'model_id': ref('rental_management.model_tenancy_details'),
+                'state': 'next_activity',
+                'activity_type_id': ref('mail.mail_activity_data_todo'),
+                'activity_summary':'Schedule Handover / Coordinate Move-In',
+                'activity_date_deadline_range': 1,
+                'activity_date_deadline_range_type': 'days',
+                'activity_user_type': 'specific',
+                'activity_user_id': ref('base.user_admin')
+            }),
+            (0, 0, {
+                'name': 'Creating Contract',
+                'model_id': ref('rental_management.model_tenancy_details'),
+                'state': 'next_activity',
+                'activity_type_id': ref('mail.mail_activity_data_todo'),
+                'activity_summary':'Ejari Registration',
+                'activity_date_deadline_range': 1,
+                'activity_date_deadline_range_type': 'days',
+                'activity_user_type': 'specific',
+                'activity_user_id': ref('base.user_admin')
+            }),
+            (0, 0, {
+                'name': 'Creating Contract',
+                'model_id': ref('rental_management.model_tenancy_details'),
+                'state': 'next_activity',
+                'activity_type_id': ref('mail.mail_activity_data_todo'),
+                'activity_summary':'Send Welcome Pack',
+                'activity_date_deadline_range': 1,
+                'activity_date_deadline_range_type': 'days',
+                'activity_user_type': 'specific',
+                'activity_user_id': ref('base.user_admin')
+            }),
+            (4, ref('action_create_move_in_request')),
+            (4, ref('action_mark_activities_done')),
+            ]"/>
+        </record>
+
+        <!-- Contract Extend -->
+        <record id="automation_activity_on_boolean_true" model="base.automation">
+            <field name="name">Ejari Registration after extending a contract</field>
+            <field name="model_id" ref="rental_management.model_tenancy_details"/>
+            <field name="trigger">on_write</field>
+            <field name="active">True</field>
+            <field name="filter_pre_domain">[('is_extended', '=', False)]</field>
+            <field name="filter_domain">[('is_extended', '=', True)]</field>
+            <field name="action_server_ids" eval="[
+                (0, 0, {
+                    'name': 'Activity Extending a contract',
+                    'model_id': ref('rental_management.model_tenancy_details'),
+                    'state': 'next_activity',
+                    'activity_type_id': ref('mail.mail_activity_data_todo'),
+                    'activity_summary': 'Ejari Registration',
+                    'activity_date_deadline_range': 1,
+                    'activity_date_deadline_range_type': 'days',
+                    'activity_user_type': 'specific',
+                    'activity_user_id': ref('base.user_admin')
+                }),
+            ]"/>
+        </record>
+
+        <!-- Closing a contract -->
+        <record id="automation_rules_for_close_contract" model="base.automation">
+            <field name="name">Closing Contract</field>
+            <field name="model_id" ref="rental_management.model_tenancy_details"/>
+            <field name="trigger">on_write</field>
+            <field name="active">True</field>
+            <field name="filter_pre_domain">[('contract_type', 'not in', ['close_contract', 'pre_terminated', 'terminated'])]</field>
+            <field name="filter_domain">[('contract_type', 'in', ['close_contract', 'pre_terminated', 'terminated'])]</field>
+            <field name="action_server_ids" eval="[
+                (0, 0, {
+                    'name': 'Exit Inspection',
+                    'model_id': ref('rental_management.model_tenancy_details'),
+                    'state': 'next_activity',
+                    'activity_type_id': ref('mail.mail_activity_data_todo'),
+                    'activity_summary': 'Exit Inspection',
+                    'activity_date_deadline_range': 1,
+                    'activity_date_deadline_range_type': 'days',
+                    'activity_user_type': 'specific',
+                    'activity_user_id': ref('base.user_admin'),
+                }),
+
+                (0, 0, {
+                    'name': 'Ejari Cancellation',
+                    'model_id': ref('rental_management.model_tenancy_details'),
+                    'state': 'next_activity',
+                    'activity_type_id': ref('mail.mail_activity_data_todo'),
+                    'activity_summary': 'Ejari Cancellation',
+                    'activity_date_deadline_range': 1,
+                    'activity_date_deadline_range_type': 'days',
+                    'activity_user_type': 'specific',
+                    'activity_user_id': ref('base.user_admin'),
+                }),
+
+                (0, 0, {
+                    'name': 'Return Keys / Clearance / Feedback',
+                    'model_id': ref('rental_management.model_tenancy_details'),
+                    'state': 'next_activity',
+                    'activity_type_id': ref('mail.mail_activity_data_todo'),
+                    'activity_summary': 'Move-out: Return Keys / Clearance / Feedback',
+                    'activity_date_deadline_range': 1,
+                    'activity_date_deadline_range_type': 'days',
+                    'activity_user_type': 'specific',
+                    'activity_user_id': ref('base.user_admin'),
+                }),
+
+                (0, 0, {
+                    'name': 'Deactivate Access and Confirm Exit',
+                    'model_id': ref('rental_management.model_tenancy_details'),
+                    'state': 'next_activity',
+                    'activity_type_id': ref('mail.mail_activity_data_todo'),
+                    'activity_summary': 'Move-out: Deactivate Access and Confirm Exit',
+                    'activity_date_deadline_range': 1,
+                    'activity_date_deadline_range_type': 'days',
+                    'activity_user_type': 'specific',
+                    'activity_user_id': ref('base.user_admin'),
+                }),
+
+                (0, 0, {
+                    'name': 'Release Deposit / Ledger Closure',
+                    'model_id': ref('rental_management.model_tenancy_details'),
+                    'state': 'next_activity',
+                    'activity_type_id': ref('mail.mail_activity_data_todo'),
+                    'activity_summary': 'Move-out: Release Deposit / Finalize Ledger Closure',
+                    'activity_date_deadline_range': 1,
+                    'activity_date_deadline_range_type': 'days',
+                    'activity_user_type': 'specific',
+                    'activity_user_id': ref('base.user_admin'),
+                }),
+
+                (0, 0, {
+                    'name': 'Mark Unit Ready for Re-List',
+                    'model_id': ref('rental_management.model_tenancy_details'),
+                    'state': 'next_activity',
+                    'activity_type_id': ref('mail.mail_activity_data_todo'),
+                    'activity_summary': 'Move-out: Mark Unit Ready for Re-List',
+                    'activity_date_deadline_range': 1,
+                    'activity_date_deadline_range_type': 'days',
+                    'activity_user_type': 'specific',
+                    'activity_user_id': ref('base.user_admin'),
+                }),
+                (4, ref('action_create_move_out_request')),
+            ]"/>
+        </record>
+
+        <!-- Mainteanance Request -->
+        <!-- Repaired Stage  -->
+        <record id="automation_rules_for_mr_repaired" model="base.automation">
+            <field name="name">Maintenance Request</field>
+            <field name="model_id" ref="rental_management.model_maintenance_request"/>
+            <field name="trigger">on_stage_set</field>
+            <field name="trg_field_ref" ref="maintenance.stage_3"/>
+            <field name="trg_date_range">1</field>
+            <field name="trg_date_range_type">minutes</field>
+            <field name="active">True</field>
+            <field name="action_server_ids" eval="[
+            (0, 0, {
+                'name': 'Maintenance Request',
+                'model_id': ref('rental_management.model_maintenance_request'),
+                'state': 'next_activity',
+                'activity_type_id': ref('mail.mail_activity_data_todo'),
+                'activity_summary':'Feedback On Maintenance Request',
+                'activity_date_deadline_range': 1,
+                'activity_date_deadline_range_type': 'days',
+                'activity_user_type': 'specific',
+                'activity_user_id': ref('base.user_admin')
+            }),
+            ]"/>
+        </record>
+
+        <!-- Scrap Stage -->
+        <record id="automation_rules_for_mr_scrap" model="base.automation">
+            <field name="name">Maintenance Request</field>
+            <field name="model_id" ref="rental_management.model_maintenance_request"/>
+            <field name="trigger">on_stage_set</field>
+            <field name="trg_field_ref" ref="maintenance.stage_4"/>
+            <field name="trg_date_range">1</field>
+            <field name="trg_date_range_type">minutes</field>
+            <field name="active">True</field>
+            <field name="action_server_ids" eval="[
+            (0, 0, {
+                'name': 'Maintenance Request',
+                'model_id': ref('rental_management.model_maintenance_request'),
+                'state': 'next_activity',
+                'activity_type_id': ref('mail.mail_activity_data_todo'),
+                'activity_summary':'Feedback On Maintenance Request',
+                'activity_date_deadline_range': 1,
+                'activity_date_deadline_range_type': 'days',
+                'activity_user_type': 'specific',
+                'activity_user_id': ref('base.user_admin')
+            }),
+            ]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="unit_creation_wizard_view_form_inherit" model="ir.ui.view">
+            <field name="name">unit.creation.wizard.view.form</field>
+            <field name="model">unit.creation</field>
+            <field name="inherit_id" ref="rental_management.unit_creation_wizard_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='units_per_floor']" position="after">
+                    <field name="create_parking_slots"></field>
+                </xpath>
+                <xpath expr="//field[@name='property_code_prefix']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <!-- <xpath expr="//field[@name='property_code_prefix']" position="after">
+                    <field name="parking_prefix" invisible="not create_parking_slots" required="create_parking_slots"></field>
+                </xpath> -->
+                <xpath expr="//field[@name='create_parking_slots']" position="after">
+                    <button name='create_unit_sequence' string='Create Sequence' type='object'/>
+                </xpath>
+                <xpath expr="//button[@name='action_create_property_unit']" position="attributes">
+                    <attribute name="invisible">not sequence_seen</attribute>
+                </xpath>
+                <xpath expr="//field[@name='floor_start_from']" position="attributes">
+                    <attribute name="invisible">context.get('is_individual')</attribute>
+                </xpath>
+                <xpath expr="//field[@name='total_floors']" position="attributes">
+                    <attribute name="invisible">context.get('is_individual')</attribute>
+                </xpath>
+                <xpath expr="//field[@name='total_floors']" position="attributes">
+                    <attribute name="required">context.get('is_individual')</attribute>
+                </xpath>
+
+                <xpath expr="//form" position="inside">
+                    <div style="padding-left: 30px; padding-right: 30px; padding-bottom: 20px; margin-top: 10px;">
+                        <notebook>
+                            <page string="Unit Sequence" invisible="not sequence_seen" style="padding-left: 15px; padding-right: 15px;">
+                                <field name="unit_sequence_ids">
+                                    <list editable="bottom" create="false" delete="false" no_open="true">
+                                        <field name="unit_name" style="padding-left: 15px !important; font-weight: 600; min-width: 130px;"/>
+                                        <field name="property_type"/>
+                                        <field name="property_subtype_id" domain="[('type','=',property_type)]"/>
+                                        <field name="bhk"/>
+                                        <field name="parking_name" invisible="not parent.create_parking_slots"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

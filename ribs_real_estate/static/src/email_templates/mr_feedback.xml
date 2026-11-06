@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+
+        <record id="mr_completed_feedback" model="mail.template">
+            <field name="name">Feedback Request For MR</field>
+            <field name="model_id" ref="maintenance.model_maintenance_request"/>
+            <field name="subject">Your Maintenance Request {{ object.name }} is Completed – We Value Your Feedback</field>
+            <field name="body_html">
+                <![CDATA[
+                    <p>Dear <b><t t-out="object.rent_contract_id.tenancy_id.name"/></b>,</p>
+
+                    <p>
+                        Your maintenance request
+                        <b><t t-out="object.name"/></b>
+                        has been successfully completed by our maintenance team.
+                    </p>
+
+                    <p>We hope the service met your expectations.</p>
+
+                    <p>
+                        We request you to take a moment to provide your valuable feedback.
+                        Your inputs help us improve our service quality.
+                    </p>
+                    <p>Request Details:</p>
+                    <ul>
+                        <li><b>Contract :</b> <t t-out="object.rent_contract_id.tenancy_seq"/></li>
+                        <li><b>Unit :</b> <t t-out="object.property_id.property_seq"/></li>
+                        <li><b>Building :</b> <t t-out="object.property_id.property_project_id.name"/></li>
+                        <li><b>Responsible Person :</b> <t t-out="object.user_id.name"/></li>
+                        <li><b>Request Created On:</b> <t t-out="object.create_date and object.create_date.date()"/></li>
+                        <li><b>Completed On:</b> <t t-out="object.close_date"/></li>
+                    </ul>
+
+                    <p>Thank you,<br/></p>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

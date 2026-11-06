@@ -1,0 +1,49 @@
+/* ============================================================
+   erp_ui_redesign/static/src/css/erp_ui_theme_systray.css
+
+   Deliberately plain: matches the size/spacing of Odoo's own systray
+   icons (bell, messages) without depending on any of their exact class
+   names, which differ slightly between versions.
+   ============================================================ */
+
+.o_erp_theme_systray {
+    display: flex;
+    align-items: center;
+}
+
+.o_erp_theme_systray_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none !important;
+    background: transparent !important;
+    /* `color: inherit` depended on the exact DOM depth under
+       .o_menu_systray matching the navbar's dark-mode color rule
+       (erp_redesign.scss section 28c). The navbar markup nests systray
+       items one level deeper than that rule assumed, so inheritance
+       silently fell back to the browser/Odoo core default (near-black),
+       which is invisible against #1E293B - reading as a blank icon, not
+       a missing one. Set explicitly, and in a colour distinct from the
+       plain #F1F5F9 every other systray icon uses, so this one reads as
+       "the theme picker" at a glance instead of blending into the row. */
+    color: #F472B6 !important;
+    opacity: 0.9;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: background 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+}
+
+.o_erp_theme_systray_btn i {
+    color: inherit !important;
+}
+
+.o_erp_theme_systray_btn:hover,
+.o_erp_theme_systray_btn:focus {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.12) !important;
+    outline: none;
+    transform: translateY(-1px);
+}

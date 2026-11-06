@@ -1,0 +1,112 @@
+<odoo>
+    <data>
+
+        <record id="view_contract_update_register_tree" model="ir.ui.view">
+            <field name="name">contract.update.register.tree</field>
+            <field name="model">contract.update.register</field>
+            <field name="arch" type="xml">
+                <list string="New Rent Updates">
+                    <field name="name"/>
+                    <field name="contract_id"/>
+                    <field name="current_rent_annually"/>
+                    <field name="new_rent_annually"/>
+                    <field name="status" widget="badge" decoration-success="status == 'approved'"
+                        decoration-info="status == 'waiting_for_approval'" 
+                        decoration-danger="status == 'rejected'" />
+                </list>
+            </field>
+        </record>
+
+        <record id="view_contract_update_register_search" model="ir.ui.view">
+            <field name="name">contract.update.search.tree</field>
+            <field name="model">contract.update.register</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter string="Buildings" name="group_by_project" domain="[]"
+                            context="{'group_by':'project_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="dewa_register_form_view" model="ir.ui.view">
+            <field name="name">contract.update.register.form.view</field>
+            <field name="model">contract.update.register</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="status" widget="statusbar" statusbar_visible="waiting_for_approval,approved,rejected"/>
+                        <button name="action_approve" type="object" string="Approve"
+                                    class="btn btn-outline-success" invisible="status != 'waiting_for_approval'"/>
+                        <button name="action_reject" type="object" string="Reject"
+                                    class="btn btn-danger" invisible="status != 'waiting_for_approval'"/>
+                        <button name="send_mail" type="object" string="Send Mail"
+                                    class="btn btn-outline-success" invisible="status != 'approved'"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="contract_id"/>
+                            <label for="increase_or_decrease" class="mt-1"/>
+                            <div style="display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                                <field name="increase_or_decrease" class="oe_inline"/>
+
+                                <span style="background-color:#007bff; color:white; padding:2px 6px; border-radius:4px;">In</span>
+
+                                <field name="amount_or_percentage" class="oe_inline"/>
+
+                                <span style="background-color:#28a745; color:white; padding:2px 6px; border-radius:4px;">To</span>
+
+                                <field name="percentage" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id'}" invisible= "amount_or_percentage  == 'amount'"/>
+                                <field name="amount" class="oe_inline" invisible= "amount_or_percentage == 'percentage'"/>
+                                <span invisible= "amount_or_percentage == 'amount'">%</span>
+                            </div>
+                            <field name="duration_id"/>
+                            <field name="from_date"/>
+                            <div style="position: relative; z-index: 9999;">
+                                <field name="to_date"/>
+                            </div>
+                            <field name="current_rent_monthly"/>
+                            <field name="current_rent_annually"/>
+                            <field name="new_rent_monthly"/>
+                            <field name="new_rent_annually"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Send Mail" type="object" name="send_new_contract_details" class="btn btn-primary"/>
+                        <button string="Discard" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="dewa_register_action" model="ir.actions.act_window">
+            <field name="name">New Contract Register</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">contract.update.register</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="waiting_approve_update_contract" model="ir.actions.act_window">
+            <field name="name">New Contract - Waiting for Approval</field>
+            <field name="res_model">contract.update.register</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('status', '=', 'waiting_for_approval')]</field>
+            <field name="context">{'search_default_group_by_project': 1}</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No contract rent update requests waiting for approval.
+                </p>
+            </field>
+        </record>
+
+        <record id="approve_update_contract" model="ir.actions.act_window">
+            <field name="name">New Contract Details</field>
+            <field name="res_model">contract.update.register</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'search_default_group_by_project': 1}</field>
+            <field name="domain">[]</field>
+        </record>
+
+    </data>
+</odoo>

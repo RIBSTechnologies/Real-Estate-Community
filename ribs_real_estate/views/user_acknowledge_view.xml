@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="acknowledge_thankyou" name="Acknowledge Thank You Page">
+        <t t-call="website.layout">
+            <div class="container mt16 mb16">
+                <h1>Thank You for Acknowledging!</h1>
+            </div>
+        </t>
+    </template>
+
+    <template id="website_notification_handler" inherit_id="website.layout">
+        <xpath expr="//body" position="inside">
+            <t t-if="request.session.get('website_notification')">
+                <div id="website_notification"
+                                 class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3"
+                                 style="z-index:1055; min-width:300px;"
+                                 role="alert">
+                    <t t-out="request.session.pop('website_notification')['message']"/>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <script type="text/javascript">
+                    setTimeout(function () {
+                    location.reload();
+                     }, 2000);
+                </script>
+            </t>
+        </xpath>
+    </template>
+</odoo>

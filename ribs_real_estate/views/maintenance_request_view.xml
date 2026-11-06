@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="maintenance_request_view" model="ir.ui.view">
+            <field name="model">maintenance.request</field>
+            <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='description']" position="after">
+                    <field name="attachment_ids" widget="many2many_binary" readonly="1"/>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="invisible" >not employee_id</attribute>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="mr_created_person_id" readonly="1" invisible="not mr_created_person_id"/>
+                </xpath>
+                <xpath expr="//field[@name='vendor_id']" position="replace">
+                    <field name="vendor_id" invisible="payment_from != 'vendor'" options="{'no_quick_create':True,'no_create_edit':True}" domain="[('supplier_rank', '>=', 1)]" readonly="invoice_state or bill_state" />
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="replace">
+                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='property_id']" position="before">
+                    <field name="building_id_parent" readonly="rent_contract_id"/>
+                </xpath>
+                <xpath expr="//field[@name='property_id']" position="attributes">
+                    <attribute name="readonly">rent_contract_id</attribute>
+                </xpath>
+                <!-- <xpath expr="//field[@name='equipment_id']" position="replace">
+                    <field name="equipment_id"  context="{'default_company_id':company_id, 'default_category_id':category_id}" invisible="1"/>
+                </xpath> -->
+                <xpath expr="//page[@name='included_products']" position="after">
+                    <page string="Pre-Handover Inspection Form" name="pre_handover" invisible="mr_for != 'move_in'">
+                        <group name="property_details" string="Property Details ">
+                            <field name="project_id" />
+                            <field name="property" readonly="1"/>
+                            <field name="property_type"/>
+
+                            <label for="total_area"/>
+                            <div>
+                                <field name="total_area" class="oe_inline"/> / <field name="measure_unit" class="oe_inline"/>
+                            </div>
+                            <field name="tenant_id" />
+                            <field name="contract_start_date"/>
+                        </group>
+                        <group string="General Condition Check" name="general_condition_check">
+                            <field name="move_in_ids">
+                                <list editable="bottom">
+                                    <field name="item"/>
+                                    <field name="move_in_status"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group string="Received the Following" name="received_cards">
+                            <field name="unit_key"/>
+                            <field name="access_card"/>
+                            <field name="dewa_security_deposit"/>
+                        </group>
+                        <group string="Final Readiness Confirmation" name="final_readiness">
+                            <group>
+                                <field name="cleaning_done"/>
+                                <field name="repairs_done"/>
+                                <field name="safety_checks"/>
+                                <field name="ready_for_handover"/>
+                            </group>
+                        </group>
+
+                    </page>
+                    <page string="Move-Out Inspection Form" name="move_out_inspection" invisible="mr_for != 'move_out'">
+                        <group string="Property and Tenant Details" name="property_tenant_details">
+                            <field name="partner_id" />
+                            <field name="project_id" />
+                            <field name="property_type"/>
+                            <field name="contract_end_date"/>
+                            <field name="forwarding_contact"/>
+                            <field name="forwarding_email"/>
+                            <field name="inspection_team" widget="many2many_tags"/>
+                        </group>
+                        <group string="Meter Readings (Final) " name="metro_readings">
+                            <field name="electricity"/>
+                            <field name="water"/>
+                            <field name="chiller"/>
+                            <field name="attach_photo"/>
+                            <field name="bill_attachment" widget="many2many_binary" invisible="attach_photo == 0"/>
+                        </group>
+                        <group string="General Condition Check" name="general_condition_check">
+                            <field name="move_out_ids" domain="[('item.item_for','=','move_out')]">
+                                <list editable="bottom">
+                                    <field name="item"/>
+                                    <field name="move_out_status"/>
+                                    <field name="chargeable"/>
+                                    <field name="move_out_notes"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group string="Damages and Cost Estimation" name="damage_cost_estimation">
+                            <field name="damage_description"/>
+                            <field name="estimated_cost"/>
+                            <field name="chargeable_to_tenant"/>
+                            <field name="note"/>
+                        </group>
+                        <group string="Keys and Access Return" name="keys_access_return">
+                            <label for="key_card_remote_id"/>
+                            <div>
+                                <field name="key_card_remote_id" class="oe_inline"/> <label for="key_qty" string="Qty"/><field name="key_qty" class="oe_inline"/>
+                            </div>
+
+                            <label for="access_cards_returned_id"/>
+                            <div>
+                                <field name="access_cards_returned_id" class="oe_inline"/> <label for="access_cards_qty" string="Qty"/><field name="access_cards_qty" class="oe_inline"/>
+                            </div>
+
+                            <label for="parking_card_remote_id"/>
+                            <div>
+                                <field name="parking_card_remote_id" class="oe_inline"/> <label for="parking_tags_qty" string="Qty"/><field name="parking_tags_qty" class="oe_inline"/>
+                            </div>
+
+                            <field name="missing_items"/>
+                        </group>
+                        <group string="Clearance Status" name="clearance_status_move_out">
+                            <field name="outstanding_rent_id"/>
+                            <field name="outstanding_utilities_id"/>
+                            <field name="damages_chargeable_id"/>
+                            <field name="move_out_ready_id"/>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='user_ids']" position="after">
+                    <field name="client_preferred_time"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="maintenance_request_view_list" model="ir.ui.view">
+            <field name="model">maintenance.request</field>
+            <field name="inherit_id" ref="maintenance.hr_equipment_request_view_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="default_group_by">property_id</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="maintenance_request_view_kanban_inherit" model="ir.ui.view">
+            <field name="model">maintenance.request</field>
+            <field name="inherit_id" ref="maintenance.hr_equipment_request_view_kanban" />
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="default_group_by">user_ids</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

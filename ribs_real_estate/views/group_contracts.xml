@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_contracts_form_view" model="ir.ui.view">
+        <field name="name">group.contracts.form.view</field>
+        <field name="model">group.contracts</field>
+        <field name="arch" type="xml">
+            <form string="Contract Documents">
+                <sheet>
+                    <group>
+                        <div class="row">
+                            <div class="col-6">
+                                <h1>
+                                    <field name="name"/>
+                                </h1>
+                            </div>
+                            <div class="col-6 text-end">
+                                <div style="display: inline-block; font-size: 15px; border: 1px solid black; background: #000; color: #fff; border-radius: 3px; padding: 2px 7px; margin-right: 3px; font-weight: 600;">
+                                    <field name="days_left" readonly="1" style="color: #fff;"/>
+                                </div>
+                                <strong>Days Left</strong>
+                            </div>
+                        </div>
+                        <field name="contract_ids" widget="many2many_tags"/>
+                        <field name="unit_ids" widget="many2many_tags"/>
+                        <field name="duration_type"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="group_contracts_action" model="ir.actions.act_window">
+        <field name="name">Group Contracts</field>
+        <field name="res_model">group.contracts</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the Group Contracts.
+            </p>
+        </field>
+    </record>
+</odoo>

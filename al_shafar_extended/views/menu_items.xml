@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- "Statistics" -> "Dashboard" (Properties app menu bar).
+         property_dashboard's own property.dashboard.menu.sync.rename_native_dashboard()
+         actively renames whatever native menu is called "Dashboard" TO
+         "Statistics" (property_dashboard/models/menu_sync.py), and it
+         re-runs on every install/upgrade of that module via an
+         un-gated <function> call - so a plain name change here would get
+         silently reverted the next time property_dashboard is upgraded.
+         The ir.config_parameter below is that same method's own documented
+         off-switch ("Set property_dashboard.native_dashboard_new_name to
+         an empty string to turn this off"), so the rename sticks for
+         good regardless of module install order. Harmless if
+         property_dashboard is never installed - it's an unused
+         ir.config_parameter row in that case. -->
+    <record id="rental_management.menu_rental_dashboard" model="ir.ui.menu">
+        <field name="name">Dashboard</field>
+    </record>
+    <!-- NOT referencing property_dashboard.menu_property_statistics here:
+         al_shafar_extended does not depend on property_dashboard, so a
+         hard xmlid reference to one of its records would break this
+         module's install/upgrade on any deployment where that module
+         isn't present. It doesn't need renaming anyway - reconcile_statistics()
+         already keeps that copy archived (inactive) whenever the native
+         menu above exists, which it always does here. -->
+    <record id="config_param_disable_native_dashboard_rename" model="ir.config_parameter" forcecreate="1">
+        <field name="key">property_dashboard.native_dashboard_new_name</field>
+        <field name="value"></field>
+    </record>
+
+    <!-- Menu Sequence Reordering: Ensure "Property" menu comes after "Maintenances" -->
+    <record id="ribs_real_estate.menu_property_new" model="ir.ui.menu">
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="rental_management.menu_print_report" model="ir.ui.menu">
+        <field name="sequence">99</field>
+    </record>
+
+    <!-- Main Contract Menu under Accounting -> Customers -->
+    <menuitem id="menu_contract_contract_main"
+              name="Contracts &amp; Terminations"
+              parent="account.menu_finance_receivables"
+              action="action_tenancy_terminated"
+              sequence="15"/>
+
+    <!-- Configurable Access Rights for Reset to Draft Buttons -->
+    <record id="sh_pdc_payment_form_view_inherit_draft_user" model="ir.ui.view">
+        <field name="name">sh.pdc.wizard.form.inherit.draft.user</field>
+        <field name="model">pdc.wizard</field>
+        <field name="inherit_id" ref="sh_pdc.sh_pdc_payment_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_set_draft']" position="attributes">
+                <attribute name="groups">al_shafar_extended.group_reset_to_draft_pdc</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="property_project_form_view_inherit_draft_user" model="ir.ui.view">
+        <field name="name">property.project.form.inherit.draft.user</field>
+        <field name="model">property.project</field>
+        <field name="inherit_id" ref="rental_management.property_project_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_status_draft']" position="attributes">
+                <attribute name="groups">al_shafar_extended.group_reset_to_draft_property</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="property_sub_project_form_view_inherit_draft_user" model="ir.ui.view">
+        <field name="name">property.sub.project.form.inherit.draft.user</field>
+        <field name="model">property.sub.project</field>
+        <field name="inherit_id" ref="rental_management.property_sub_project_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_status_draft']" position="attributes">
+                <attribute name="groups">al_shafar_extended.group_reset_to_draft_property</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="property_details_form_view_inherit_draft_user" model="ir.ui.view">
+        <field name="name">property.details.form.inherit.draft.user</field>
+        <field name="model">property.details</field>
+        <field name="inherit_id" ref="rental_management.property_details_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_draft_property']" position="attributes">
+                <attribute name="groups">al_shafar_extended.group_reset_to_draft_property</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

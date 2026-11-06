@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="default_terms_conditions_form_view" model="ir.ui.view">
+        <field name="name">default.terms.conditions.form</field>
+        <field name="model">default.terms.conditions</field>
+        <field name="arch" type="xml">
+            <form string="Terms and Conditions" create="0">
+                <sheet>
+                    <group>
+                        <field name="terms_html" widget="html"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View (not essential for singleton, but okay to keep) -->
+    <record id="default_terms_conditions_list_view" model="ir.ui.view">
+        <field name="name">default.terms.conditions.tree</field>
+        <field name="model">default.terms.conditions</field>
+        <field name="arch" type="xml">
+            <list string="Terms and Conditions">
+                <field name="terms_html"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Option 1: Direct action to open the single record -->
+    <record id="default_terms_and_conditions_action_form" model="ir.actions.act_window">
+        <field name="name">Terms and Conditions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">default.terms.conditions</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" eval="ref('ribs_real_estate.default_terms_conditions_demo_data')"/>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Option 2: Dynamic server action (optional; use only if no static record exists) -->
+    <record id="default_terms_and_conditions_server_action" model="ir.actions.server">
+        <field name="name">Open Terms and Conditions</field>
+        <field name="model_id" ref="model_default_terms_conditions"/>
+        <field name="state">code</field>
+        <field name="code">action = env['default.terms.conditions'].open_singleton_record()</field>
+    </record>
+
+</odoo>

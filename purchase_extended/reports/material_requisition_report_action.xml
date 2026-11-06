@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tight margins so the bordered box fills close to the full
+         printable page, same proportions as the original paper form
+         (which leaves almost no page margin around its own border). -->
+    <record id="paperformat_material_requisition" model="report.paperformat">
+        <field name="name">Material Requisition</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- "Material Requisition" print button on Purchase Request - a
+         second print option alongside purchase_request's own "Purchase
+         Request" report, not a replacement for it. -->
+    <record id="action_report_material_requisition" model="ir.actions.report">
+        <field name="name">Material Requisition</field>
+        <field name="binding_model_id" ref="purchase_request.model_purchase_request"/>
+        <field name="binding_type">report</field>
+        <field name="model">purchase.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">purchase_extended.report_material_requisition</field>
+        <field name="print_report_name">'Material Requisition - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="paperformat_material_requisition"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Contract Form View -->
+    <record id="view_contract_contract_form" model="ir.ui.view">
+        <field name="name">contract.contract.form</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <form string="Customer Contract">
+                <header>
+                    <button name="action_open_termination_wizard" string="Terminate Contract" type="object" class="btn-danger" icon="stop_circle" icon_class="oi-filled" invisible="state == 'terminated'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,terminated,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="edit_square">
+                            <field name="move_count" widget="statinfo" string="Invoices"/>
+                        </button>
+                        <button name="action_view_refunds" type="object" class="oe_stat_button" icon="payments">
+                            <field name="refund_count" widget="statinfo" string="Refund Details"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Contract Ref..."/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Customer &amp; Contract Term">
+                            <field name="partner_id"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Financial Rates &amp; Policy">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="monthly_rent"/>
+                            <field name="total_contract_value"/>
+                            <field name="settlement_method"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Termination &amp; Refund Settlement" name="termination_details">
+                            <group>
+                                <group string="Termination Record">
+                                    <field name="termination_date" readonly="1"/>
+                                    <field name="termination_reason" readonly="1"/>
+                                    <field name="termination_remarks" readonly="1"/>
+                                </group>
+                                <group string="Refund Summary &amp; Status">
+                                    <field name="total_paid_amount"/>
+                                    <field name="total_utilized_amount"/>
+                                    <field name="refund_amount" style="font-weight:bold; color:#B91C1C;"/>
+                                    <field name="refunded_amount"/>
+                                    <field name="balance_refund"/>
+                                    <field name="refund_status" widget="badge"
+                                           decoration-success="refund_status == 'refunded'"
+                                           decoration-warning="refund_status == 'pending'"
+                                           decoration-info="refund_status == 'partially_refunded'"
+                                           decoration-muted="refund_status == 'no_refund'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Linked Invoices &amp; Credit Notes" name="invoices">
+                            <field name="invoice_ids" readonly="1">
+                                <list string="Invoices &amp; Credit Notes">
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="invoice_date"/>
+                                    <field name="move_type"/>
+                                    <field name="amount_total_signed" string="Total"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Contract List View -->
+    <record id="view_contract_contract_tree" model="ir.ui.view">
+        <field name="name">contract.contract.list</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <list string="Contracts" decoration-danger="state == 'terminated'" decoration-info="state == 'in_progress'">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="monthly_rent"/>
+                <field name="total_contract_value"/>
+                <field name="total_paid_amount"/>
+                <field name="refund_amount"/>
+                <field name="refund_status" widget="badge"
+                       decoration-success="refund_status == 'refunded'"
+                       decoration-warning="refund_status == 'pending'"
+                       decoration-muted="refund_status == 'no_refund'"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'in_progress'"
+                       decoration-danger="state == 'terminated'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Contract Search View -->
+    <record id="view_contract_contract_search" model="ir.ui.view">
+        <field name="name">contract.contract.search</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <search string="Search Contracts">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="termination_reason"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Terminated" name="terminated" domain="[('state', '=', 'terminated')]"/>
+                <filter string="Pending Refund" name="pending_refund" domain="[('refund_status', '=', 'pending')]"/>
+                <separator/>
+                <group>
+                    <filter string="Customer" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Refund Status" name="group_refund_status" context="{'group_by': 'refund_status'}"/>
+                    <filter string="Settlement Method" name="group_settlement" context="{'group_by': 'settlement_method'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Window Action for Contracts -->
+    <record id="action_contract_contract" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">contract.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_contract_contract_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Contract!
+            </p>
+            <p>
+                Manage customer contracts, automated termination settlements, and prepaid unused refund calculations.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Contract Agreement report (Tenancy Contract PDF) - LEASED UNIT block:
+         adds a "Parking" row right after "Unit", showing 1 when the unit's
+         property subtype is a parking type (name contains "parking",
+         case-insensitive), 0 otherwise. -->
+    <template id="tenancy_details_qweb_report_template_parking_inherit"
+              inherit_id="ribs_real_estate.tenancy_details_qweb_report_template_inherit">
+        <xpath expr="//td/b[text()='Unit Size']/ancestor::tr[1]" position="before">
+            <tr>
+                <td style="padding:5px 8px;"><b>Parking</b></td>
+                <td style="padding:5px 8px;">
+                    <span t-out="1 if 'parking' in (o.property_id.property_subtype_id.name or '').lower() else 0"/>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+</odoo>

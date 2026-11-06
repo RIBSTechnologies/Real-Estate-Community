@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="contract_payment_summary_list_view" model="ir.ui.view">
+            <field name="name">contract.payment.summary.list</field>
+            <field name="model">contract.payment.summary</field>
+            <field name="arch" type="xml">
+                <list string="Contract Payments" create="false" delete="false"
+                      js_class="payment_summary_list" default_order="id desc">
+                    <field name="contract_id"/>
+                    <field name="contract_start_date"/>
+                    <field name="contract_end_date"/>
+                    <field name="tenancy_id"/>
+                    <field name="phone" string="Contact No"/>
+                    <field name="contract_responsible"/>
+                    <field name="currency_id" column_invisible="1"/>
+                    <field name="contract_total_value"
+                        options="{'currency_field': 'currency_id'}"/>
+                    <field name="total_paid"
+                        options="{'currency_field': 'currency_id'}"/>
+                    <field name="remaining_to_pay"
+                        options="{'currency_field': 'currency_id'}"/>
+                    <button name="action_open_contract_payments"
+                        type="object"
+                        string="Payments"
+                        icon="payments"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="contract_payment_summary_search" model="ir.ui.view">
+            <field name="name">contract.payment.summary.search</field>
+            <field name="model">contract.payment.summary</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="contract_id" string="Contract"/>
+                    <field name="tenancy_id" string="Tenant Name"/>
+                    <field name="phone" string="Contact / Phone" filter_domain="[('phone', 'ilike', self)]"/>
+                    <separator/>
+                    <filter string="Month"
+                            name="group_by_month"
+                            context="{'group_by': 'payment_month'}"/>
+
+                    <filter string="Day"
+                            name="group_by_day"
+                            context="{'group_by': 'payment_day'}"/>
+
+                    <filter string="Responsible"
+                            name="group_by_responsible"
+                            context="{'group_by': 'contract_responsible'}"/>
+                    <filter string="Not Received"
+                    name="contract_payments_not_received"
+                    domain="[
+                        ('contract_id.payments_received', '=', 'not_received'),
+                        ('contract_id.contract_type', '=', 'running_contract')
+                    ]"/>
+                    <filter string="Running Contract" name="running_contract" domain="[('contract_id.contract_type', '=', 'running_contract')]"/>
+                    <filter string="New Contracts"
+                            name="new_contracts"
+                            domain="[
+                                ('contract_id.contract_type', '=', 'running_contract'),
+                                '|',
+                                ('contract_id.payments_received', '=', False),
+                                ('contract_id.payments_received', '=', 'not_received')
+                            ]"/>                
+                </search>
+            </field>
+        </record>
+
+        <record id="action_contract_payment_summary" model="ir.actions.act_window">
+            <field name="name">Contract Payment Summary</field>
+            <field name="res_model">contract.payment.summary</field>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="contract_payment_summary_list_view"/>
+            <field name="context"> 
+                {
+                    'group_by': ['payment_month', 'contract_responsible']
+                }
+            </field>
+        </record>
+
+        <menuitem id="menu_contract_payment_summary"
+          name="Contract Payment Summary"
+          parent="rental_management.main_menu_rental_management"
+          action="action_contract_payment_summary"
+          groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+          sequence="11"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Not wrapped in noupdate="1": <function> calls aren't tracked by
+             xmlid/noupdate the way <record> is, so this runs on every
+             install/upgrade of this module, on every environment, and
+             self-heals if a Mandatory rule is ever (re)configured by hand.
+             See AccountAnalyticPlan._ensure_optional_applicability for the
+             logic. -->
+        <function model="account.analytic.plan" name="_ensure_optional_applicability" eval="[]"/>
+    </data>
+</odoo>

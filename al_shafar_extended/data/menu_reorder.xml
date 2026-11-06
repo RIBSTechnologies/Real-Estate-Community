@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Not wrapped in noupdate="1": <function> calls aren't tracked by
+             xmlid/noupdate the way <record> is, so this runs on every
+             install/upgrade of this module, on every environment, and
+             self-heals if the order/visibility ever drifts. See
+             IrUiMenu._ensure_properties_menu_order for the logic. -->
+        <function model="ir.ui.menu" name="_ensure_properties_menu_order" eval="[]"/>
+    </data>
+</odoo>

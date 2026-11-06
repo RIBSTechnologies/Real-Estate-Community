@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="send_updated_contract" model="mail.template">
+            <field name="name">Send New Contract to Tenant</field>
+            <field name="model_id" ref="model_contract_update_register"/>
+            <field name="subject">Details of Contract {{ object.contract_id.tenancy_seq or '' }}</field>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333;">
+
+                    <!-- Greeting -->
+                    <p>
+                        <strong>Dear Mr/Ms/Mrs. <t t-out="object.contract_id.tenancy_id.name"/>,</strong>
+                    </p>
+
+                    <!-- Expiry Statement -->
+                    <p>
+                        This is to inform you that the Contract for the following unit has expired on 
+                        <strong><t t-out="object.contract_id.end_date_copy"/></strong>.
+                    </p>
+
+                    <!-- Property Details Table -->
+                    <table style="width:100%; border-collapse:collapse; margin-top:10px; border:1px solid #ccc;">
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>Property Name</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="object.contract_id.property_project_id.name"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>Unit No</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="object.contract_id.property_id.name"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>New Contract Start Date</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="object.from_date"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>New Contract End Date</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="object.to_date"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>New Annual Rent</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="'%.2f' % object.new_rent_annually"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>Cheques Under</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="object.contract_id.tenancy_id.print_cheque"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>Terms of Payments</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="object.duration_id.duration"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Footer Message -->
+                    <p style="margin-top:20px;">
+                        Kindly make your arrangements to renew this contract on or before the expiry date.
+                    </p>
+
+                    <p>Thank you,<br/></p>
+
+                </div>
+                ]]>
+            </field>
+
+        </record>
+    </data>
+</odoo>

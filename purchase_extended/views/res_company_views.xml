@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_lpo_header" model="ir.ui.view">
+        <field name="name">res.company.form.lpo.header</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Purchase Order Header" name="lpo_header">
+                    <group>
+                        <group string="English (left column)">
+                            <field name="lpo_name_en" placeholder="e.g. Al Shafar Contracting Co. L.L.C."/>
+                            <field name="lpo_po_box"/>
+                            <field name="lpo_city_en"/>
+                        </group>
+                        <group string="Arabic (right column / centre)">
+                            <field name="lpo_name_ar"/>
+                            <field name="lpo_city_ar"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="lpo_header_mark" widget="image" class="oe_avatar"/>
+                    </group>
+                    <div class="text-muted">
+                        Used by the Local Purchase Order print-out. Phone, fax, email and TRN (Tax ID) come from
+                        the General Information tab; digits are printed in Arabic in the right-hand column.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

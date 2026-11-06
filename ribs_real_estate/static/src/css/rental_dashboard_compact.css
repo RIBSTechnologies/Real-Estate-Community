@@ -1,0 +1,17 @@
+/* Shrinks the Property Dashboard stat tiles (both the original "Rent Contract
+   Statics" row and the "Contract Types" row added by ribs_real_estate),
+   without touching either template's markup. */
+.tk_rental_dash .card {
+    padding: 14px !important;
+}
+.tk_rental_dash .card img {
+    width: 26px !important;
+}
+.tk_rental_dash .tk-st-1 {
+    font-size: 13px !important;
+    margin: 6px 0 2px !important;
+}
+.tk_rental_dash .tk-st-2 {
+    font-size: 18px !important;
+    margin: 0 !important;
+}

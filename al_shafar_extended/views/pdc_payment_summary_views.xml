@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PDC Cheque Payment Summary: one row per contract, expand to see
+         that contract's PDC cheques inline (with a Return action), same
+         expandable-row UX as ribs_real_estate's Contract Payment Summary,
+         reusing its contract.payment.summary model as the outer rows. -->
+    <record id="pdc_payment_summary_list_view" model="ir.ui.view">
+        <field name="name">pdc.payment.summary.list</field>
+        <field name="model">contract.payment.summary</field>
+        <field name="arch" type="xml">
+            <list string="PDC Cheque Payment Summary" create="false" delete="false"
+                  js_class="pdc_payment_summary_list" default_order="id desc">
+                <field name="contract_id"/>
+                <field name="contract_start_date"/>
+                <field name="contract_end_date"/>
+                <field name="tenancy_id" string="Tenant Name"/>
+                <field name="phone" string="Contact No"/>
+                <field name="contract_responsible"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="contract_total_value" options="{'currency_field': 'currency_id'}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="pdc_payment_summary_search" model="ir.ui.view">
+        <field name="name">pdc.payment.summary.search</field>
+        <field name="model">contract.payment.summary</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_id" string="Contract"/>
+                <field name="tenancy_id" string="Tenant Name"/>
+                <field name="phone" string="Contact / Phone" filter_domain="[('phone', 'ilike', self)]"/>
+                <filter string="Responsible" name="group_by_responsible" context="{'group_by': 'contract_responsible'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pdc_payment_summary" model="ir.actions.act_window">
+        <field name="name">PDC Cheque Payment Summary</field>
+        <field name="res_model">contract.payment.summary</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="pdc_payment_summary_list_view"/>
+        <field name="search_view_id" ref="pdc_payment_summary_search"/>
+    </record>
+
+    <menuitem id="menu_pdc_payment_summary"
+        name="PDC Cheque Payment Summary"
+        parent="rental_management.main_menu_rental_management"
+        action="action_pdc_payment_summary"
+        groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+        sequence="12"/>
+
+</odoo>

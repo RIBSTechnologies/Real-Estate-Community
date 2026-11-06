@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Extend Close Contract wizard (contract.closing.wizard)
+        Settlement section is placed OUTSIDE the base 2-column group,
+        directly before the footer — full width, no column squashing.
+    -->
+    <record id="view_contract_closing_wizard_settlement_inherit" model="ir.ui.view">
+        <field name="name">contract.closing.wizard.settlement.inherit</field>
+        <field name="model">contract.closing.wizard</field>
+        <field name="inherit_id" ref="ribs_real_estate.contract_closing_wizard_form_view"/>
+        <field name="arch" type="xml">
+
+            <!-- Insert full-width Settlement section BEFORE the footer -->
+            <xpath expr="//footer" position="before">
+                <field name="currency_id" invisible="1"/>
+                <field name="if_penalty" invisible="1"/>
+                <field name="penalty_deduction" invisible="1"/>
+
+                <!-- Horizontal rule separator (only for early termination) -->
+                <div invisible="termination_type != 'early'"
+                     style="border-top: 1px solid #e2e8f0; margin: 4px 0 12px 0;"/>
+
+                <!-- Settlement Configuration — full-width 2-col group -->
+                <group string="Settlement &amp; Refund Configuration"
+                       invisible="termination_type != 'early'"
+                       class="o_group">
+                    <group>
+                        <field name="customer_id" readonly="1"/>
+                        <field name="termination_reason_ext" required="termination_type == 'early'"/>
+                        <field name="settlement_method" required="termination_type == 'early'"/>
+                    </group>
+                    <group>
+                        <field name="refund_method" required="termination_type == 'early'"/>
+                        <field name="remarks_ext" placeholder="Settlement notes…"/>
+                    </group>
+                </group>
+
+                <!-- ══════════════════════════════════════════════════════════
+                     INVOICE SELECTION (ABOVE THE SUMMARY)
+                     Tick which invoices to refund. Each selected invoice is
+                     day-prorated against the termination (closing) date and the
+                     summary below is driven ONLY by these selected invoices.
+                     ══════════════════════════════════════════════════════════ -->
+                <group string="Select Invoice Lines to Refund"
+                       invisible="termination_type != 'early'">
+                    <field name="use_invoice_selection" widget="boolean_toggle"/>
+                    <field name="invoice_selection_ids" nolabel="1"
+                           invisible="not use_invoice_selection">
+                        <list editable="bottom" create="false" delete="false">
+                            <!-- Identity + context columns.
+                                 The web client does NOT post back readonly
+                                 fields, so everything the server needs to
+                                 rebuild a line must be present here and
+                                 editable. move_line_id is the source of truth:
+                                 without it the server cannot re-read the
+                                 invoice and the credit note comes out empty. -->
+                            <field name="move_line_id" column_invisible="1"/>
+                            <field name="move_id" column_invisible="1"/>
+                            <field name="contract_start" column_invisible="1"/>
+                            <field name="contract_end" column_invisible="1"/>
+                            <field name="manual_override" column_invisible="1"/>
+                            <field name="type_override" column_invisible="1"/>
+
+                            <!-- Visible columns: reference, account, tax, total, refund -->
+                            <field name="selected" widget="boolean_toggle"/>
+                            <field name="name" string="Invoice" readonly="1"/>
+                            <field name="account_id" string="Account" readonly="1"/>
+                            <field name="tax_label" string="Tax" readonly="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="total_amount" widget="monetary" readonly="1"
+                                   string="Total Amount" sum="Total"/>
+                            <field name="refund_total" widget="monetary" readonly="1"
+                                   string="Refund" sum="Refund"
+                                   decoration-success="refund_total &gt; 0"/>
+
+                            <!-- Everything below is hidden by default.
+                                 Use the ⚙ column picker to bring one back when
+                                 you need to audit or override a calculation. -->
+                            <field name="line_type" optional="hide"/>
+                            <field name="product_label" readonly="1" optional="hide"/>
+                            <field name="date_from" optional="hide"/>
+                            <field name="date_to" optional="hide"/>
+                            <field name="period_days" readonly="1" optional="hide"/>
+                            <field name="used_days" readonly="1" optional="hide"/>
+                            <field name="refund_days" readonly="1" optional="hide"/>
+                            <field name="amount" widget="monetary" readonly="1" optional="hide"/>
+                            <field name="vat_amount" widget="monetary" readonly="1" optional="hide"/>
+                            <field name="refund_amount" widget="monetary" optional="hide"/>
+                            <field name="refund_tax_amount" widget="monetary" optional="hide"/>
+                            <field name="analytic_label" readonly="1" optional="hide"/>
+                            <field name="quantity" readonly="1" optional="hide"/>
+                            <field name="price_unit" readonly="1" optional="hide"/>
+                            <field name="invoice_date" readonly="1" optional="hide"/>
+                            <field name="payment_state" readonly="1" optional="hide"/>
+                        </list>
+                    </field>
+                </group>
+
+                <!-- Financial Settlement Breakdown Card — full width -->
+                <div invisible="termination_type != 'early'"
+                     style="background:#f8fafc; border:1px solid #e2e8f0; border-left:4px solid #0284c7;
+                            border-radius:8px; padding:14px 18px; margin:4px 0 12px 0;">
+                    <div style="font-weight:700; color:#0369a1; font-size:13px;
+                                text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">
+                        &#128202; Financial Settlement Breakdown
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 32px;">
+
+                        <!-- Left column -->
+                        <div>
+                            <table style="width:100%; border-collapse:collapse;">
+                                <tr>
+                                    <td style="padding:4px 0; color:#64748b; font-size:13px; width:55%;">Contract Value</td>
+                                    <td style="padding:4px 0; font-weight:700; color:#1e293b; text-align:right;">
+                                        <field name="contract_amount" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0; color:#64748b; font-size:13px;">Amount Paid</td>
+                                    <td style="padding:4px 0; font-weight:700; color:#1e3a8a; text-align:right;">
+                                        <field name="amount_already_paid" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0; color:#64748b; font-size:13px;">Amount Utilized</td>
+                                    <td style="padding:4px 0; font-weight:600; color:#0369a1; text-align:right;">
+                                        <field name="amount_utilized" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0; color:#64748b; font-size:13px;">Occupied / Refundable Days</td>
+                                    <td style="padding:4px 0; font-weight:600; color:#334155; text-align:right;">
+                                        <field name="occupied_days" nolabel="1" class="oe_inline"/>
+                                        <span style="color:#94a3b8;"> / </span>
+                                        <field name="refundable_days" nolabel="1" class="oe_inline"/>
+                                        <span style="color:#94a3b8; font-size:12px;"> of </span>
+                                        <field name="total_period_days" nolabel="1" class="oe_inline"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0; color:#64748b; font-size:13px;">Settlement Base</td>
+                                    <td style="padding:4px 0; font-weight:700; color:#0284c7; text-align:right;">
+                                        <field name="settlement_amount" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Right column -->
+                        <div>
+                            <table style="width:100%; border-collapse:collapse;">
+                                <tr>
+                                    <td style="padding:4px 0; color:#64748b; font-size:13px; width:55%;">Invoice Refund</td>
+                                    <td style="padding:4px 0; font-weight:700; color:#15803d; text-align:right;">
+                                        <field name="invoice_refund_amount" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0; color:#64748b; font-size:13px;">
+                                        Tax Refund
+                                        <field name="tax_refundable" widget="boolean_toggle" nolabel="1" class="oe_inline ms-1" help="Toggle ON to exclude tax from refund."/>
+                                        <span style="font-size:11px; font-weight:600; color:#dc2626; margin-left:4px;" invisible="not tax_refundable">(Excluded)</span>
+                                    </td>
+                                    <td style="padding:4px 0; font-weight:700; color:#6b21a8; text-align:right;">
+                                        <field name="tax_refund_amount" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0; color:#64748b; font-size:13px;">Security Deposit Refund</td>
+                                    <td style="padding:4px 0; font-weight:700; color:#059669; text-align:right;">
+                                        <field name="deposit_refund_amount" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0; color:#64748b; font-size:13px;">Gross Refund</td>
+                                    <td style="padding:4px 0; font-weight:700; color:#0284c7; text-align:right;">
+                                        <field name="total_refund_amount" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                                    </td>
+                                </tr>
+                                <tr invisible="not if_penalty or penalty_deduction == 0">
+                                    <td style="padding:4px 0; color:#dc2626; font-size:13px;">Penalty Deduction (-)</td>
+                                    <td style="padding:4px 0; font-weight:700; color:#dc2626; text-align:right;">
+                                        <field name="penalty_deduction" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                                    </td>
+                                </tr>
+                                <tr style="border-top:2px solid #cbd5e1;">
+                                    <td style="padding:8px 0 4px 0; color:#991b1b; font-weight:800; font-size:13px;">NET REFUND</td>
+                                    <td style="padding:8px 0 4px 0; font-weight:800; color:#b91c1c; font-size:15px; text-align:right;">
+                                        <field name="net_refund_amount" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ══════════════════════════════════════════════════════════
+                     SECURITY DEPOSIT REFUND (Release Contract / normal closure)
+                     The tenant used the full term, so no rent/tax refund is
+                     due — but a security deposit is still returned, via the
+                     same credit-note mechanism. Shows the credit note value
+                     up front, before the user confirms the closure.
+                     ══════════════════════════════════════════════════════════ -->
+                <div invisible="termination_type != 'normal' or not deposit_refund_amount"
+                     style="background:#f0fdf4; border:1px solid #bbf7d0; border-left:4px solid #059669;
+                            border-radius:8px; padding:14px 18px; margin:4px 0 12px 0;">
+                    <div style="font-weight:700; color:#059669; font-size:13px;
+                                text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">
+                        Security Deposit Refund
+                    </div>
+                    <table style="width:100%; border-collapse:collapse;">
+                        <tr>
+                            <td style="padding:4px 0; color:#64748b; font-size:13px; width:55%;">Security Deposit Refund</td>
+                            <td style="padding:4px 0; font-weight:700; color:#059669; text-align:right;">
+                                <field name="deposit_refund_amount" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                            </td>
+                        </tr>
+                        <tr invisible="not if_penalty or penalty_deduction == 0">
+                            <td style="padding:4px 0; color:#dc2626; font-size:13px;">Penalty Deduction (-)</td>
+                            <td style="padding:4px 0; font-weight:700; color:#dc2626; text-align:right;">
+                                <field name="penalty_deduction" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                            </td>
+                        </tr>
+                        <tr style="border-top:2px solid #cbd5e1;">
+                            <td style="padding:8px 0 4px 0; color:#065f46; font-weight:800; font-size:13px;">CREDIT NOTE VALUE</td>
+                            <td style="padding:8px 0 4px 0; font-weight:800; color:#059669; font-size:15px; text-align:right;">
+                                <field name="net_refund_amount" widget="monetary" options="{'currency_field':'currency_id'}" nolabel="1"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- ══════════════════════════════════════════════════════════
+                     ACCOUNT-WISE COMPONENT BREAKDOWN (editable)
+                     Pick the GL (debit) and customer (credit) account per
+                     refund component. Amounts are computed; accounts are yours.
+                     Also shown for a normal closure with a deposit to refund,
+                     since it's the same credit-note mechanism either way.
+                     ══════════════════════════════════════════════════════════ -->
+                <group string="Account-wise Settlement Components"
+                       invisible="termination_type not in ('early', 'normal') or not settlement_line_ids">
+                    <field name="settlement_line_ids" nolabel="1" readonly="1">
+                        <list create="false" delete="false" edit="false">
+                            <field name="component_type" optional="show"/>
+                            <field name="name"/>
+                            <field name="account_id"/>
+                            <field name="receivable_account_id" optional="show"/>
+                            <field name="partner_id" optional="hide"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="amount" widget="monetary" sum="Total"/>
+                        </list>
+                    </field>
+                </group>
+
+                <!-- ══════════════════════════════════════════════════════════
+                     JOURNAL ITEMS PREVIEW (read-only double entry)
+                     Live preview of what will be posted, split account-wise.
+                     ══════════════════════════════════════════════════════════ -->
+                <group string="Journal Items Preview"
+                       invisible="termination_type not in ('early', 'normal') or not settlement_journalitem_ids">
+                    <field name="settlement_journalitem_ids" nolabel="1" readonly="1">
+                        <list create="false" delete="false" edit="false">
+                            <field name="component_type" optional="show"/>
+                            <field name="name"/>
+                            <field name="account_id"/>
+                            <field name="partner_id" optional="hide"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="debit" widget="monetary" sum="Total Debit"/>
+                            <field name="credit" widget="monetary" sum="Total Credit"/>
+                        </list>
+                    </field>
+                    <group col="4" class="oe_subtotal_footer">
+                        <field name="preview_total_debit" widget="monetary"
+                               options="{'currency_field':'currency_id'}"/>
+                        <field name="preview_total_credit" widget="monetary"
+                               options="{'currency_field':'currency_id'}"/>
+                        <field name="preview_balanced"/>
+                    </group>
+                    <div invisible="preview_balanced"
+                         style="color:#b91c1c; font-weight:700; margin-top:4px;">
+                        &#9888; Debit and Credit are not balanced — review the selected accounts/amounts before closing.
+                    </div>
+                </group>
+
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

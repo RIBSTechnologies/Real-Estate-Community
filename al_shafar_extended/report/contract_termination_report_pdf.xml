@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Custom Landscape Paperformat -->
+    <record id="paperformat_contract_termination_report" model="report.paperformat">
+        <field name="name">Contract Termination Report Landscape A4</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">12</field>
+        <field name="margin_bottom">12</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Action Report -->
+    <record id="action_report_contract_termination_pdf" model="ir.actions.report">
+        <field name="name">Contract Termination Settlement Report</field>
+        <field name="model">contract.termination.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">al_shafar_extended.report_contract_termination_template</field>
+        <field name="paperformat_id" ref="paperformat_contract_termination_report"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb Template -->
+    <template id="report_contract_termination_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="article page" t-att-data-oe-model="doc._name" t-att-data-oe-id="doc.id">
+
+                    <!-- Custom Styles -->
+                    <style>
+                        .cnt-header-container {
+                            border-bottom: 2px solid #1E3A8A;
+                            padding-bottom: 8px;
+                            margin-bottom: 12px;
+                        }
+                        .cnt-title-banner {
+                            background-color: #1E3A8A;
+                            color: #FFFFFF;
+                            padding: 8px 14px;
+                            border-radius: 4px;
+                            margin-bottom: 12px;
+                        }
+                        .cnt-data-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 9.5px;
+                            margin-bottom: 15px;
+                        }
+                        .cnt-data-table th {
+                            background-color: #1E3A8A;
+                            color: #FFFFFF;
+                            padding: 6px 4px;
+                            text-align: center;
+                            font-weight: bold;
+                            border: 1px solid #0F172A;
+                        }
+                        .cnt-data-table td {
+                            padding: 5px 4px;
+                            border: 1px solid #CBD5E1;
+                            vertical-align: middle;
+                        }
+                        .cnt-badge {
+                            display: inline-block;
+                            padding: 2px 6px;
+                            border-radius: 3px;
+                            font-size: 8.5px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                        }
+                        .badge-pending { background-color: #FEF3C7; color: #92400E; }
+                        .badge-refunded { background-color: #DCFCE7; color: #166534; }
+                        .badge-no_refund { background-color: #E2E8F0; color: #475569; }
+                        .badge-partially_refunded { background-color: #DBEAFE; color: #1E40AF; }
+                    </style>
+
+                    <!-- Header -->
+                    <div class="cnt-header-container row">
+                        <div class="col-7">
+                            <h3 style="margin:0; font-weight:bold; color:#1E3A8A;" t-out="doc.company_id.name"/>
+                            <div style="font-size:10px; color:#475569; margin-top:2px;">
+                                <t t-if="doc.company_id.street"><span t-out="doc.company_id.street"/>, </t>
+                                <t t-if="doc.company_id.city"><span t-out="doc.company_id.city"/> </t>
+                                <t t-if="doc.company_id.country_id"><span t-out="doc.company_id.country_id.name"/></t>
+                                <br/>
+                                Phone: <span t-out="doc.company_id.phone or 'N/A'"/> | Email: <span t-out="doc.company_id.email or 'N/A'"/>
+                            </div>
+                        </div>
+                        <div class="col-5 text-right">
+                            <t t-if="doc.company_id.logo">
+                                <img t-att-src="image_data_uri(doc.company_id.logo)" style="max-height: 55px; max-width: 200px;" alt="Logo"/>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- Title Banner -->
+                    <div class="cnt-title-banner">
+                        <div class="row">
+                            <div class="col-8">
+                                <h4 style="margin:0; font-weight:bold; color:#FFFFFF;">CONTRACT TERMINATION &amp; REFUND SETTLEMENT REPORT</h4>
+                            </div>
+                            <div class="col-4 text-right" style="font-size:10px;">
+                                Printed: <span t-out="datetime.datetime.now().strftime('%Y-%m-%d %H:%M')"/><br/>
+                                Currency: <span t-out="doc.company_id.currency_id.name"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <t t-set="contracts" t-value="doc._get_terminated_contracts()"/>
+                    <t t-set="refund_status_labels" t-value="dict(env['contract.contract']._fields['refund_status'].selection)"/>
+
+                    <!-- Data Table -->
+                    <table class="cnt-data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 3%;">#</th>
+                                <th style="width: 9%;">Contract No</th>
+                                <th style="width: 14%;">Customer / Partner</th>
+                                <th style="width: 7%;">Start Date</th>
+                                <th style="width: 7%;">End Date</th>
+                                <th style="width: 8%;">Term Date</th>
+                                <th style="width: 9%; text-align:right;">Contract Value</th>
+                                <th style="width: 9%; text-align:right;">Amount Paid</th>
+                                <th style="width: 9%; text-align:right;">Utilized Amount</th>
+                                <th style="width: 9%; text-align:right;">Refund Amount</th>
+                                <th style="width: 10%;">Refund Ref</th>
+                                <th style="width: 10%;">Refund Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="sr_no" t-value="1"/>
+                            <t t-set="total_val" t-value="0.0"/>
+                            <t t-set="total_paid" t-value="0.0"/>
+                            <t t-set="total_util" t-value="0.0"/>
+                            <t t-set="total_ref" t-value="0.0"/>
+
+                            <t t-foreach="contracts" t-as="cnt">
+                                <t t-set="posted_refund" t-value="cnt.invoice_ids.filtered(lambda m: m.state == 'posted' and m.move_type == 'out_refund')[:1]"/>
+
+                                <tr t-att-style="'background-color: ' + ('#F8FAFC' if sr_no % 2 == 0 else '#FFFFFF') + ';'">
+                                    <td class="text-center"><span t-out="sr_no"/></td>
+                                    <td class="text-center"><strong><span t-out="cnt.name"/></strong></td>
+                                    <td><span t-out="cnt.partner_id.name"/></td>
+                                    <td class="text-center"><span t-out="cnt.start_date"/></td>
+                                    <td class="text-center"><span t-out="cnt.end_date"/></td>
+                                    <td class="text-center"><span t-out="cnt.termination_date"/></td>
+                                    <td class="text-right"><span t-out="cnt.total_contract_value" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></td>
+                                    <td class="text-right"><span t-out="cnt.total_paid_amount" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></td>
+                                    <td class="text-right"><span t-out="cnt.total_utilized_amount" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></td>
+                                    <td class="text-right">
+                                        <strong style="color:#B91C1C;"><span t-out="cnt.refund_amount" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-out="posted_refund.name if posted_refund else 'N/A'"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <t t-set="st_code" t-value="cnt.refund_status or 'no_refund'"/>
+                                        <span t-attf-class="cnt-badge badge-{{st_code}}">
+                                            <span t-out="refund_status_labels.get(st_code, st_code)"/>
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <t t-set="total_val" t-value="total_val + (cnt.total_contract_value or 0.0)"/>
+                                <t t-set="total_paid" t-value="total_paid + (cnt.total_paid_amount or 0.0)"/>
+                                <t t-set="total_util" t-value="total_util + (cnt.total_utilized_amount or 0.0)"/>
+                                <t t-set="total_ref" t-value="total_ref + (cnt.refund_amount or 0.0)"/>
+                                <t t-set="sr_no" t-value="sr_no + 1"/>
+                            </t>
+
+                            <!-- Grand Total -->
+                            <tr style="background-color:#0F172A; color:#FFFFFF; font-weight:bold;">
+                                <td colspan="6" class="text-right">TOTAL (<t t-out="len(contracts)"/> Terminated Contracts):</td>
+                                <td class="text-right"><span t-out="total_val" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></td>
+                                <td class="text-right"><span t-out="total_paid" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></td>
+                                <td class="text-right"><span t-out="total_util" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></td>
+                                <td class="text-right"><span t-out="total_ref" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

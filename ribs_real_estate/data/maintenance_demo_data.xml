@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="general_condition_walls_line" model="maintenance.condition.line.item">
+            <field name="name">Walls and Paint</field>
+            <field name="item_for">move_in</field>
+        </record>
+        <record id="general_condition_flooring_line" model="maintenance.condition.line.item">
+            <field name="name">Flooring / Tiles</field>
+            <field name="item_for">move_in</field>
+        </record>
+
+        <record id="general_condition_doors_line" model="maintenance.condition.line.item">
+            <field name="name">Doors / Locks</field>
+            <field name="item_for">move_in</field>
+        </record>
+
+        <record id="general_condition_windows_line" model="maintenance.condition.line.item">
+            <field name="name">Windows / Handles</field>
+            <field name="item_for">move_in</field>
+        </record>
+
+        <record id="general_condition_wardrobes_line" model="maintenance.condition.line.item">
+            <field name="name">Wardrobes / Cabinets</field>
+            <field name="item_for">move_in</field>
+        </record>
+
+        <record id="general_condition_bathroom_line" model="maintenance.condition.line.item">
+            <field name="name">Bathroom Fixtures</field>
+            <field name="item_for">move_in</field>
+        </record>
+
+        <record id="general_condition_kitchen_line" model="maintenance.condition.line.item">
+            <field name="name">Kitchen Cabinets</field>
+            <field name="item_for">move_in</field>
+        </record>
+
+        <record id="general_condition_exhaust_line" model="maintenance.condition.line.item">
+            <field name="name">Exhaust Fans</field>
+            <field name="item_for">move_in</field>
+        </record>
+
+        <record id="general_condition_lighting_line" model="maintenance.condition.line.item">
+            <field name="name">Lighting and Switches</field>
+            <field name="item_for">move_in</field>
+        </record>
+        <record id="general_condition_ac_line" model="maintenance.condition.line.item">
+            <field name="name">AC / HVAC</field>
+            <field name="item_for">move_in</field>
+        </record>
+        <record id="general_condition_appliances_line" model="maintenance.condition.line.item">
+            <field name="name">Appliances</field>
+            <field name="item_for">move_in</field>
+        </record>
+
+         <record id="move_out_condition_walls" model="maintenance.condition.line.item">
+            <field name="name">Walls / Paint </field>
+            <field name="item_for">move_out</field>
+        </record>
+
+        <record id="move_out_condition_flooring" model="maintenance.condition.line.item">
+            <field name="name">Flooring / Tiles </field>
+            <field name="item_for">move_out</field>
+        </record>
+        <record id="move_out_condition_doors" model="maintenance.condition.line.item">
+            <field name="name">Doors / Locks </field>
+            <field name="item_for">move_out</field>
+        </record>
+        <record id="move_out_condition_windows" model="maintenance.condition.line.item">
+            <field name="name">Windows / Glass </field>
+            <field name="item_for">move_out</field>
+        </record>
+        <record id="move_out_condition_kitchen" model="maintenance.condition.line.item">
+            <field name="name">Kitchen </field>
+            <field name="item_for">move_out</field>
+        </record>
+        <record id="move_out_condition_bathroom" model="maintenance.condition.line.item">
+            <field name="name">Bathroom Fixtures</field>
+            <field name="item_for">move_out</field>
+        </record>
+         <record id="move_out_condition_ac" model="maintenance.condition.line.item">
+            <field name="name">AC / HVAC</field>
+            <field name="item_for">move_out</field>
+        </record>
+        <record id="move_out_condition_appliances" model="maintenance.condition.line.item">
+            <field name="name">Appliances </field>
+            <field name="item_for">move_out</field>
+        </record>
+        <record id="move_out_condition_cleaning" model="maintenance.condition.line.item">
+            <field name="name">Cleaning Level  </field>
+            <field name="item_for">move_out</field>
+        </record>
+
+    </data>
+</odoo>

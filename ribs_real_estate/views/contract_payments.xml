@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="contract_payment_form_view" model="ir.ui.view">
+            <field name="name">contract.payments.form.view</field>
+            <field name="model">contract.payments</field>
+            <field name="arch" type="xml">
+                <form string="Contract Details">
+                    <header>
+                        <field name="payments_received" widget="statusbar" statusbar_visible="waiting_for_approval,received,not_received" />
+                        <button name="received" string="Mark as Received" type="object" invisible="1"/>
+                        <button name="not_received" string="Mark as Not Received" type="object" invisible="1"/>
+                        <button name="send_mail" string="Send Mail" type="object" class="btn btn-outline-success" invisible="payments_received != 'received'"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="contract_id" readonly="1"/>
+                            <field name="contract_responsible"/>
+                            <field name="contract_total_value"/>
+                            <field name="financial_person_id" readonly="1"/>
+                        </group>
+                        <notebook>
+                            <page name="invoice_details" string="Invoice Details">
+                                <field name="contract_invoice_ids" readonly="1">
+                                    <list create="false" delete="false">
+                                        <field name="invoice_date" />
+                                        <field name="type" />
+                                        <field name="description" />
+                                        <field name="currency_id" column_invisible="1" />
+                                        <field name="amount" widget="monetary"
+                                            options="{'currency_field': 'currency_id'}" />
+                                        <field name="rent_invoice_id" widget="many2onebutton" />
+                                    </list>
+                                </field>
+                            </page>
+                            <page name="payment_details" string="Payment Details">
+                                <field name="contract_payment_ids">
+                                    <list create="false" delete="false">
+                                        <button name="line_received"
+                                            type="object"
+                                            title="Receive and Confirm"
+                                            icon="check_circle" icon_class="oi-filled" invisible="line_payment_received == 'received'"/>
+                                        <button name="action_open_add_comment_wizard"
+                                            type="object"
+                                            icon="chat_bubble" icon_class="oi-filled"
+                                            title="Add Comment" invisible="line_payment_received == 'received'"/>
+                                        <field name="payment_type"/>
+                                        <field name="journal_id"/>
+                                        <field name="currency_id" column_invisible="1"/>
+                                        <field name="amount" options="{'currency_field': 'currency_id'}"/>
+                                        <field name="cheque_num"/>
+                                        <field name="chq_due_date"/>
+                                        <field name="remitter_bank_id"/>
+                                        <field name="ref"/>
+                                        <field name="attachment_ids" widget="many2many_binary"/>
+                                        <field name="payment_account_id" invisible="payment_pdc_id != False" widget="many2onebutton"/>
+                                        <field name="payment_pdc_id" invisible="payment_account_id != False" widget="many2onebutton" context="{'form_view_ref': 'sh_pdc.sh_pdc_payment_form_view'}"/>
+                                        <field name="rejected_reason" readonly="line_payment_received == 'received'"/>
+                                        <field name="leasing_reason" readonly="1"/>
+                                        <field name="rejected_attachment_ids" widget="many2many_binary"/>
+                                        <field name="line_payment_received"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="contract_payment_tree_view" model="ir.ui.view">
+            <field name="name">contract.payments.tree.view</field>
+            <field name="model">contract.payments</field>
+            <field name="arch" type="xml">
+                <list string="Contract Payments" delete="false" create="false" default_order="contract_id desc">
+                    <field name="contract_id"/>
+                    <field name="contract_responsible"/>
+                    <field name="currency_id" column_invisible="1"/>  
+                    <field name="contract_total_value" options="{'currency_field': 'currency_id'}"/>
+                    <field name="payments_received"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="contract_payment_search_view" model="ir.ui.view">
+            <field name="name">contract.payments.search.view</field>
+            <field name="model">contract.payments</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter string="Contract" name="group_by_contract_id" domain="[]" context="{'group_by':'contract_id'}"/>
+                    <filter string="Not Received" name="contract_payments_not_received" domain="[('contract_payments','in',[False,'not_received'])]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- # For Leasing Team (Comments Added by Finance Team) -->
+        <record id="contract_payment_tree_finance_comment" model="ir.ui.view">
+            <field name="name">contract.payments.tree.finance.comment</field>
+            <field name="model">contract.payments</field>
+            <field name="arch" type="xml">
+                <list string="Payments with Finance Comments"
+                    create="false" delete="false">
+                    <button name="line_received"
+                            type="object"
+                            title="Receive and Confirm"
+                            icon="check_circle" icon_class="oi-filled" invisible="finance_comment_added"/>
+                    <button name="action_open_add_comment_wizard"
+                            type="object"
+                            icon="chat_bubble" icon_class="oi-filled"
+                            title="Add Comment" invisible="finance_comment_added"/>
+                    <button name="action_open_edit_payment_wizard" 
+                            type="object" icon="edit" icon_class="oi-filled" 
+                            title="Edit Payment" invisible="leasing_comment_added"/>
+                    <field name="contract_id"/>
+                    <field name="journal_id"/>
+                    <field name="currency_id" column_invisible="1"/>  
+                    <field name="amount"
+                        widget="monetary"
+                        options="{'currency_field': 'currency_id'}"/>
+                    <field name="chq_due_date"/>
+                    <field name="remitter_bank_id"/>
+                    <field name="ref"/>
+                    <field name="financial_person_id"/>
+                    <field name="leasing_reason"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                    <field name="rejected_reason"/>
+                    <field name="rejected_attachment_ids" widget="many2many_binary"/>
+                    <field name="line_payment_received"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- # For Finance Team (Comment added by Leasing Team) -->
+        <!-- <record id="contract_payment_tree_leasing_comment" model="ir.ui.view">
+            <field name="name">contract.payments.tree.leasing.comment</field>
+            <field name="model">contract.payments</field>
+            <field name="arch" type="xml">
+                <list string="Payments with Leasing Comments"
+                    create="false" delete="false">
+                    <field name="contract_id"/>
+                    <field name="journal_id"/>
+                    <field name="currency_id" column_invisible="1"/>  
+                    <field name="amount"
+                        widget="monetary"
+                        options="{'currency_field': 'currency_id'}"/>
+                    <field name="chq_due_date"/>
+                    <field name="ref"/>
+                    <field name="financial_person_id"/>
+                    <field name="rejected_reason"/>
+                    <field name="leasing_reason"/>
+                    <field name="line_payment_received"/>
+                    <button name="action_open_add_comment_wizard"
+                        type="object"
+                        icon="chat_bubble" icon_class="oi-filled"
+                        title="Add Comment" invisible="line_payment_received == 'received'"/>
+                    <button name="line_received"
+                        type="object"
+                        title="Receive and Confirm"
+                        icon="check_circle" icon_class="oi-filled" invisible="line_payment_received == 'received'"/>
+                </list>
+            </field>
+        </record> -->
+
+        <record id="action_contract_payments" model="ir.actions.act_window">
+            <field name="name">Contract Payments</field>
+            <field name="res_model">contract.payments</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'search_default_group_by_contract_id': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create contract payments to manage payments related to tenancy contracts.
+                </p>
+            </field>
+        </record>
+
+        <!-- # For Leasing Team (Comments Added by Finance Team) -->
+        <record id="action_contract_payments_finance_comment" model="ir.actions.act_window">
+            <field name="name">Payments with Finance Comments</field>
+            <field name="res_model">contract.payments</field>
+            <field name="view_mode">list</field>
+            <field name="views">
+                [(ref('contract_payment_tree_finance_comment'), 'list')]
+            </field>
+            <field name="domain">
+                [
+                    ('finance_comment_added', '=', True),
+                    ('line_payment_received', '=', 'not_received'),
+                ]
+            </field>
+            <field name="context">{'create': False}</field>
+        </record>
+
+         <!-- # For Finance Team (Comment added by Leasing Team) -->
+        <record id="action_contract_payments_leasing_comment" model="ir.actions.act_window">
+            <field name="name">Payments with Leasing Comments</field>
+            <field name="res_model">contract.payments</field>
+            <field name="view_mode">list</field>
+            <field name="views">
+                [(ref('contract_payment_tree_leasing_comment'), 'list')]
+            </field>
+            <field name="domain">
+                [
+                    ('leasing_comment_added', '=', True),
+                    ('line_payment_received', '=', 'not_received'),
+                ]
+            </field>
+            <field name="context">{'create': False}</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.maintenance</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="35"/>
+            <field name="inherit_id" ref="maintenance.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//app[@name='maintenance']/block" position="after">
+                    <block title="Maintenance Count">
+                        <setting help="If this many issues have been raised by the property unit, It should be escalated to the manager">
+                            <field name="maintenance_count"/>
+                        </setting>
+                    </block>
+                </xpath>
+            </field>
+        </record>
+        <record id="res_config_settings_view_form_rental_inherit" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.rental</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="rental_management.res_config_settings_view_form_rental"/>
+            <field name="arch" type="xml">
+                <xpath expr="//app[@name='rental_management']" position="inside">
+                    <block title="Contract">
+                        <setting help="Who can reduce the Contract Rent Amount">
+                            <field name="authorized_users_ids" widget="many2many_tags"/>
+                        </setting>
+                        <setting help="Force leasing person to collect payments while creating a Contract">
+                            <field name="force_collect_payments"/>
+                        </setting>
+                    </block>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

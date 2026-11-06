@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Account Move Form - Professional Redesign                     -->
+    <!-- Covers: Vendor Bills, Journal Entries, Invoices               -->
+    <!-- Only rearranges fields, improves visual grouping.             -->
+    <!-- No fields removed, no backend logic changed.                  -->
+    <!-- ============================================================ -->
+
+    <record id="erp_account_move_form_redesign" model="ir.ui.view">
+        <field name="name">account.move.form.erp.redesign</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+
+            <!-- Add redesign class to form -->
+            <xpath expr="//form" position="attributes">
+                <attribute name="class">erp_redesigned_form erp_account_move_form</attribute>
+            </xpath>
+
+            <!-- ======================================== -->
+            <!-- Move Fiscal Position into the header     -->
+            <!-- right group for Vendor Bills so users    -->
+            <!-- can see it without opening Other Info    -->
+            <!-- ======================================== -->
+
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="fiscal_position_id"
+                       readonly="state in ['cancel', 'posted']"
+                       invisible="move_type not in ('in_invoice', 'in_refund')"
+                       options="{'no_create': True}"
+                       string="Fiscal Position"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

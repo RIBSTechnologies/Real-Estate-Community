@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Report Wizard Form View -->
+    <record id="view_contract_termination_report_wizard_form" model="ir.ui.view">
+        <field name="name">contract.termination.report.wizard.form</field>
+        <field name="model">contract.termination.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Contract Termination Report">
+                <sheet>
+                    <div class="oe_title">
+                        <h2 style="color: #1E3A8A; font-weight: bold;">
+                            <i class="oi mr-2" data-icon="article"/>Contract Termination Settlement Report
+                        </h2>
+                        <p class="text-muted">
+                            Select date range, customer/partner, and refund status to generate the termination report.
+                        </p>
+                    </div>
+
+                    <group>
+                        <group string="Termination Date Filter">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group string="Selection Criteria">
+                            <field name="refund_status"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <group string="Customer / Partner Selection">
+                        <field name="partner_ids" widget="many2many_tags" placeholder="Select Customer(s)... (Leave blank for ALL customers)"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_print_pdf" string="Print PDF Report" type="object" class="btn-primary" icon="picture_as_pdf"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Window -->
+    <record id="action_contract_termination_report_wizard" model="ir.actions.act_window">
+        <field name="name">Contract Termination Report</field>
+        <field name="res_model">contract.termination.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu Item in Accounting -> Reporting -->
+    <menuitem id="menu_contract_termination_report"
+              name="Contract Termination Report"
+              parent="account.menu_finance_reports"
+              action="action_contract_termination_report_wizard"
+              sequence="60"/>
+
+</odoo>

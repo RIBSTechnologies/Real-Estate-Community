@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="contract_template_inherti" name="Contract Inherit" inherit_id="rental_management.tenancy_details_qweb_report_template">
+        <xpath expr="//h6[5]" position="replace">
+        
+        </xpath>
+    </template>
+</odoo>

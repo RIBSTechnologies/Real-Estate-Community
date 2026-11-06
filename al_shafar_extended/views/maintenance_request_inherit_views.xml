@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="maintenance_request_view_move_in_status_radio" model="ir.ui.view">
+            <field name="name">maintenance.request.move.in.status.radio</field>
+            <field name="model">maintenance.request</field>
+            <field name="inherit_id" ref="ribs_real_estate.maintenance_request_view"/>
+            <field name="arch" type="xml">
+                <!-- ribs_real_estate replaces vendor_id (re-locking it once an
+                     invoice/bill exists), so its "editable until Handover" rule
+                     has to sit on top of that view - see
+                     maintenance_request_view_invoice_bill_transfers. -->
+                <xpath expr="//field[@name='vendor_id']" position="attributes">
+                    <attribute name="readonly">products_locked</attribute>
+                </xpath>
+                <!-- Request title: editable only while creating. Requests raised
+                     from a contract or the tenant portals are saved on creation,
+                     so they are never editable here. -->
+                <xpath expr="//div[hasclass('oe_title')]//field[@name='name']" position="attributes">
+                    <attribute name="readonly">id</attribute>
+                </xpath>
+                <xpath expr="//field[@name='move_in_ids']/list/field[@name='item']" position="after">
+                    <field name="count"/>
+                </xpath>
+                <xpath expr="//field[@name='move_in_status']" position="attributes">
+                    <attribute name="widget">radio</attribute>
+                    <attribute name="options">{'horizontal': true}</attribute>
+                </xpath>
+                <xpath expr="//group[@name='general_condition_check']/field[@name='move_in_ids']" position="before">
+                    <button name="action_refresh_move_in_condition_lines" type="object"
+                            string="Update Condition Check" icon="refresh" class="btn-secondary mb-2"
+                            invisible="not is_new_request_stage"/>
+                </xpath>
+                <!-- Team Approval beside Property Details: every maintenance
+                     team Proceeds, or Doesn't Proceed with remarks, before the
+                     move-in can reach Handover (maintenance_team_approval.py). -->
+                <xpath expr="//group[@name='property_details']" position="before">
+                    <group name="property_and_team_approval">
+                        <group name="team_approval" string="Team Approval">
+                            <field name="team_approval_locked" invisible="1"/>
+                            <field name="team_approval_ids" nolabel="1" colspan="2"
+                                   readonly="team_approval_locked">
+                                <list editable="bottom" create="0" delete="0"
+                                      decoration-success="decision == 'proceed'"
+                                      decoration-danger="decision == 'not_proceed' and not remarks"
+                                      decoration-warning="decision == 'not_proceed' and remarks">
+                                    <field name="team_id" readonly="1" force_save="1"/>
+                                    <field name="decision" widget="badge"
+                                           decoration-success="decision == 'proceed'"
+                                           decoration-danger="decision == 'not_proceed'"
+                                           decoration-muted="decision == 'pending'"/>
+                                    <button name="action_proceed" type="object" string="Proceed"
+                                            icon="check" class="btn-link text-success"
+                                            invisible="decision == 'proceed' or parent.team_approval_locked"/>
+                                    <button name="action_not_proceed" type="object" string="Don't Proceed"
+                                            icon="close" class="btn-link text-danger"
+                                            invisible="decision == 'not_proceed' or parent.team_approval_locked"/>
+                                    <field name="remarks" required="decision == 'not_proceed'"
+                                           placeholder="Required for Don't Proceed"/>
+                                    <field name="decided_by" optional="hide"/>
+                                    <field name="decided_on" optional="hide"/>
+                                </list>
+                            </field>
+                            <div colspan="2" class="text-muted small"
+                                 invisible="team_approval_locked">
+                                Handover needs every team to Proceed, or Don't Proceed with remarks.
+                                <button name="action_load_team_approvals" type="object" string="Add missing teams"
+                                        icon="refresh" class="btn-link p-0 ms-1"/>
+                            </div>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//group[@name='team_approval']" position="before">
+                    <xpath expr="//group[@name='property_details']" position="move"/>
+                </xpath>
+                <xpath expr="//group[@name='final_readiness']" position="replace"/>
+                <xpath expr="//group[@name='received_cards']" position="replace">
+                    <group>
+                        <group name="received_cards" string="Received the Following">
+                            <field name="unit_key"/>
+                            <field name="access_card"/>
+                            <field name="dewa_security_deposit"/>
+                        </group>
+                        <group name="final_readiness" string="Final Readiness Confirmation">
+                            <field name="cleaning_done"/>
+                            <field name="repairs_done"/>
+                            <field name="safety_checks"/>
+                            <field name="ready_for_handover"/>
+                        </group>
+                    </group>
+                </xpath>
+                <!-- Tenant rating/feedback/closed date - part of the repair-
+                     ticket tenant-feedback loop (action_tenant_feedback) -
+                     not relevant for a move-in request. Tenant Resolution
+                     Confirmation and Reopen Count (shown alongside these
+                     before) are removed from this form entirely, per
+                     request. -->
+                <xpath expr="//field[@name='priority']" position="after">
+                    <field name="ticket_type" widget="badge" readonly="1"
+                           decoration-info="ticket_type == 'handover'"
+                           decoration-warning="ticket_type == 'tenant'"
+                           decoration-muted="ticket_type == 'direct'"/>
+                    <field name="tenant_rating" readonly="1"
+                           invisible="not tenant_rating or mr_for == 'move_in'"/>
+                    <field name="tenant_rating_comment" readonly="1"
+                           invisible="not tenant_rating_comment or mr_for == 'move_in'"/>
+                    <field name="closed_date" readonly="1"
+                           invisible="not closed_date or mr_for == 'move_in'"/>
+                </xpath>
+
+                <!-- Statusbar: a move-in/move-out request keeps the simple
+                     click-through it always had (New Request -> In Progress
+                     -> Handover directly - Repaired/Scrap never apply to
+                     it). Everything else (a general/repair ticket) gets the
+                     new button-driven workflow below: only New Request and
+                     In Progress stay directly clickable, every stage after
+                     that (Site Visit, both Outsource ones, Parts Required,
+                     Repaired, Handover, Scrap) can only be reached through
+                     its matching action_* button/method, never by clicking
+                     the pill - the current stage is always kept in the list
+                     regardless of this domain, so it never hides the pill
+                     the record is actually sitting on. -->
+                <xpath expr="//field[@name='stage_id']" position="attributes">
+                    <attribute name="domain">[('name', 'in', ['New Request', 'In Progress', 'Handover'] if mr_for in ('move_in', 'move_out') else ['New Request', 'In Progress'])]</attribute>
+                </xpath>
+
+                <!-- Site Visit -> Outsource -> Parts Required -> Repaired/
+                     Scrap/Handover: button-driven workflow for a general/
+                     repair ticket (see maintenance_request.py action_*
+                     methods) - not shown at all for move-in/move-out, which
+                     keep their own simple direct-click flow above. -->
+                <xpath expr="//header" position="inside">
+                    <field name="is_in_progress_stage" invisible="1"/>
+                    <field name="is_site_visit_stage" invisible="1"/>
+                    <field name="is_outsource_decision_stage" invisible="1"/>
+                    <field name="is_parts_required_stage" invisible="1"/>
+                    <field name="is_repaired_stage" invisible="1"/>
+                    <button name="action_attend_site" type="object" string="Attend Site"
+                            class="btn-primary"
+                            invisible="mr_for in ('move_in', 'move_out') or not is_in_progress_stage"/>
+                    <button name="action_outsource_required" type="object" string="Outsource Required"
+                            class="btn-primary"
+                            invisible="mr_for in ('move_in', 'move_out') or not is_site_visit_stage"/>
+                    <button name="action_outsource_not_required" type="object" string="Outsource Not Required"
+                            class="btn-secondary"
+                            invisible="mr_for in ('move_in', 'move_out') or not is_site_visit_stage"/>
+                    <button name="action_parts_required" type="object" string="Parts Required"
+                            class="btn-secondary"
+                            invisible="mr_for in ('move_in', 'move_out') or not is_outsource_decision_stage"/>
+                    <button name="action_repaired" type="object" string="Repaired"
+                            class="btn-primary"
+                            invisible="mr_for in ('move_in', 'move_out') or not (is_outsource_decision_stage or is_parts_required_stage)"/>
+                    <button name="action_scrap" type="object" string="Scrap"
+                            class="btn-secondary"
+                            invisible="mr_for in ('move_in', 'move_out') or not (is_outsource_decision_stage or is_parts_required_stage)"/>
+                    <button name="action_handover" type="object" string="Handover"
+                            class="btn-primary"
+                            invisible="mr_for in ('move_in', 'move_out') or not is_repaired_stage"/>
+                </xpath>
+            </field>
+        </record>
+        <!-- Invoices / Vendor Bills smart buttons each show only their own
+             documents and amount (core mixed both and shared one total), plus
+             the Delivery Orders / Receipts created from them (maintenance_stock.py). -->
+        <record id="maintenance_request_view_invoice_bill_transfers" model="ir.ui.view">
+            <field name="name">maintenance.request.invoice.bill.transfers</field>
+            <field name="model">maintenance.request</field>
+            <field name="inherit_id" ref="rental_management.property_maintenance_inherit_view"/>
+            <field name="arch" type="xml">
+                <!-- Included Products stay editable until Handover/Scrap (core
+                     locked them once any invoice/bill existed); Create Invoice /
+                     Create Bill stay available while there are lines not yet on
+                     one. Lines already invoiced/billed lock row by row. -->
+                <!-- Payment Type picks the flow: Invoice -> Create Invoice, Bill ->
+                     Create RFQ (-> PO -> Receipt -> Bill), Internal Transfer ->
+                     Create Internal Transfer. -->
+                <xpath expr="//header/button[@name='action_crete_invoice']" position="attributes">
+                    <attribute name="invisible">not can_create_invoice or payment_type != 'invoice'</attribute>
+                    <attribute name="class">btn-primary</attribute>
+                </xpath>
+                <xpath expr="//header/button[@name='action_crete_bill']" position="attributes">
+                    <attribute name="string">Create RFQ</attribute>
+                    <attribute name="invisible">not can_create_rfq or payment_type != 'bill'</attribute>
+                    <attribute name="class">btn-primary</attribute>
+                </xpath>
+                <xpath expr="//header/button[@name='action_crete_bill']" position="after">
+                    <button name="action_create_internal_transfer" type="object" string="Create Internal Transfer"
+                            class="btn-primary" invisible="not can_create_transfer or payment_type != 'transfer'"/>
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <field name="products_locked" invisible="1"/>
+                    <field name="can_create_invoice" invisible="1"/>
+                    <field name="can_create_rfq" invisible="1"/>
+                    <field name="can_create_transfer" invisible="1"/>
+                </xpath>
+                <!-- Included Products split into Invoice / Vendor Bill / Internal
+                     Transfer sub-tabs (maintenance_stock.MaintenanceRequestStock).
+                     The original combined section stays in the view, hidden, so
+                     other modules' xpaths into it keep resolving. -->
+                <xpath expr="//page[@name='included_products']/group[1]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='included_products']/field[@name='maintenance_product_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='included_products']/group[hasclass('oe_invoice_lines_tab')]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='included_products']/group[hasclass('oe_invoice_lines_tab')]" position="after">
+                    <!-- Payment Type switches the view: Invoice -> customer + Invoice
+                         tab, Bill -> vendor + Vendor Bill tab, Internal Transfer ->
+                         Internal Transfer tab. One request can use all three. -->
+                    <group name="included_products_payment">
+                        <group>
+                            <field name="payment_type" widget="radio" options="{'horizontal': True}"
+                                   required="1" readonly="products_locked"/>
+                        </group>
+                        <group>
+                            <field name="customer_id" invisible="payment_type != 'invoice'"
+                                   required="payment_type == 'invoice'"
+                                   options="{'no_quick_create':True,'no_create_edit':True}"
+                                   domain="[('user_type', '=', 'customer')]" readonly="products_locked"/>
+                            <field name="vendor_id" invisible="payment_type != 'bill'"
+                                   required="payment_type == 'bill'"
+                                   options="{'no_quick_create':True,'no_create_edit':True}"
+                                   domain="[('supplier_rank', '>=', 1)]" readonly="products_locked"/>
+                            <field name="transfer_location_id" invisible="payment_type != 'transfer'"
+                                   readonly="products_locked" options="{'no_create': True}"/>
+                            <field name="transfer_location_dest_id" invisible="payment_type != 'transfer'"
+                                   readonly="products_locked" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Invoice" name="included_products_invoice" invisible="payment_type != 'invoice'">
+                            <field name="invoice_product_ids" readonly="products_locked"
+                                   context="{'default_line_type': 'invoice'}">
+                                <list editable="bottom">
+                                    <field name="company_id" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="line_type" column_invisible="1"/>
+                                    <field name="is_billed" column_invisible="1"/>
+                                    <field name="product_id" readonly="is_billed"
+                                           options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="description" readonly="is_billed"/>
+                                    <field name="quantity" readonly="is_billed"/>
+                                    <field name="price_unit" readonly="is_billed"/>
+                                    <field name="tax_ids" widget="many2many_tags" readonly="is_billed"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="invoice_id" options="{'no_create': True}"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_untaxed_amount"/>
+                            </group>
+                        </page>
+                        <page string="Vendor Bill" name="included_products_bill" invisible="payment_type != 'bill'">
+                            <div class="text-muted mb-2">
+                                Create RFQ → Confirm Order → Receipt → Vendor Bill. Each document is linked to
+                                this request and shown on the smart buttons above.
+                            </div>
+                            <field name="bill_product_ids" readonly="products_locked"
+                                   context="{'default_line_type': 'bill'}">
+                                <list editable="bottom">
+                                    <field name="company_id" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="line_type" column_invisible="1"/>
+                                    <field name="is_billed" column_invisible="1"/>
+                                    <field name="product_id" readonly="is_billed" required="1"
+                                           options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="description" readonly="is_billed"/>
+                                    <field name="quantity" readonly="is_billed"/>
+                                    <field name="price_unit" string="Cost" readonly="is_billed"/>
+                                    <field name="tax_ids" widget="many2many_tags" readonly="is_billed"
+                                           domain="[('type_tax_use', '=', 'purchase')]"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="purchase_order_id"/>
+                                    <field name="purchase_state" widget="badge" optional="show"/>
+                                    <field name="qty_received" optional="show"/>
+                                    <field name="qty_invoiced" optional="show"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="bill_untaxed_amount"/>
+                            </group>
+                        </page>
+                        <page string="Internal Transfer" name="included_products_transfer"
+                              invisible="payment_type != 'transfer'">
+                            <field name="transfer_product_ids" readonly="products_locked"
+                                   context="{'default_line_type': 'transfer'}">
+                                <list editable="bottom">
+                                    <field name="company_id" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="line_type" column_invisible="1"/>
+                                    <field name="is_billed" column_invisible="1"/>
+                                    <field name="product_id" readonly="is_billed" required="1"
+                                           domain="[('type', '=', 'consu')]"
+                                           options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="description" readonly="is_billed"/>
+                                    <field name="quantity" readonly="is_billed"/>
+                                    <field name="picking_id"/>
+                                    <field name="picking_state" widget="badge" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>
+                <xpath expr="//page[@name='included_products']//field[@name='payment_from']" position="attributes">
+                    <attribute name="readonly">products_locked</attribute>
+                </xpath>
+                <xpath expr="//page[@name='included_products']//field[@name='customer_id']" position="attributes">
+                    <attribute name="readonly">products_locked</attribute>
+                </xpath>
+                <xpath expr="//page[@name='included_products']//field[@name='payment_type']" position="attributes">
+                    <attribute name="readonly">products_locked</attribute>
+                </xpath>
+                <xpath expr="//field[@name='maintenance_product_ids']" position="attributes">
+                    <attribute name="readonly">products_locked</attribute>
+                </xpath>
+                <xpath expr="//field[@name='maintenance_product_ids']/list/field[@name='product_id']" position="attributes">
+                    <attribute name="readonly">is_billed</attribute>
+                </xpath>
+                <xpath expr="//field[@name='maintenance_product_ids']/list/field[@name='description']" position="attributes">
+                    <attribute name="readonly">is_billed</attribute>
+                </xpath>
+                <xpath expr="//field[@name='maintenance_product_ids']/list/field[@name='quantity']" position="attributes">
+                    <attribute name="readonly">is_billed</attribute>
+                </xpath>
+                <xpath expr="//field[@name='maintenance_product_ids']/list/field[@name='price_unit']" position="attributes">
+                    <attribute name="readonly">is_billed</attribute>
+                </xpath>
+                <xpath expr="//field[@name='maintenance_product_ids']/list/field[@name='tax_ids']" position="attributes">
+                    <attribute name="readonly">is_billed</attribute>
+                </xpath>
+                <xpath expr="//field[@name='maintenance_product_ids']/list/field[@name='price_subtotal']" position="after">
+                    <field name="is_billed" column_invisible="1"/>
+                    <field name="invoice_id" optional="show" options="{'no_create': True}"/>
+                    <field name="bill_id" optional="show" options="{'no_create': True}"/>
+                </xpath>
+                <xpath expr="//button[@name='action_view_invoice']" position="replace">
+                    <button name="action_view_invoice" type="object" class="oe_stat_button" icon="payments"
+                            invisible="invoice_count &lt;= 0">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="invoice_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </span>
+                            <span class="o_stat_text">Invoices</span>
+                        </div>
+                    </button>
+                    <button name="action_view_deliveries" type="object" class="oe_stat_button" icon="local_shipping"
+                            invisible="delivery_count &lt;= 0">
+                        <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                    </button>
+                </xpath>
+                <xpath expr="//button[@name='action_view_bills']" position="replace">
+                    <button name="action_view_purchase_orders" type="object" class="oe_stat_button"
+                            icon="shopping_cart" invisible="purchase_order_count &lt;= 0">
+                        <field name="purchase_order_count" widget="statinfo" string="RFQ / PO"/>
+                    </button>
+                    <button name="action_view_bills" type="object" class="oe_stat_button" icon="edit_square"
+                            invisible="bill_count &lt;= 0">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="bill_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </span>
+                            <span class="o_stat_text">Vendor Bills</span>
+                        </div>
+                    </button>
+                    <button name="action_view_receipts" type="object" class="oe_stat_button" icon="download"
+                            invisible="receipt_count &lt;= 0">
+                        <field name="receipt_count" widget="statinfo" string="Receipt"/>
+                    </button>
+                    <button name="action_view_internal_transfers" type="object" class="oe_stat_button"
+                            icon="swap_horiz" invisible="internal_transfer_count &lt;= 0">
+                        <field name="internal_transfer_count" widget="statinfo" string="Internal Transfer"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+        <!-- Invoice / bill created from a maintenance request: raise its
+             Delivery Order (invoice) or Receipt (bill) - maintenance_stock.py. -->
+        <record id="view_move_form_maintenance_picking" model="ir.ui.view">
+            <field name="name">account.move.form.maintenance.picking</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <!-- Maintenance invoice with goods: confirm only after delivery. -->
+                <xpath expr="//header" position="after">
+                    <field name="maintenance_delivery_pending" invisible="1"/>
+                    <div class="alert alert-warning mb-0" role="alert" invisible="not maintenance_delivery_pending">
+                        This invoice was created from a maintenance request. Create and validate its
+                        Delivery Order before confirming it.
+                    </div>
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <field name="can_create_maintenance_picking" invisible="1"/>
+                    <button name="action_create_maintenance_picking" type="object" string="Create Delivery Order"
+                            class="btn-secondary"
+                            invisible="not can_create_maintenance_picking or move_type != 'out_invoice'"/>
+                    <button name="action_create_maintenance_picking" type="object" string="Create Receipt"
+                            class="btn-secondary"
+                            invisible="not can_create_maintenance_picking or move_type != 'in_invoice'"/>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_view_maintenance_pickings" type="object" class="oe_stat_button"
+                            icon="local_shipping" invisible="maintenance_picking_count == 0 or move_type != 'out_invoice'">
+                        <field name="maintenance_picking_count" widget="statinfo" string="Delivery"/>
+                    </button>
+                    <button name="action_view_maintenance_pickings" type="object" class="oe_stat_button"
+                            icon="download" invisible="maintenance_picking_count == 0 or move_type != 'in_invoice'">
+                        <field name="maintenance_picking_count" widget="statinfo" string="Receipt"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+        <!-- Ticket Type: Handover / Tenant-Customer Ticket / Directly Created
+             (maintenance_request.py _compute_ticket_type). -->
+        <record id="maintenance_request_view_list_ticket_type" model="ir.ui.view">
+            <field name="name">maintenance.request.list.ticket.type</field>
+            <field name="model">maintenance.request</field>
+            <field name="inherit_id" ref="maintenance.hr_equipment_request_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="ticket_type" widget="badge" optional="show"
+                           decoration-info="ticket_type == 'handover'"
+                           decoration-warning="ticket_type == 'tenant'"
+                           decoration-muted="ticket_type == 'direct'"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="maintenance_request_view_search_ticket_type" model="ir.ui.view">
+            <field name="name">maintenance.request.search.ticket.type</field>
+            <field name="model">maintenance.request</field>
+            <field name="inherit_id" ref="maintenance.hr_equipment_request_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <separator/>
+                    <filter name="ticket_type_handover" string="Handover"
+                            domain="[('ticket_type', '=', 'handover')]"/>
+                    <filter name="ticket_type_tenant" string="Tenant / Customer Ticket"
+                            domain="[('ticket_type', '=', 'tenant')]"/>
+                    <filter name="ticket_type_direct" string="Directly Created"
+                            domain="[('ticket_type', '=', 'direct')]"/>
+                    <group>
+                        <filter name="group_by_ticket_type" string="Ticket Type"
+                                context="{'group_by': 'ticket_type'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        <!-- RFQ / PO raised from a maintenance request's Vendor Bill tab. -->
+        <record id="purchase_order_form_maintenance_request" model="ir.ui.view">
+            <field name="name">purchase.order.form.maintenance.request</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_ref']" position="after">
+                    <field name="maintenance_request_id" invisible="not maintenance_request_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

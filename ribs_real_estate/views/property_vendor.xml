@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="property_vendor_form_view_inherit" model="ir.ui.view">
+            <field name="name">property.vendor.form.view</field>
+            <field name="model">property.vendor</field>
+            <field name="inherit_id" ref="rental_management.property_vendor_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='sold_invoice']" position="replace">
+                    <page string="Invoices" name="sold_invoice"
+                        invisible="not sale_invoice_ids" groups="ribs_real_estate.property_rental_accountant">
+                        <div class="row">
+                            <div class="col-12">
+                                <field name="remain_check" invisible="1" />
+                                <button name="action_receive_remaining" type="object"
+                                    confirm="Are you sure? After this action can not able to regenerate or reset installment."
+                                    string="Receive Remaining Payment"
+                                    class="btn btn-primary"
+                                    invisible="remain_check or stage != 'sold'" />
+                            </div>
+                        </div>
+                        <br />
+                        <field name="sale_invoice_ids">
+                            <form>
+                                <group>
+                                    <group>
+                                        <field name="name" readonly="1" force_save="1" />
+                                        <field name="desc" />
+                                        <field name="invoice_id" readonly="1" force_save="1"
+                                            invisible="not invoice_id" />
+                                        <field name="payment_state" widget="badge"
+                                            decoration-success="payment_state=='paid'"
+                                            decoration-danger="payment_state=='not_paid'"
+                                            decoration-info="payment_state=='in_payment'"
+                                            decoration-primary="payment_state=='partial'"
+                                            decoration-warning="payment_state=='reversed'" />
+                                    </group>
+                                    <group>
+                                        <field name="invoice_date" readonly="1"
+                                            force_save="1" />
+                                        <field name="tax_ids" widget="many2many_tags"
+                                            options="{'no_open': True, 'no_quick_create': True}"
+                                            readonly="1" force_save="1" />
+                                        <field name="amount" readonly="1" force_save="1" />
+                                        <field name="tax_amount" />
+                                    </group>
+                                </group>
+                            </form>
+                            <list editable="bottom" delete="false" create="false">
+                                <field name="name" required="1" readonly="1" force_save="1" />
+                                <field name="desc" readonly="invoice_id"
+                                    force_save="1" optional="hide" />
+                                <field name="invoice_date" required="1"
+                                    readonly="invoice_id"
+                                    force_save="1" />
+                                <field name="amount" required="1" readonly="1"
+                                    force_save="1" />
+                                <field name="tax_ids" widget="many2many_tags"
+                                    readonly="invoice_id"
+                                    force_save="1" />
+                                <field name="tax_amount" optional="hide" />
+                                <field name="total_amount" string="Total Amount"
+                                    help="Taxed" optional="hide" invisible="not invoice_id" />
+                                <field name="paid_amount" string="Paid Amount"
+                                    optional="hide" invisible="not invoice_id" />
+                                <field name="remaining_amount" string="Due Amount"
+                                    optional="hide" invisible="not invoice_id" />
+                                <field name="currency_id" column_invisible="1" />
+                                <field name="invoice_created" column_invisible="1" />
+                                <field name="invoice_id" readonly="1"
+                                    force_save="1"
+                                    widget="many2onebutton" />
+                                <field name="payment_state" widget="badge"
+                                    decoration-success="payment_state=='paid'"
+                                    decoration-danger="payment_state=='not_paid'"
+                                    decoration-info="payment_state=='in_payment'"
+                                    decoration-primary="payment_state=='partial'"
+                                    decoration-warning="payment_state=='reversed'" />
+                                <button name="action_create_invoice" type="object"
+                                    string="Create Invoice"
+                                    class="btn btn-info"
+                                    column_invisible="parent.stage != 'sold'"
+                                    invisible="invoice_created" />
+                            </list>
+                        </field>
+                        <group class="oe_subtotal_footer oe_right" string="Calculation"
+                            style="text-align: right">
+                            <field name="total_untaxed_amount" />
+                            <field name="tax_amount" />
+                            <field name="total_amount" class="oe_subtotal_footer_separator" />
+                            <field name="paid_amount" />
+                            <field name="remaining_amount"
+                                class="oe_subtotal_footer_separator" />
+                        </group>
+                    </page>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

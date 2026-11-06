@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Stock Picking Form (GRN/Receipt) - Professional Redesign      -->
+    <!-- Only rearranges fields, improves visual grouping.             -->
+    <!-- No fields removed, no backend logic changed.                  -->
+    <!-- ============================================================ -->
+
+    <record id="erp_stock_picking_form_redesign" model="ir.ui.view">
+        <field name="name">stock.picking.form.erp.redesign</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+
+            <!-- Add redesign class to form -->
+            <xpath expr="//form" position="attributes">
+                <attribute name="class">erp_redesigned_form erp_stock_picking_form</attribute>
+            </xpath>
+
+            <!-- ======================================== -->
+            <!-- Move Responsible User from "Additional   -->
+            <!-- Info" tab into the main right group for  -->
+            <!-- immediate visibility                     -->
+            <!-- ======================================== -->
+
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="user_id"
+                       widget="many2one_avatar_user"
+                       domain="[('share', '=', False)]"
+                       readonly="state in ['cancel', 'done']"
+                       string="Responsible"/>
+            </xpath>
+
+            <!-- Hide duplicate in Additional Info tab -->
+            <xpath expr="//page[@name='extra']//field[@name='user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

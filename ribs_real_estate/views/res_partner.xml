@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.view.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="35"/>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_documents_details" type="object"
+                        icon="folder_open" icon_class="oi-filled"
+                        class="oe_stat_button">
+                        <field name="document_count" string="Documents"
+                                    widget="statinfo" />
+                    </button>
+                </xpath>
+                <xpath expr="//field[@name='user_type']" position="before">
+                    <field name="company_types"/>
+                </xpath>
+
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="nationality"/>
+                    <field name="emirates_id"/>
+                    <field name="licence_no"/>
+                </xpath>
+                <xpath expr="//field[@name='email']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='phone']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="before">
+                    <field name="address_memo"/>
+                    <field name="ship_to"/>
+                </xpath>
+                <xpath expr="//field[@name='website']" position="before">
+                    <field name="alt_phone"/>
+                    <field name="cc"/>
+                    <field name="fax"/>
+                    <field name="passport_number"/>
+                    <field name="place_issue"/>
+                    <field name="print_cheque"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- <record id="documents_document_res_partner_inherit_view" model="ir.ui.view">
+            <field name="name">res.partner.view.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="35"/>
+            <field name="inherit_id" ref="documents.documents_document_res_partner_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_see_documents']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record> -->
+    </data>
+</odoo>

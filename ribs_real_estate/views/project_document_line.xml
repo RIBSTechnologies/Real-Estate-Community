@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="project_document_form_view_inherit" model="ir.ui.view">
+            <field name="name">project.document.line.form.view</field>
+            <field name="model">project.document.line</field>
+            <field name="inherit_id" ref="rental_management.project_document_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='document_file']" position="after">
+                    <field name="expiry_date"></field>
+                    <field name="notes"></field>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

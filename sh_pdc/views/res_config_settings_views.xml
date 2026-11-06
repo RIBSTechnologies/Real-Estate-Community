@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!--  Accounting setting -->
+	<record id="sh_pdc_account_setting_inherit" model="ir.ui.view">
+		<field name="name">sh.pdc.account.setting.inherit</field>
+		<field name="model">res.config.settings</field>
+		<field name="inherit_id" ref="account.res_config_settings_view_form" />
+		<field name="arch" type="xml">
+			<app name="account" position="inside">
+				<block title="PDC Payment" name="sh_pdc_payment">
+					<setting>
+						<field name="pdc_customer" />
+					</setting>
+					<setting>
+						<field name="pdc_vendor" />
+					</setting>
+					<setting>
+						<field name="auto_fill_open_invoice" />
+					</setting>
+				</block>
+				<block title="PDC Cancel Configuration" name="sh_pdc_cancel_config">
+					<setting>
+						<field name="pdc_operation_type" widget="radio" />
+					</setting>
+				</block>
+				<block title="Customer" name="sh_customer">
+					<setting>
+						<field name='is_cust_due_notify'/>
+					</setting>
+					<setting invisible="not is_cust_due_notify">
+						<field name="is_notify_to_customer" />
+						<div class="content-group" invisible="not is_notify_to_customer">
+							<div class="row mt16">
+								<label for="notify_on_1" class="col-lg-3 o_light_label"/>
+								<field name="notify_on_1" />
+							</div>
+							<div class="row mt16">
+								<label for="notify_on_2" class="col-lg-3 o_light_label"/>
+								<field name="notify_on_2" />
+							</div>
+							<div class="row mt16">
+								<label for="notify_on_3" class="col-lg-3 o_light_label"/>
+								<field name="notify_on_3" />
+							</div>
+							<div class="row mt16">
+								<label for="notify_on_4" class="col-lg-3 o_light_label"/>
+								<field name="notify_on_4" />
+							</div>
+							<div class="row mt16">
+								<label for="notify_on_5" class="col-lg-3 o_light_label"/>
+								<field name="notify_on_5" />
+							</div>
+						</div>
+					</setting>
+					<setting invisible="not is_cust_due_notify">
+						<field name="is_notify_to_user" />
+						<div class="content-group" invisible="not is_notify_to_user" >
+							<div class="text-muted" >
+								Select user to receive email notification. 
+							</div>
+							<div class="mt16">
+								<field name="sh_user_ids" options="{'no_create': True}" widget="many2many_tags" class="col-md-6 pull-left" domain="[('share', '=', False)]"/>
+							</div>
+						</div>
+					</setting>
+				</block>
+				<!-- <block title="Vendor" name="sh_vendor">
+					<setting>
+						<field name='is_vendor_due_notify'/>
+					</setting>
+					<setting invisible="not is_vendor_due_notify">
+						<field name="is_notify_to_vendor" />
+						<div class="content-group" invisible="not is_notify_to_vendor">
+							<div class="row mt16">
+								<label for="notify_on_1_vendor" class="col-lg-3 o_light_label"/>
+								<field name="notify_on_1_vendor" />
+							</div>
+							<div class="row mt16">
+								<label for="notify_on_2_vendor" class="col-lg-3 o_light_label"/>
+								<field name="notify_on_2_vendor" />
+							</div>
+							<div class="row mt16">
+								<label for="notify_on_3_vendor" class="col-lg-3 o_light_label"/>
+								<field name="notify_on_3_vendor" />
+							</div>
+							<div class="row mt16">
+								<label for="notify_on_4_vendor" class="col-lg-3 o_light_label"/>
+								<field name="notify_on_4_vendor" />
+							</div>
+							<div class="row mt16">
+								<label for="notify_on_5_vendor" class="col-lg-3 o_light_label"/>
+								<field name="notify_on_5_vendor" />
+							</div>
+						</div>
+					</setting>
+					<setting invisible="not is_vendor_due_notify">
+						<field name="is_notify_to_user_vendor" />
+						<div class="content-group" invisible="not is_notify_to_user_vendor" >
+							<div class="text-muted" >
+								Select user to receive email notification. 
+							</div>
+							<div class="mt16">
+								<field name="sh_user_ids_vendor" options="{'no_create': True}" widget="many2many_tags" class="col-md-6 pull-left" domain="[('share', '=', False)]"/>
+							</div>
+						</div>
+					</setting>
+				</block> -->
+
+			</app>
+
+		</field>
+	</record>
+</odoo>

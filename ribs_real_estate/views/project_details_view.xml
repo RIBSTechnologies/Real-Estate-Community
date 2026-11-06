@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="property_project_view_form_inherit_new" model="ir.ui.view">
+            <field name="name">property.project.view.form</field>
+            <field name="model">property.project</field>
+            <field name="inherit_id" ref="rental_management.property_project_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='landlord_id']" position="replace">
+                    <field name="landlord_id" readonly="status == 'available'" required="1"/>
+                </xpath>
+                <xpath expr="//field[@name='property_type']" position="replace">
+                   <field name="property_type" readonly="status == 'available'"/>
+                </xpath>
+                 <xpath expr="//field[@name='property_type']" position="after">
+                    <label for="property_subtype_id" string="Property Sub Type" invisible="property_type in ('land','residential','commercial','industrial')"/>
+                </xpath>
+
+                <xpath expr="//field[@name='project_for']" position="attributes">
+                    <attribute name="invisible" >1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='sale_lease']" position="attributes">
+                    <attribute name="invisible" >1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='landlord_id']" position="before">
+                    <field name="building_for" readonly="1"/>
+                    <field name="property_owner"/>
+                 </xpath>
+
+                <xpath expr="//field[@name='company_id']" position="replace">
+                    <field name="company_id" invisible="1" readonly="status == 'available'"/>
+                 </xpath>
+                <xpath expr="//field[@name='property_subtype_id']" position="replace">
+                    <field name="property_subtype_id" readonly="status == 'available'"/>
+                </xpath>
+
+
+<!--                <xpath expr="//field[@name='company_id']" position="before">-->
+<!--                    <field name="commercial_subtype_id" invisible="property_type != 'commercial'"/>-->
+<!--                </xpath>-->
+
+
+                <xpath expr="//group[@name='address_details']/div[1]" position="replace">
+                    <div class="o_address_format">
+                        <field name="region_id" placeholder="Region"
+                               class="o_address_region"
+                               readonly="status == 'available'"/>
+                        <field name="street" placeholder="Street..."
+                               class="o_address_street"
+                               readonly="status == 'available'"/>
+                        <field name="street2" placeholder="Street 2..."
+                               class="o_address_street"
+                               readonly="status == 'available'"/>
+                        <field name="city_id" placeholder="City" class="o_address_city"
+                               readonly="status == 'available'"/>
+                        <field name="state_id" class="o_address_state" placeholder="State"
+                               readonly="status == 'available'"/>
+                        <field name="zip" placeholder="ZIP" class="o_address_zip"
+                               readonly="status == 'available'"/>
+                        <field name="country_id" placeholder="Country"
+                               class="o_address_country"
+                               readonly="status == 'available'"/>
+                    </div>
+                </xpath>
+
+                <xpath expr="//page[@name='basic_details']" position="after">
+                    <page name="parking_slots" string="Parking Slots">
+                        <group>
+                            <group>
+                                <field name="parking_ids" string="Parking Number" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='landlord_id']" position="after">
+                    <field name="maintenance_person_ids" widget="many2many_tags"/>
+                    <field name="property_manager"/>
+                </xpath>
+
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="property_age"/>
+                    <field name="security_id"/>
+                </xpath>
+                <xpath expr="//field[@name='security_id']" position="after">
+                    <field name="security_number" readonly="1"/>
+                    <field name="dewa_number" readonly="status == 'available'"/>
+                    <field name="makani_number" readonly="status == 'available'"/>
+                    <field name="land_number" readonly="status == 'available'"/>
+                    <field name="property_type_account_id" groups="base.group_no_one"/>
+                    <field name="building_account_id" groups="base.group_no_one"/>
+                </xpath>
+
+                <!-- <xpath expr="//header" position="inside">
+                    <button name="action_create_unit" type="object" string="Create Unit" 
+                    class="oe_highlight" invisible="status != 'available'"/>
+                </xpath> -->
+                <!-- <xpath expr="//label[@for='avail_nearby_connectivity']" position="after">
+                    <field name="dewa_reading"></field>
+                    <label for="dewa_reading"></label>
+                </xpath>
+                <xpath expr="//page[@name='additional_details']" position="before">
+                    <page string="Dewa Meter Reading" name="dewa_meter_reading"
+                            invisible="not dewa_reading">
+                        <h3 style="text-align:center;color:#714B67;">
+                            <strong>Dewa Meter Reading</strong>
+                        </h3>
+                        <form>
+                            <group>
+                                <group>
+                                    <field name="meter_type"/>
+                                    <field name="reading"/>
+                                    <field name="reading_date"/>
+                                </group>
+                            </group>
+                        </form>
+                    </page>
+                </xpath> -->
+                <!-- <xpath expr="//hr[1]" position="before">
+                    <group>
+                        <group name="accounting_details" string="Accounting Details">
+                            <field name="invoice_creation_id"></field>
+                            <field name="bill_creation_id"></field>
+                            <field name="pdc_penalty_creation_id"></field>
+                            <field name="early_closing_penalty_id"></field>
+                        </group>
+                    </group>
+                </xpath> -->
+                <xpath expr="//field[@name='is_sub_project']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//label[@for='is_sub_project']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                
+                <xpath expr="//button[4]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//header" position="inside">
+                    <button name="create_units" type="object" string="Create Units" 
+                    class="btn-primary" invisible="status != 'draft' or
+                    is_individual"/>
+                </xpath>
+
+                <xpath expr="//header" position="inside">
+                    <button name="create_units" type="object" string="Create Building" 
+                    class="btn-primary" invisible="status != 'draft' or 
+                    not is_individual"/>
+                </xpath>
+
+                <xpath expr="//field[@name='project_sequence']" position="attributes">
+                    <attribute name="string">Plot Number</attribute>    
+                </xpath>
+
+                <!-- <xpath expr="//page[@name='basic_details']" position="before">
+                    <page name="accounting_details" string="Accounting Details" groups="ribs_real_estate.property_rental_accountant">
+                        <group>
+                            <group string="Tenancy Contract">
+                                <field name="invoice_creation_id"></field>
+                                <field name="account_security_deposit_id"></field>
+                                <field name="income_account_id"></field>
+                                <field name="deffered_income_account_id"></field>
+                                <field name="account_retention_id"></field>
+                            </group>
+                            <group string="Payments Received">
+                                <field name="current_date_cheque_id"></field>
+                                <field name="cash_receipt_id"></field>
+                                <field name="cuc_account_id"></field>
+                                <field name="default_bank_account_id"></field>
+                            </group>
+                        </group>
+                    </page>
+                </xpath> -->
+
+                <xpath expr="//page[@name='basic_details']" position="before">
+                    <page name="bank_details" string="Bank Details" groups="ribs_real_estate.property_rental_accountant">
+                        <group>
+                            <group string="Tenancy Contract">
+                                <field name="rent_bank_account_id" required="1"></field>
+                                <field name="vat_sec_bank_account_id" required="1"></field>
+                                <field name="security_bank_account_id" required="1"></field>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+                <xpath expr="//page[@name='additional_details']" position="before">
+                     <page name="update_contract" string="Update Contract" >
+                        <group>
+                            <group >
+                                <field name="building_contract_increment"/>
+                                <field name="contract_increment_percentage" invisible="building_contract_increment != 'percentage'"/>
+                                <field name="contract_increment_amount" invisible="building_contract_increment != 'amount'"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="property_project_view_list_inherit" model="ir.ui.view">
+            <field name="name">property.project.view.list.inherit</field>
+            <field name="model">property.project</field>
+            <field name="inherit_id" ref="rental_management.property_project_view_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="replace">
+                    <list string="Building" sample="1">
+                        <field name="project_sequence" string="Plot Number"/>
+                        <field name="name"/>
+                        <field name="property_type"/>
+                        <field name="property_subtype_id"/>
+                        <field name="state_id"/>
+                        <field name="security_id"/>
+                        <field name="security_number"/>
+                        <field name="building_status" widget="badge"
+                            decoration-success="building_status == 'fully_available'"
+                            decoration-warning="building_status == 'partial'"
+                            decoration-danger="building_status == 'not_available'"/>
+                    </list>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

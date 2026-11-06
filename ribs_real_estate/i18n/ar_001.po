@@ -1,0 +1,604 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ribs_real_estate
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-01 08:34+0000\n"
+"PO-Revision-Date: 2025-10-01 08:34+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ribs_real_estate
+#: model:mail.template,name:ribs_real_estate.email_template_user_acknowledged
+msgid " User Acknowledge"
+msgstr ""
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/send_recurring_complaints.xml:0
+msgid ""
+"<div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;\n"
+"                                font-size:14px;padding:20px;border-radius:8px;\">\n"
+"                        <p>Hello,</p>\n"
+"                        <p>There are <b><t t-out=\"ctx['complaint_count'] or ''\"></t></b> complaints reported for the property \n"
+"                        <b><t t-out=\"ctx['property'] or ''\"> </b>.  \n"
+"                        Please take a look at the details in the system.</p>\n"
+"                        \n"
+"                        <a t-attf-href=\"{{ object.get_mr_url() }}\"\n"
+"                            style=\"padding:10px 20px;background:#007bff;color:#fff;text-decoration:none;border-radius:5px;\">\n"
+"                                View Complaints\n"
+"                        </a>\n"
+"                        \n"
+"                        <p style=\"margin-top:20px;\">Thank you,<br/>Your Maintenance Team</p>\n"
+"                    </div>"
+msgstr ""
+
+#. module: ribs_real_estate
+#: model:mail.template,body_html:ribs_real_estate.email_template_recurring_complaints
+msgid ""
+"<div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;&#10;                                font-size:14px;padding:20px;border-radius:8px;\">\n"
+"                        <p>Hello,</p>\n"
+"                        <p>There are <b><t t-out=\"ctx['complaint_count'] or ''\"/></b> complaints reported for the property \n"
+"                        <b><t t-out=\"ctx['property'] or ''\"> </t></b>.  \n"
+"                        Please take a look at the details in the system.</p>\n"
+"                        \n"
+"                        <a t-attf-href=\"{{ object.get_mr_url() }}\" style=\"padding:10px 20px;background:#007bff;color:#fff;text-decoration:none;border-radius:5px;\">\n"
+"                                View Complaints\n"
+"                        </a>\n"
+"                        \n"
+"                        <p style=\"margin-top:20px;\">Thank you,<br/>Your Maintenance Team</p>\n"
+"                    </div>\n"
+"                \n"
+"            "
+msgstr ""
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/send_hot_leads.xml:0
+msgid ""
+"<div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;padding-top:5px;padding-left:30px;padding-bottom:5px;padding-right:30px;\">\n"
+"                        <p style=\"font-weight:bold;color:#d9534f;\">This is really a hot lead, don't miss this lead!</p>\n"
+"                        <p>\n"
+"                            <a t-attf-href=\"#{object.get_lead_url()}\">View Lead Details</a>\n"
+"                        </p>\n"
+"                    </div>"
+msgstr ""
+
+#. module: ribs_real_estate
+#: model:mail.template,body_html:ribs_real_estate.email_template_send_hot_leads
+msgid ""
+"<div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;padding-top:5px;padding-left:30px;padding-bottom:5px;padding-right:30px;\">\n"
+"                        <p style=\"font-weight:bold;color:#d9534f;\">This is really a hot lead, don't miss this lead!</p>\n"
+"                        <p>\n"
+"                            <a t-attf-href=\"#{object.get_lead_url()}\">View Lead Details</a>\n"
+"                        </p>\n"
+"                    </div>\n"
+"                \n"
+"            "
+msgstr ""
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/user_acknowledge.xml:0
+msgid ""
+"<div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;padding-top:5px;padding-left:30px;padding-bottom:5px;padding-right:30px;\">\n"
+"                        <p>Congratulation, You're part of our company now. please click below for Acknowledge your acceptence  </p>\n"
+"                            <a t-attf-href=\"#{object.get_base_url()}/acknowledge/#{object.id}\"\n"
+"                            style=\"padding:10px 20px;background:#007bff;color:#fff;text-decoration:none;border-radius:5px;\">\n"
+"                            Acknowledge\n"
+"                            </a>\n"
+"                    </div>"
+msgstr ""
+
+#. module: ribs_real_estate
+#: model:mail.template,body_html:ribs_real_estate.email_template_user_acknowledged
+msgid ""
+"<div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;padding-top:5px;padding-left:30px;padding-bottom:5px;padding-right:30px;\">\n"
+"                        <p>Congratulation, You're part of our company now. please click below for Acknowledge your acceptence  </p>\n"
+"                            <a t-attf-href=\"#{object.get_base_url()}/acknowledge/#{object.id}\" style=\"padding:10px 20px;background:#007bff;color:#fff;text-decoration:none;border-radius:5px;\">\n"
+"                            Acknowledge\n"
+"                            </a>\n"
+"                    </div>\n"
+"                \n"
+"            "
+msgstr ""
+
+#. module: ribs_real_estate
+#. odoo-python
+#: code:addons/ribs_real_estate/models/rent_invoice.py:0
+msgid "<li>%s | Due: %s | Pending: %.2f</li>"
+msgstr ""
+
+#. module: ribs_real_estate
+#. odoo-python
+#: code:addons/ribs_real_estate/models/rent_invoice.py:0
+msgid ""
+"<p>Dear %(customer)s,</p><p>This is a reminder that the following invoices "
+"are still unpaid:</p><ul>%(lines)s</ul><p>Please make the payment at your "
+"earliest convenience.</p><p>Thank you,</p>"
+msgstr ""
+
+#. module: ribs_real_estate
+#: model:ir.actions.server,name:ribs_real_estate.ir_cron_action_send_pending_invoice_reminder_ir_actions_server
+msgid "Action Send Pending Invoice Reminder"
+msgstr "إجراء إرسال تذكير بالفواتير المعلقة"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_documents__attachments
+#: model:ir.model.fields,field_description:ribs_real_estate.field_maintenance_request__attachment_ids
+msgid "Attachments"
+msgstr "المرفقات"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_details__stage__available
+msgid "Available"
+msgstr "متاح"
+
+#. module: ribs_real_estate
+#: model:ir.actions.act_window,name:ribs_real_estate.pdc_bounce_wizard_action
+msgid "Bounce Wizard"
+msgstr "معالج الارتداد"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_wizard__broker_id
+msgid "Broker"
+msgstr "وسيط"
+
+#. module: ribs_real_estate
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.bounce_charge_wizard
+msgid "Close"
+msgstr "أغلق"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_res_partner
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_documents__contract_id
+msgid "Contract"
+msgstr "جهة الاتصال"
+
+#. module: ribs_real_estate
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.contract_document_form_view
+msgid "Contract Documents"
+msgstr "وثائق العقد"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_contract_wizard
+msgid "Create Contract of rent in property"
+msgstr "إنشاء عقد إيجار في الممتلكات"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_documents__create_uid
+#: model:ir.model.fields,field_description:ribs_real_estate.field_document_document__create_uid
+#: model:ir.model.fields,field_description:ribs_real_estate.field_minimum_discount__create_uid
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_allocation__create_uid
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_slots__create_uid
+#: model:ir.model.fields,field_description:ribs_real_estate.field_pdc_bounce_wizard__create_uid
+msgid "Created by"
+msgstr "تم الإنشاء بواسطة"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_documents__create_date
+#: model:ir.model.fields,field_description:ribs_real_estate.field_document_document__create_date
+#: model:ir.model.fields,field_description:ribs_real_estate.field_minimum_discount__create_date
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_allocation__create_date
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_slots__create_date
+#: model:ir.model.fields,field_description:ribs_real_estate.field_pdc_bounce_wizard__create_date
+msgid "Created on"
+msgstr "تم إنشاؤه في"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_rent_invoice
+msgid "Crete Invoice for Rented property"
+msgstr "فاتورة كريت للممتلكات المؤجرة"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_wizard__customer_id
+msgid "Customer"
+msgstr "عميل"
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/send_hot_leads.xml:0
+#: code:addons/ribs_real_estate/static/src/email_templates/user_acknowledge.xml:0
+#: model:mail.template,subject:ribs_real_estate.email_template_send_hot_leads
+#: model:mail.template,subject:ribs_real_estate.email_template_user_acknowledged
+msgid "Details of {{object.name}}"
+msgstr "تفاصيل {{object.name}}"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_documents__display_name
+#: model:ir.model.fields,field_description:ribs_real_estate.field_document_document__display_name
+#: model:ir.model.fields,field_description:ribs_real_estate.field_minimum_discount__display_name
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_allocation__display_name
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_slots__display_name
+#: model:ir.model.fields,field_description:ribs_real_estate.field_pdc_bounce_wizard__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_pdc_bounce_wizard__penalty_confirmation
+msgid ""
+"Do you want to apply a penalty for the bounced \n"
+"                                          cheque? This will generate a new invoice under the contract \n"
+"                                          for the penalty amount."
+msgstr "هل ترغب في تطبيق غرامة على الشيك المرتجع؟ سيؤدي هذا إلى إنشاء فاتورة جديدة بموجب العقد بقيمة الغرامة."
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_tenancy_details__document_count
+msgid "Document Count"
+msgstr "عدد المستندات"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_documents__document_id
+msgid "Document Name"
+msgstr "اسم المستند"
+
+#. module: ribs_real_estate
+#: model:ir.model.constraint,message:ribs_real_estate.constraint_document_document_unique_document_name
+msgid "Document with this name already exists!"
+msgstr "المستند بهذا الاسم موجود بالفعل!"
+
+#. module: ribs_real_estate
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.tenancy_details_form_view_inherit
+msgid "Documents"
+msgstr "وثائق"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_details__stage__draft
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: ribs_real_estate
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.res_config_settings_view_form_inherit
+msgid "If this many issues have been raised by the property unit, It should be escalated to the manager"
+msgstr "إذا تم إثارة هذا العدد من المشكلات من قبل وحدة العقار، فيجب تصعيدها إلى المدير"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_crm_lead__hot_lead_mail_sent
+msgid "Hot Lead Mail Sent"
+msgstr "تم إرسال البريد السريع"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_documents__id
+#: model:ir.model.fields,field_description:ribs_real_estate.field_document_document__id
+#: model:ir.model.fields,field_description:ribs_real_estate.field_minimum_discount__id
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_allocation__id
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_slots__id
+#: model:ir.model.fields,field_description:ribs_real_estate.field_pdc_bounce_wizard__id
+msgid "ID"
+msgstr "بطاقة تعريف"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_details__stage__booked
+msgid "In Booking"
+msgstr "حجز"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_details__stage__sale
+msgid "In Sale"
+msgstr "أُوكَازيُون"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_tenancy_details
+msgid "Information Related To customer Tenancy while Creating Contract"
+msgstr "المعلومات المتعلقة بإيجارات العميل أثناء إنشاء العقد"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_rent_invoice__invoice_state
+msgid "Invoice State"
+msgstr "حالة الفاتورة"
+
+#. module: ribs_real_estate
+#. odoo-python
+#: code:addons/ribs_real_estate/models/rent_invoice.py:0
+msgid ""
+"Invoice report not found. Tried XML IDs: %s. Please ensure the 'account' "
+"module is installed."
+msgstr "لم يتم العثور على تقرير الفاتورة. تم تجربة معرفات XML: %s. يُرجى التأكد من تثبيت وحدة الحساب."
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_res_partner__is_verified
+#: model:ir.model.fields,field_description:ribs_real_estate.field_res_users__is_verified
+msgid "Is Verified"
+msgstr "تم التحقق"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_account_move
+msgid "Journal Entry"
+msgstr "قيد اليومية"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_documents__write_uid
+#: model:ir.model.fields,field_description:ribs_real_estate.field_document_document__write_uid
+#: model:ir.model.fields,field_description:ribs_real_estate.field_minimum_discount__write_uid
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_allocation__write_uid
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_slots__write_uid
+#: model:ir.model.fields,field_description:ribs_real_estate.field_pdc_bounce_wizard__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_documents__write_date
+#: model:ir.model.fields,field_description:ribs_real_estate.field_document_document__write_date
+#: model:ir.model.fields,field_description:ribs_real_estate.field_minimum_discount__write_date
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_allocation__write_date
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_slots__write_date
+#: model:ir.model.fields,field_description:ribs_real_estate.field_pdc_bounce_wizard__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "عميل مهتم/فرصة "
+
+#. module: ribs_real_estate
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_details__sale_lease__for_lease
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_project__project_for__lease
+msgid "Lease"
+msgstr "عقد الإيجار"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_res_config_settings__maintenance_count
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.res_config_settings_view_form_inherit
+msgid "Maintenance Count"
+msgstr "عدد الصيانة"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_maintenance_request
+msgid "Maintenance Request"
+msgstr "طلب الصيانة"
+
+#. module: ribs_real_estate
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.bounce_charge_wizard
+msgid "Mark it as Bounced"
+msgstr "وضع علامة عليه على أنه مرتد"
+
+#. module: ribs_real_estate
+#: model:ir.actions.act_window,name:ribs_real_estate.minimum_discount_action
+#: model:ir.model.fields,field_description:ribs_real_estate.field_minimum_discount__discount
+#: model:ir.ui.menu,name:ribs_real_estate.menu_minimum_discount
+msgid "Minimum Discount"
+msgstr "وضع علامة عليه على أنه مرتد"
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/send_recurring_complaints.xml:0
+#: model:mail.template,subject:ribs_real_estate.email_template_recurring_complaints
+msgid "Multiple Complaints for {{ object.property_id.name }}"
+msgstr "شكاوى متعددة بشأن {{ object.property_id.name }}"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_contract_documents__document_name
+#: model:ir.model.fields,field_description:ribs_real_estate.field_document_document__name
+msgid "Name"
+msgstr "اسم"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_crm_lead__offer_mail_sent
+msgid "Offer Mail Sent"
+msgstr "تم إرسال البريد العرض"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_details__stage__on_leasing
+msgid "On Lease"
+msgstr "على عقد الإيجار"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_details__stage__on_lease
+msgid "On Rent"
+msgstr "في الإيجار"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_pdc_wizard
+msgid "PDC Wizard"
+msgstr "معالج PDC"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_property_details__parking_ids
+msgid "Parking"
+msgstr "موقف السيارات"
+
+#. module: ribs_real_estate
+#: model:ir.actions.act_window,name:ribs_real_estate.parking_allocation_action
+#: model:ir.ui.menu,name:ribs_real_estate.menu_parking_allocation
+msgid "Parking Allocation"
+msgstr "تخصيص مواقف السيارات"
+
+#. module: ribs_real_estate
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.parking_allocation_list_view
+msgid "Parking Areas"
+msgstr "منطقة وقوف السيارات"
+
+#. module: ribs_real_estate
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.property_project_view_form_inherit_new
+msgid "Parking Number"
+msgstr "رقم موقف السيارات"
+
+#. module: ribs_real_estate
+#: model:ir.model.constraint,message:ribs_real_estate.constraint_parking_slots_parking_numbers_uniq
+msgid "Parking Number should be unique"
+msgstr "يجب أن يكون رقم موقف السيارات فريدًا"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_slots__parking_numbers
+msgid "Parking Numbers"
+msgstr "أرقام مواقف السيارات"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_allocation__parking_ids
+#: model:ir.model.fields,field_description:ribs_real_estate.field_property_project__parking_ids
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.property_details_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.property_project_view_form_inherit_new
+msgid "Parking Slots"
+msgstr "مواقف السيارات"
+
+#. module: ribs_real_estate
+#. odoo-python
+#: code:addons/ribs_real_estate/models/rent_invoice.py:0
+msgid "Payment Reminder - %s"
+msgstr "تذكير الدفع - %s"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_pdc_bounce_wizard__penalty_amount
+msgid "Penalty Amount"
+msgstr "مبلغ العقوبة"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_account_bank_statement_line__pending_invoice_reminder_sent
+#: model:ir.model.fields,field_description:ribs_real_estate.field_account_move__pending_invoice_reminder_sent
+msgid "Pending Invoice Reminder Sent"
+msgstr "تم إرسال تذكير الفاتورة المعلقة"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_allocation__project_id
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_slots__project_id
+msgid "Project"
+msgstr "مشروع"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_property_project__project_for
+msgid "Project For"
+msgstr "مشروع ل"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_parking_allocation__project_name
+msgid "Project Name"
+msgstr "اسم المشروع"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_property_details
+msgid "Property Details and for registration new Property"
+msgstr "تفاصيل العقار ولتسجيل عقار جديد"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_property_details__sale_lease
+msgid "Property For"
+msgstr "الملكية ل"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_property_project
+msgid "Property Project Details"
+msgstr "تفاصيل المشروع العقاري"
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/send_recurring_complaints.xml:0
+#: model:mail.template,name:ribs_real_estate.email_template_recurring_complaints
+msgid "Recurring Complaints"
+msgstr "الشكاوى المتكررة"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_details__sale_lease__for_tenancy
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_project__project_for__rent
+msgid "Rent"
+msgstr "إيجار"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_details__sale_lease__for_sale
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_project__project_for__sale
+msgid "Sale"
+msgstr "للبيع"
+
+#. module: ribs_real_estate
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.tenancy_details_form_view_inherit
+msgid "Send Payment Reminder"
+msgstr "إرسال تذكير بالدفع"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields.selection,name:ribs_real_estate.selection__property_details__stage__sold
+msgid "Sold"
+msgstr "مُباع"
+
+#. module: ribs_real_estate
+#: model:ir.model.fields,field_description:ribs_real_estate.field_property_details__stage
+msgid "Status"
+msgstr "منصة"
+
+#. module: ribs_real_estate
+#: model_terms:ir.ui.view,arch_db:ribs_real_estate.acknowledge_thankyou
+msgid "Thank You for Acknowledging!"
+msgstr "شكرا لك على الاعتراف!"
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/send_hot_leads.xml:0
+#: model:mail.template,name:ribs_real_estate.email_template_send_hot_leads
+msgid "Ticket Details"
+msgstr "تفاصيل التذكرة"
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/user_acknowledge.xml:0
+msgid "User Acknowledge"
+msgstr "إقرار المستخدم"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_property_vendor_wizard
+msgid "Wizard For Selecting Customer to sale"
+msgstr "معالج لاختيار الزبون للبيع"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_contract_documents
+msgid "contract.documents"
+msgstr "العقد.المستندات"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_document_document
+msgid "document.document"
+msgstr "وثيقة.وثيقة"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_minimum_discount
+msgid "minimum.discount"
+msgstr "الحد_الأدنى_للخصم"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_parking_allocation
+msgid "parking.allocation"
+msgstr "تخصيص مواقف السيارات"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_parking_slots
+msgid "parking.slots"
+msgstr "تخصيص مواقف السيارات"
+
+#. module: ribs_real_estate
+#: model:ir.model,name:ribs_real_estate.model_pdc_bounce_wizard
+msgid "pdc.bounce.wizard"
+msgstr "معالج الارتداد pdc"
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/send_recurring_complaints.xml:0
+msgid "{{ (object.user_id.email_formatted or user.email_formatted) }}"
+msgstr "{{ (object.user_id.email_formatted or user.email_formatted) }}"
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/send_hot_leads.xml:0
+#: code:addons/ribs_real_estate/static/src/email_templates/user_acknowledge.xml:0
+msgid "{{(object.user_id.email_formatted or user.email_formatted)}}"
+msgstr "{{(object.user_id.email_formatted or user.email_formatted)}}"
+
+#. module: ribs_real_estate
+#. odoo-javascript
+#: code:addons/ribs_real_estate/static/src/email_templates/send_hot_leads.xml:0
+#: code:addons/ribs_real_estate/static/src/email_templates/user_acknowledge.xml:0
+msgid "{{object.partner_id.id}}"
+msgstr "{{object.partner_id.id}}"

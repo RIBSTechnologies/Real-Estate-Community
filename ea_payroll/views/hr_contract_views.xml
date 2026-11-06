@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherit Employee Form View to add payroll details to current contract version -->
+    <record id="hr_employee_view_form_payroll" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.ea_payroll.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='payroll_information']//group[@name='contract']" position="inside">
+                <field name="schedule_pay" />
+                <field name="struct_id" required="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Contract Template Form View to add payroll details to templates -->
+    <record id="hr_contract_template_form_view_payroll" model="ir.ui.view">
+        <field name="name">hr.contract.template.form.ea_payroll.inherit</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_contract_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='contract']" position="inside">
+                <field name="schedule_pay" />
+                <field name="struct_id" required="1" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

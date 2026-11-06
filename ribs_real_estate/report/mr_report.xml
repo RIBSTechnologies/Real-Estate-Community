@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Maintenance Request report - same letterhead and boxed layout as
+        purchase_extended's Material Requisition: company logo + name
+        (show_company_logo, see external_layout_standard_custom), a black-
+        bordered box with a centred title band, a two-column details strip,
+        then the move-in / move-out inspection sections and signature lines.
+        Monochrome like the MR form, with a light grey fill only on section
+        and table headings.
+    -->
+    <template id="maintenance_request_qweb_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="show_company_logo" t-value="True"/>
+                <t t-set="yes_no" t-value="lambda value: 'Yes' if value else 'No'"/>
+                <!-- Count is added to condition lines by al_shafar_extended - only print it when installed. -->
+                <t t-set="has_count" t-value="'count' in o.env['maintenance.condition.line']._fields"/>
+                <t t-set="label" t-value="lambda record, name: dict(record._fields[name].selection).get(record[name], '') if record[name] else ''"/>
+                <t t-call="web.external_layout">
+                    <div class="page mreq-page">
+                        <style>
+                            .mreq-page { font-family: Arial, sans-serif; font-size: 12px; color: #000; line-height: 1.4; }
+                            .mreq-box { border: 2px solid #000; }
+                            .mreq-title-band { display: table; width: 100%; min-height: 70px; }
+                            .mreq-title-band-inner { display: table-cell; vertical-align: middle; text-align: center; padding: 14px 0; }
+                            .mreq-title { font-weight: bold; font-size: 19px; letter-spacing: 0.5px; }
+                            .mreq-subtitle { font-size: 12px; margin-top: 4px; }
+                            .mreq-meta { width: 100%; border-collapse: collapse; border-top: 2px solid #000; }
+                            .mreq-meta td { padding: 7px 14px; vertical-align: top; font-size: 12px; }
+                            .mreq-meta .mreq-label { font-weight: bold; white-space: nowrap; width: 18%; }
+                            .mreq-meta .mreq-value { border-bottom: 1px solid #999; width: 32%; }
+                            .mreq-section { border-top: 2px solid #000; background-color: #f2f2f2;
+                                            font-weight: bold; font-size: 13px; text-transform: uppercase;
+                                            letter-spacing: 0.4px; padding: 6px 14px; }
+                            .mreq-section-body { padding: 8px 14px 12px 14px; }
+                            .mreq-text { white-space: pre-line; }
+                            .mreq-table { width: 100%; border-collapse: collapse; }
+                            .mreq-table th, .mreq-table td { border: 1px solid #000; padding: 6px 8px; font-size: 12px; }
+                            .mreq-table th { background-color: #f2f2f2; text-align: center; font-weight: bold; }
+                            .mreq-center { text-align: center; }
+                            .mreq-kv { width: 100%; border-collapse: collapse; }
+                            .mreq-kv td { padding: 4px 0; font-size: 12px; vertical-align: top; }
+                            .mreq-kv .mreq-label { font-weight: bold; width: 25%; }
+                            .mreq-signatures { width: 100%; border-collapse: collapse; border-top: 2px solid #000; }
+                            .mreq-signatures td { padding: 46px 14px 12px 14px; font-size: 12px; text-align: center; vertical-align: bottom; }
+                            .mreq-signature-line { border-top: 1px solid #000; padding-top: 4px; margin: 0 12px; }
+                        </style>
+
+                        <div class="mreq-box">
+                            <!-- Title band -->
+                            <div class="mreq-title-band">
+                                <div class="mreq-title-band-inner">
+                                    <div class="mreq-title">
+                                        <t t-if="o.mr_for == 'move_in'">PRE-HANDOVER INSPECTION FORM</t>
+                                        <t t-elif="o.mr_for == 'move_out'">MOVE-OUT INSPECTION FORM</t>
+                                        <t t-else="">MAINTENANCE REQUEST</t>
+                                    </div>
+                                    <div class="mreq-subtitle" t-if="o.mr_for in ('move_in', 'move_out')">Maintenance Request</div>
+                                </div>
+                            </div>
+
+                            <!-- Request details -->
+                            <table class="mreq-meta">
+                                <tr>
+                                    <td class="mreq-label">Request</td>
+                                    <td class="mreq-value"><span t-out="o.name or ''"/></td>
+                                    <td class="mreq-label">Scheduled Date</td>
+                                    <td class="mreq-value">
+                                        <span t-if="o.schedule_date" t-field="o.schedule_date"
+                                              t-options="{'widget': 'datetime', 'format': 'dd/MM/yyyy HH:mm'}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="mreq-label">Contract</td>
+                                    <td class="mreq-value"><span t-out="o.rent_contract_id.tenancy_seq or ''"/></td>
+                                    <td class="mreq-label">Duration</td>
+                                    <td class="mreq-value">
+                                        <t t-if="o.duration">
+                                            <span t-field="o.duration" t-options="{'widget': 'float_time'}"/> hours
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="mreq-label">Building</td>
+                                    <td class="mreq-value"><span t-out="(o.building_id_parent or o.property_id.property_project_id).name or ''"/></td>
+                                    <td class="mreq-label">Priority</td>
+                                    <td class="mreq-value"><span t-out="label(o, 'priority')"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="mreq-label">Property</td>
+                                    <td class="mreq-value"><span t-out="o.property_id.name or ''"/></td>
+                                    <td class="mreq-label">Responsible</td>
+                                    <td class="mreq-value"><span t-out="', '.join(o.user_ids.mapped('name'))"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="mreq-label">Type</td>
+                                    <td class="mreq-value"><span t-out="o.maintenance_type_id.name or ''"/></td>
+                                    <td class="mreq-label">Stage</td>
+                                    <td class="mreq-value"><span t-out="o.stage_id.name or ''"/></td>
+                                </tr>
+                            </table>
+
+                            <t t-if="o.mr_for not in ('move_in', 'move_out') and o.description">
+                                <div class="mreq-section">Description</div>
+                                <div class="mreq-section-body"><span t-field="o.description"/></div>
+                            </t>
+
+                            <!-- ================= MOVE-IN ================= -->
+                            <t t-if="o.mr_for == 'move_in'">
+                                <div class="mreq-section">Property Details</div>
+                                <div class="mreq-section-body">
+                                    <table class="mreq-kv">
+                                        <tr>
+                                            <td class="mreq-label">Building</td><td><span t-out="o.project_id.name or ''"/></td>
+                                            <td class="mreq-label">Unit Type</td><td><span t-out="o.property_type or ''"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mreq-label">Property</td><td><span t-out="o.property.name or ''"/></td>
+                                            <td class="mreq-label">Total Area</td><td><span t-out="o.total_area"/> <t t-out="o.measure_unit"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mreq-label">Tenant</td><td><span t-out="o.tenant_id.tenancy_seq or ''"/></td>
+                                            <td class="mreq-label">Contract Start Date</td>
+                                            <td><span t-out="o.contract_start_date and o.contract_start_date.strftime('%d/%m/%Y') or ''"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="mreq-section">General Condition Check</div>
+                                <div class="mreq-section-body">
+                                    <table class="mreq-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:6%;">No.</th>
+                                                <th style="width:30%;">Item</th>
+                                                <th t-if="has_count" style="width:8%;">Count</th>
+                                                <th style="width:18%;">Status</th>
+                                                <th>Notes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="o.move_in_ids" t-as="line">
+                                                <td class="mreq-center"><t t-out="line_index + 1"/></td>
+                                                <td><span t-out="line.item.name"/></td>
+                                                <td t-if="has_count" class="mreq-center"><span t-out="line.count"/></td>
+                                                <td class="mreq-center"><span t-out="label(line, 'move_in_status')"/></td>
+                                                <td><span t-out="line.notes or ''"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="mreq-section">Received the Following</div>
+                                <div class="mreq-section-body">
+                                    <table class="mreq-kv">
+                                        <tr><td class="mreq-label">Unit Key</td><td><span t-out="o.unit_key or ''"/></td></tr>
+                                        <tr><td class="mreq-label">Access / Remote / Parking Card</td><td><span t-out="o.access_card or ''"/></td></tr>
+                                        <tr><td class="mreq-label">DEWA Security Deposit</td><td><span t-out="yes_no(o.dewa_security_deposit)"/></td></tr>
+                                    </table>
+                                </div>
+
+                                <div class="mreq-section">Final Readiness Confirmation</div>
+                                <div class="mreq-section-body">
+                                    <table class="mreq-kv">
+                                        <tr>
+                                            <td class="mreq-label">Cleaning Done</td><td><span t-out="yes_no(o.cleaning_done)"/></td>
+                                            <td class="mreq-label">Repairs Completed</td><td><span t-out="yes_no(o.repairs_done)"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mreq-label">Safety Checks Completed</td><td><span t-out="yes_no(o.safety_checks)"/></td>
+                                            <td class="mreq-label">Ready for Handover</td><td><span t-out="yes_no(o.ready_for_handover)"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <t t-set="signatories" t-value="['Maintenance Team', 'Leasing Executive', 'Quality / Inspection']"/>
+                            </t>
+
+                            <t t-elif="o.mr_for == 'move_out'">
+                                <!-- ================= MOVE-OUT ================= -->
+                                <div class="mreq-section">Property and Tenant Details</div>
+                                <div class="mreq-section-body">
+                                    <table class="mreq-kv">
+                                        <tr>
+                                            <td class="mreq-label">Tenant Name</td><td><span t-out="o.partner_id.name or ''"/></td>
+                                            <td class="mreq-label">Building</td><td><span t-out="o.project_id.name or ''"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mreq-label">Property Type</td><td><span t-out="o.property_type or ''"/></td>
+                                            <td class="mreq-label">Contract End Date</td>
+                                            <td><span t-out="o.contract_end_date and o.contract_end_date.strftime('%d/%m/%Y') or ''"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mreq-label">Forwarding Contact</td><td><span t-out="o.forwarding_contact or ''"/></td>
+                                            <td class="mreq-label">Forwarding Email</td><td><span t-out="o.forwarding_email or ''"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mreq-label">Inspection Team</td>
+                                            <td colspan="3"><span t-out="', '.join(o.inspection_team.mapped('name'))"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="mreq-section">Meter Readings (Final)</div>
+                                <div class="mreq-section-body">
+                                    <table class="mreq-table">
+                                        <thead>
+                                            <tr><th>Electricity</th><th>Water</th><th>Chiller</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="mreq-center"><span t-out="o.electricity or ''"/></td>
+                                                <td class="mreq-center"><span t-out="o.water or ''"/></td>
+                                                <td class="mreq-center"><span t-out="o.chiller or ''"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="mreq-section">General Condition Check</div>
+                                <div class="mreq-section-body">
+                                    <table class="mreq-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:6%;">No.</th>
+                                                <th style="width:28%;">Item</th>
+                                                <th t-if="has_count" style="width:8%;">Count</th>
+                                                <th style="width:16%;">Status</th>
+                                                <th>Notes</th>
+                                                <th style="width:14%;">Chargeable</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="o.move_out_ids" t-as="line">
+                                                <td class="mreq-center"><t t-out="line_index + 1"/></td>
+                                                <td><span t-out="line.item.name"/></td>
+                                                <td t-if="has_count" class="mreq-center"><span t-out="line.count"/></td>
+                                                <td class="mreq-center"><span t-out="label(line, 'move_out_status')"/></td>
+                                                <td><span t-out="line.move_out_notes or ''"/></td>
+                                                <td class="mreq-center"><span t-out="yes_no(line.chargeable)"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="mreq-section">Damages and Cost Estimation</div>
+                                <div class="mreq-section-body">
+                                    <table class="mreq-kv">
+                                        <tr><td class="mreq-label">Description</td><td><span t-out="o.damage_description or ''"/></td></tr>
+                                        <tr><td class="mreq-label">Estimated Cost</td><td><span t-out="o.estimated_cost or ''"/></td></tr>
+                                        <tr><td class="mreq-label">Chargeable to Tenant</td><td><span t-out="yes_no(o.chargeable_to_tenant)"/></td></tr>
+                                        <tr><td class="mreq-label">Note</td><td><span t-out="o.note or ''"/></td></tr>
+                                    </table>
+                                </div>
+
+                                <div class="mreq-section">Keys and Access Return</div>
+                                <div class="mreq-section-body">
+                                    <table class="mreq-table">
+                                        <thead>
+                                            <tr><th style="width:40%;">Item</th><th style="width:40%;">Status</th><th style="width:20%;">Qty</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Key / Card / Remote</td>
+                                                <td class="mreq-center"><span t-out="label(o, 'key_card_remote_id')"/></td>
+                                                <td class="mreq-center"><span t-out="o.key_qty or 0"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Access Cards Returned</td>
+                                                <td class="mreq-center"><span t-out="label(o, 'access_cards_returned_id')"/></td>
+                                                <td class="mreq-center"><span t-out="o.access_cards_qty or 0"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Parking Card / Remote</td>
+                                                <td class="mreq-center"><span t-out="label(o, 'parking_card_remote_id')"/></td>
+                                                <td class="mreq-center"><span t-out="o.parking_tags_qty or 0"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table class="mreq-kv" style="margin-top:6px;">
+                                        <tr><td class="mreq-label">Missing Items</td><td><span t-out="o.missing_items or ''"/></td></tr>
+                                    </table>
+                                </div>
+
+                                <div class="mreq-section">Clearance Status</div>
+                                <div class="mreq-section-body">
+                                    <table class="mreq-kv">
+                                        <tr>
+                                            <td class="mreq-label">Outstanding Rent</td><td><span t-out="label(o, 'outstanding_rent_id')"/></td>
+                                            <td class="mreq-label">Outstanding Utilities</td><td><span t-out="label(o, 'outstanding_utilities_id')"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mreq-label">Damages Chargeable</td><td><span t-out="label(o, 'damages_chargeable_id')"/></td>
+                                            <td class="mreq-label">Move-Out Ready</td><td><span t-out="label(o, 'move_out_ready_id')"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <t t-set="signatories" t-value="['Inspector', 'Tenant', 'Leasing Representative']"/>
+                            </t>
+
+                            <t t-else="">
+                                <t t-set="signatories" t-value="['Requested by', 'Approved by']"/>
+                            </t>
+
+                            <!-- Signatures -->
+                            <table class="mreq-signatures">
+                                <tr>
+                                    <td t-foreach="signatories" t-as="signatory"
+                                        t-attf-style="width: #{100 // len(signatories)}%;">
+                                        <div class="mreq-signature-line" t-out="signatory"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <record id="maintenance_request_report_id" model="ir.actions.report">
+        <field name="name">Maintenance Request Report</field>
+        <field name="model">maintenance.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ribs_real_estate.maintenance_request_qweb_report_template</field>
+        <field name="binding_model_id" ref="model_maintenance_request" />
+        <field name="binding_type">report</field>
+        <field name="print_report_name">object.name</field>
+    </record>
+    <record id="maintenance_request_report_id" model="ir.actions.report">
+        <field name="name">Maintenance Request Report</field>
+        <field name="model">maintenance.request</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">ribs_real_estate.maintenance_request_qweb_report_template</field>
+        <field name="binding_model_id" ref="model_maintenance_request" />
+        <field name="binding_type">report</field>
+        <field name="print_report_name">object.name</field>
+    </record>
+</odoo>

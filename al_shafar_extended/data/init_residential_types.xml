@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Initialize default residential types with their analytic plans and accounts -->
+        
+        <!-- Residential Type: Residential -->
+        <record id="residential_type_residential" model="residential.type">
+            <field name="name">Residential</field>
+        </record>
+        
+        <!-- Residential Type: Villa -->
+        <record id="residential_type_villa" model="residential.type">
+            <field name="name">Villa</field>
+        </record>
+        
+        <!-- Residential Type: Commercial -->
+        <record id="residential_type_commercial" model="residential.type">
+            <field name="name">Commercial</field>
+        </record>
+        
+        <!-- Residential Type: Land -->
+        <record id="residential_type_land" model="residential.type">
+            <field name="name">Land</field>
+        </record>
+        
+    </data>
+</odoo>

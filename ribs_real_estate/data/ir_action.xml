@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>   
+   <record id="action_group_contracts" model="ir.actions.server">
+        <field name="name">Group Contracts</field>
+        <field name="model_id" ref="rental_management.model_tenancy_details"/>
+        <field name="binding_model_id" ref="rental_management.model_tenancy_details"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.group_existing_contracts()
+        </field>
+    </record>
+
+    <record id="action_update_contracts" model="ir.actions.server">
+        <field name="name">Update New Contract</field>
+        <field name="model_id" ref="rental_management.model_tenancy_details"/>
+        <field name="binding_model_id" ref="rental_management.model_tenancy_details"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.update_contract_request()
+        </field>
+    </record>
+
+    <record id="action_recompute_contract_values_and_payments" model="ir.actions.server">
+        <field name="name">Recompute Contract Values &amp; Payment Details</field>
+        <field name="model_id" ref="rental_management.model_tenancy_details"/>
+        <field name="binding_model_id" ref="rental_management.model_tenancy_details"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_recompute_contract_values_and_payments()
+        </field>
+    </record>
+
+    <record id="action_approve_new_contract" model="ir.actions.server">
+        <field name="name">Approve New Contracts</field>
+        <field name="model_id" ref="ribs_real_estate.model_contract_update_register"/>
+        <field name="binding_model_id" ref="ribs_real_estate.model_contract_update_register"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_approve()
+        </field>
+    </record>
+
+    <record id="action_reject_new_contract" model="ir.actions.server">
+        <field name="name">Reject New Contracts</field>
+        <field name="model_id" ref="ribs_real_estate.model_contract_update_register"/>
+        <field name="binding_model_id" ref="ribs_real_estate.model_contract_update_register"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_reject()
+        </field>
+    </record>
+
+    <record id="action_approve_and_mail_new_contract" model="ir.actions.server">
+        <field name="name">Approve and Send Mail New Contracts</field>
+        <field name="model_id" ref="ribs_real_estate.model_contract_update_register"/>
+        <field name="binding_model_id" ref="ribs_real_estate.model_contract_update_register"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_approve_and_mail()
+        </field>
+    </record>
+
+</odoo>

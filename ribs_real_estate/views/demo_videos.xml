@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Building - For Building and Unit Creation  -->
+        <record id="property_project_view_form_inherit_video" model="ir.ui.view">
+            <field name="name">property.project.view.form</field>
+            <field name="model">property.project</field>
+            <field name="inherit_id" ref="rental_management.property_project_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='status']" position="before">
+                    <a href="https://drive.google.com/file/d/1uborDSgdWmQsj3_Xe81Wx_Yk9N5x6Ynu/view?usp=drive_link"
+                        target="_blank"
+                        title="Building &amp; Unit Management Video"
+                        class="mx-2 d-flex align-items-center text-decoration-none"
+                        style="cursor: pointer;">
+                        <img src="/ribs_real_estate/static/src/img/play_button_1.jpg" 
+                            alt="Demo Video"
+                            width="40" 
+                            height="40" 
+                            style="vertical-align: middle;"/>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Unit - For Contract Creation  -->
+        <record id="property_details_form_view_inherit_video" model="ir.ui.view">
+            <field name="name">property.details.form.view</field>
+            <field name="model">property.details</field>
+            <field name="inherit_id" ref="rental_management.property_details_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[1]" position="before">
+                    <a href="https://drive.google.com/file/d/1F1roieqjdCxwq_tuQrEokHl4Y3q9De0I/view?usp=drive_link"
+                        target="_blank"
+                        title="Contract Renewal &amp; Releasing Video"
+                        class="mx-2 d-flex align-items-center text-decoration-none"
+                        style="cursor: pointer;">
+                        <img src="/ribs_real_estate/static/src/img/play_button_1.jpg" 
+                            alt="Demo Video"
+                            width="40" 
+                            height="40" 
+                            style="vertical-align: middle;"/>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Contract - For Contract Renewal and Termination  -->
+        <record id="tenancy_details_form_view_inherit_video" model="ir.ui.view">
+            <field name="name">tenancy.details.form.view</field>
+            <field name="model">tenancy.details</field>
+            <field name="inherit_id" ref="rental_management.tenancy_details_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_active_rent_contract']" position="before">
+                    <a href="https://drive.google.com/drive/folders/18u8CkWgU6-VOBmZBnnlHUpPZNhiTmGaW?usp=sharing"
+                        target="_blank"
+                        title="Contract Management Video"
+                        class="mx-2 d-flex align-items-center text-decoration-none"
+                        style="cursor: pointer;">
+                        <img src="/ribs_real_estate/static/src/img/play_button_1.jpg" 
+                            alt="Demo Video"
+                            width="40" 
+                            height="40" 
+                            style="vertical-align: middle;"/>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Maintenance - For Maintenance Management  -->
+        <record id="maintenance_request_view_video" model="ir.ui.view">
+            <field name="model">maintenance.request</field>
+            <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='cancel_equipment_request']" position="before">
+                    <a href="https://drive.google.com/file/d/1OPxDOfHH1-cfLwbwYko4ck3Bzt4GqlbR/view?usp=drive_link"
+                        target="_blank"
+                        title="Contract Management Video"
+                        class="mx-2 d-flex align-items-center text-decoration-none"
+                        style="cursor: pointer;">
+                        <img src="/ribs_real_estate/static/src/img/play_button_1.jpg" 
+                            alt="Demo Video"
+                            width="40" 
+                            height="40" 
+                            style="vertical-align: middle;"/>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Portal View - For Portal Flow  -->
+        <record id="menu_portal_demo" model="website.menu">
+            <field name="name">Portal Demo Video</field>
+            <field name="url">https://drive.google.com/file/d/10KsYG2OknD325sE3IblhfuJyKMb39FeB/view?usp=drive_link</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">1</field>
+            <field name="new_window" eval="True"/>
+        </record>
+
+    </data>
+</odoo>
+        

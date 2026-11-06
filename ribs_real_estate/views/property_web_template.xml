@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- My Portal -->
+    <template id="portal_my_documents" inherit_id="portal.portal_my_home" name="My Portal">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry"
+                title.translate="My Documents"
+                url.f="/my/sell-contract/"
+                placeholder_count.f="sell_contract_count"
+                text.translate="View your documents"
+                icon.f="/ribs_real_estate/static/src/img/document_icon.png"/>
+        </xpath>
+    </template>
+
+    <template id="rental_user_document_details" name="Document Details">
+        <t t-call="portal.portal_layout">
+            <t t-if="not maintenance_rec">
+                <p>
+                    There are currently no maintenance requests
+                </p>
+            </t>
+            <t t-if="maintenance_rec" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>
+                            Attachment Name
+                        </th>
+                        <th class="text-center">
+                            Attachment
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="maintenance_rec" t-as="mr">
+                        <tr>
+                            <td>
+                                <a t-attf-href="/my/maintenance-request/information/{{ slug(mr) }}">
+                                    <span t-field="mr.name" />
+                                </a>
+                            </td>
+                            <td>
+                                <span t-field="mr.property_id.name" />
+                            </td>
+                            <td>
+                                <span t-field="mr.landlord_id.name" />
+                            </td>
+                            <td>
+                                <span t-field="mr.maintenance_type_id.name" />
+                            </td>
+                            <td class="text-center">
+                                <span t-field="mr.stage_id.name" />
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+</odoo>

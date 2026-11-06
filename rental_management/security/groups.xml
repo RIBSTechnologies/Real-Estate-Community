@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <data noupdate="0">
+            <record id="module_rental_management" model="ir.module.category">
+                <field name="name">Rental Management</field>
+                <field name="description">Access rights for Rental Management</field>
+            </record>
+                <record id="res_groups_privilege_rental_management" model="res.groups.privilege">
+                    <field name="name">Rental Management</field>
+                    <field name="category_id" ref="module_rental_management"/>
+                </record>
+                <record id="property_rental_officer" model="res.groups">
+                <field name="name">Officer</field>
+                <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+                <field name="privilege_id" ref="res_groups_privilege_rental_management"/>
+            </record>
+            <record id="property_rental_manager" model="res.groups">
+                <field name="name">Manager</field>
+                <field name="implied_ids" eval="[(4, ref('property_rental_officer'))]"/>
+                <field name="privilege_id" ref="res_groups_privilege_rental_management"/>
+                <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+            </record>
+            <record id="base.default_user_group" model="res.groups">
+                <field name="implied_ids" eval="[(4,ref('property_rental_manager'))]"/>
+            </record>
+        </data>
+    </data>
+</odoo>

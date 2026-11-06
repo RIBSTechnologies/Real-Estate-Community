@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Customer Payment Receipt / Vendor Payment Voucher - same letterhead,
+         green theme and blocks as the UAE Rental Tax Invoice (see
+         report_common.xml). Wording switches on o.partner_type (customer /
+         supplier). Building / Unit come from the analytic accounts of the
+         invoices / bills the payment settles. -->
+    <template id="report_customer_payment_document">
+        <t t-set="building_name" t-value="o._get_report_building_name()"/>
+        <t t-set="unit_name" t-value="o._get_report_unit_name()"/>
+        <t t-set="invoice_lines" t-value="o._get_report_invoice_lines()"/>
+        <t t-set="is_vendor" t-value="o.partner_type == 'supplier'"/>
+        <t t-set="tenancies" t-value="o._get_report_settled_moves().mapped('tenancy_id')"/>
+        <t t-set="partner" t-value="o.partner_id"/>
+        <!-- Rows in the invoice table (real + blank) so the receipt fills one
+             A4 page; lower it if the signatures spill onto a 2nd page. -->
+        <t t-set="total_row_target" t-value="12"/>
+
+        <div class="page ti-page">
+            <t t-call="account_extended.report_style"/>
+
+            <t t-call="account_extended.report_title_band"
+                doc_title="'PAYMENT VOUCHER / سند صرف' if is_vendor else 'PAYMENT RECEIPT / سند قبض'"
+                doc_no_label="'Voucher No' if is_vendor else 'Receipt No'"
+                doc_no="o.name"
+                doc_date_label="'Voucher Date' if is_vendor else 'Receipt Date'"
+                doc_date="o.date and o.date.strftime('%d/%m/%Y') or ''"/>
+
+            <!-- ================= PARTNER + PAYMENT DETAILS ================= -->
+            <table>
+                <tr>
+                    <td width="55%" style="padding:0 8px 0 0; border:none; vertical-align:top;">
+                        <t t-call="account_extended.report_partner_box"
+                            partner_box_title="'Paid To' if is_vendor else 'Received From'"
+                            partner_trn_label="'Vendor TRN' if is_vendor else 'Customer TRN'"/>
+                    </td>
+                    <td width="45%" style="padding:0 0 0 8px; border:none; vertical-align:top;">
+                        <div class="ti-box">
+                            <div class="ti-box-head">Payment Details</div>
+                            <div class="ti-box-body">
+                                <table class="ti-kv">
+                                    <tr t-if="o.payment_method_line_id">
+                                        <td class="ti-k">Payment Method</td><td class="ti-sep">:</td>
+                                        <td><span t-field="o.payment_method_line_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="ti-k">Journal</td><td class="ti-sep">:</td>
+                                        <td><span t-field="o.journal_id.name"/></td>
+                                    </tr>
+                                    <tr t-if="o.cheque_ref">
+                                        <td class="ti-k">Cheque Ref.</td><td class="ti-sep">:</td>
+                                        <td><span t-field="o.cheque_ref"/></td>
+                                    </tr>
+                                    <tr t-if="tenancies.filtered('tenancy_seq')">
+                                        <td class="ti-k">Contract No.</td><td class="ti-sep">:</td>
+                                        <td><t t-out="', '.join(tenancies.filtered('tenancy_seq').mapped('tenancy_seq'))"/></td>
+                                    </tr>
+                                    <tr t-if="building_name">
+                                        <td class="ti-k">Building</td><td class="ti-sep">:</td>
+                                        <td><t t-out="building_name"/></td>
+                                    </tr>
+                                    <tr t-if="unit_name">
+                                        <td class="ti-k">Unit No.</td><td class="ti-sep">:</td>
+                                        <td><t t-out="unit_name"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ================= MEMO ================= -->
+            <div class="ti-memo" t-if="o.memo">
+                <strong>Narration :</strong> <span t-field="o.memo"/>
+            </div>
+            <div t-else="" style="height:14px;"/>
+
+            <!-- ================= INVOICES / BILLS SETTLED ================= -->
+            <table class="ti-lines">
+                <thead>
+                    <tr>
+                        <th class="ti-c" style="width:6%;">#</th>
+                        <th style="width:24%;"><t t-out="'Bill No.' if is_vendor else 'Invoice No.'"/></th>
+                        <th class="ti-c" style="width:15%;"><t t-out="'Bill Date' if is_vendor else 'Invoice Date'"/></th>
+                        <th class="ti-r" style="width:19%;"><t t-out="'Bill Amount' if is_vendor else 'Invoice Amount'"/></th>
+                        <th class="ti-r" style="width:18%;">Amount Paid</th>
+                        <th class="ti-r" style="width:18%;">Balance Due</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="invoice_lines" t-as="row">
+                        <t t-set="inv" t-value="row['invoice']"/>
+                        <tr t-att-class="'ti-even' if (row_index + 1) % 2 == 0 else ''">
+                            <td class="ti-c"><t t-out="row_index + 1"/></td>
+                            <td><span t-field="inv.name"/></td>
+                            <td class="ti-c"><span t-field="inv.invoice_date" t-options='{"format": "dd/MM/yyyy"}'/></td>
+                            <td class="ti-r">
+                                <span t-field="inv.amount_total"
+                                      t-options='{"widget": "monetary", "display_currency": inv.currency_id}'/>
+                            </td>
+                            <td class="ti-r">
+                                <span t-out="row['paid']"
+                                      t-options='{"widget": "monetary", "display_currency": inv.currency_id}'/>
+                            </td>
+                            <td class="ti-r">
+                                <span t-out="row['residual']"
+                                      t-options='{"widget": "monetary", "display_currency": inv.currency_id}'/>
+                            </td>
+                        </tr>
+                    </t>
+                    <tr t-if="not invoice_lines">
+                        <td class="ti-c">1</td>
+                        <td colspan="3">Advance / On-account payment</td>
+                        <td class="ti-r">
+                            <span t-field="o.amount"
+                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                        </td>
+                        <td/>
+                    </tr>
+                    <!-- Blank rows so the table always reaches total_row_target
+                         rows and the receipt fills one A4 page. -->
+                    <t t-set="filled_rows" t-value="len(invoice_lines) or 1"/>
+                    <t t-foreach="range(max(0, total_row_target - filled_rows))" t-as="blank">
+                        <tr t-att-class="'ti-even' if (filled_rows + blank + 1) % 2 == 0 else ''">
+                            <td> </td><td/><td/><td/><td/><td/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+
+            <!-- ================= TOTAL ================= -->
+            <table style="margin-top:14px; page-break-inside:avoid;">
+                <tr>
+                    <td width="55%" style="border:none; padding:0 8px 0 0; vertical-align:bottom;">
+                        <div class="ti-words">
+                            <strong>Amount in words:</strong>
+                            Dhs <t t-out="o.currency_id.amount_to_text(o.amount)"/> Only
+                        </div>
+                    </td>
+                    <td width="45%" style="border:none; padding:0 0 0 8px; vertical-align:top;">
+                        <table class="ti-totals">
+                            <tr class="ti-grand">
+                                <td><t t-out="'Amount Paid' if is_vendor else 'Amount Received'"/></td>
+                                <td class="ti-r">
+                                    <span t-field="o.amount"
+                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <t t-call="account_extended.report_signatures"/>
+        </div>
+    </template>
+
+    <template id="report_customer_payment">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="show_company_logo" t-value="True"/>
+                <t t-call="web.external_layout">
+                    <t t-call="account_extended.report_customer_payment_document"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_customer_payment" model="ir.actions.report">
+        <field name="name">Customer Payment Receipt</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_extended.report_customer_payment</field>
+        <field name="print_report_name">'Payment Receipt - %s' % (object.name or '').replace('/', '-')</field>
+        <field name="domain">[('partner_type', '=', 'customer')]</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="ribs_real_estate.paperformat_custom_invoice"/>
+    </record>
+
+    <record id="action_report_vendor_payment" model="ir.actions.report">
+        <field name="name">Vendor Payment Voucher</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_extended.report_customer_payment</field>
+        <field name="print_report_name">'Payment Voucher - %s' % (object.name or '').replace('/', '-')</field>
+        <field name="domain">[('partner_type', '=', 'supplier')]</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="ribs_real_estate.paperformat_custom_invoice"/>
+    </record>
+
+</odoo>

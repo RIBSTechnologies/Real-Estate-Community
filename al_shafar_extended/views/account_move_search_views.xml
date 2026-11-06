@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Invoices search: filter/group by Contract Name (tenancy_id) -->
+    <record id="view_account_invoice_filter_inherit_al_shafar" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit.al.shafar</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="tenancy_id" string="Contract Name"/>
+            </field>
+            <filter name="status" position="after">
+                <filter string="Contract" name="group_by_tenancy_id" context="{'group_by': 'tenancy_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

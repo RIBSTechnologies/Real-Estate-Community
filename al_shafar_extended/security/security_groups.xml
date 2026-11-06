@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Separate Security Group: Reset to Draft for PDC Payment Cheques -->
+    <record id="group_reset_to_draft_pdc" model="res.groups">
+        <field name="name">Reset to Draft: PDC Cheques</field>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Separate Security Group: Reset to Draft for Property, Projects & Units -->
+    <record id="group_reset_to_draft_property" model="res.groups">
+        <field name="name">Reset to Draft: Properties &amp; Buildings</field>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Combined Security Group: Reset to Draft for All Features -->
+    <record id="group_reset_to_draft_all" model="res.groups">
+        <field name="name">Reset to Draft: All Features</field>
+        <field name="implied_ids" eval="[(4, ref('group_reset_to_draft_pdc')), (4, ref('group_reset_to_draft_property'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

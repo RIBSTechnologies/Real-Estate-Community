@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="partner_document_form_view" model="ir.ui.view">
+            <field name="name">partner.documents.form.view</field>
+            <field name="model">partner.documents</field>
+            <field name="arch" type="xml">
+                <form string="Partner Documents">
+                    <header>
+
+                        <button name="action_accept"
+                            string="Approve"
+                            type="object"
+                            class="btn-primary"
+                            invisible="verified_status != 'pending'"/>
+
+                        <button name="action_reject"
+                                string="Reject"
+                                type="object"
+                                class="btn-danger"
+                                invisible="verified_status != 'pending'"/>
+
+                        <field name="verified_status" widget="statusbar"
+                               statusbar_visible="pending,accepted,rejected"
+                               statusbar_colors="{'pending': 'orange', 'accepted': 'green', 'rejected': 'red'}"/>
+                    </header>
+
+                    <sheet>
+                        <group>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="document_name" invisible="1"/>
+                            <field name="document_ids" invisible="1"/>
+                            <field name="document_id" domain="[('id','in',document_ids)]"/>
+                            <field name="attachments" widget="many2many_binary"/>
+                            <field name="expiry_date"/>
+                            <field name="notes"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="partner_document_tree_view" model="ir.ui.view">
+            <field name="name">partner.documents.tree.view</field>
+            <field name="model">partner.documents</field>
+            <field name="arch" type="xml">
+                <list string="Partner Documents" >
+                    <field name="partner_id" string="Tenant Name"/>
+                    <field name="document_name" string="Document Name"/>
+                    <field name="expiry_date"/>
+                    <field name="notes"/>
+                    <field name="verified_status"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="partner_document_kanban_view" model="ir.ui.view">
+            <field name="name">partner.documents.kanban.view</field>
+            <field name="model">partner.documents</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="document_name"/>
+                    <field name="verified_status"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card o_kanban_record o_kanban_global_click">
+                                <div class="o_kanban_details">
+                                    <div>
+                                        <strong>Document Name: </strong>
+                                        <t t-out="record.document_name.value"/>
+                                    </div>
+                                    <div>
+                                        <strong>Status: </strong>
+                                        <t t-out="record.verified_status.value"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="ir_actions_documents" model="ir.actions.act_window">
+            <field name="name">Documents</field>
+            <field name="res_model">document.document</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="document_document_list_view"/>
+        </record>
+
+        <record id="document_menu_action" model="ir.ui.menu">
+            <field name="name">Documents</field>
+            <field name="parent_id" ref="rental_management.menu_configuration"/>
+            <field name="action" ref="ir_actions_documents"/>
+            <field name="sequence" eval="2"/>
+        </record>
+
+        <record id="partner_document_action" model="ir.actions.act_window">
+            <field name="name">Partner Documents</field>
+            <field name="res_model">partner.documents</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="view_id" ref="partner_document_form_view"/>
+        </record>
+
+        <record id="ir_actions_approved_partner_documents" model="ir.actions.server">
+            <field name="name">Approve Tenant Documents</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_partner_documents"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.action_approved_partner_document()
+            </field>
+            <field name="binding_model_id" ref="model_partner_documents"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
+    </data>
+</odoo>

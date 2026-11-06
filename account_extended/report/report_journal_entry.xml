@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Journal Entry voucher - same letterhead, green theme and blocks as the
+         UAE Rental Tax Invoice (see report_common.xml), with account-wise
+         debit / credit lines instead of products and VAT. -->
+    <template id="report_journal_entry_document">
+        <t t-set="lines" t-value="o.line_ids.filtered(lambda l: l.display_type not in ('line_section', 'line_note'))"/>
+        <t t-set="partners" t-value="lines.mapped('partner_id')"/>
+        <t t-set="company_currency" t-value="o.company_id.currency_id"/>
+        <!-- Rows in the line table (real + blank) so the voucher fills one
+             A4 page; lower it if the signatures spill onto a 2nd page. -->
+        <t t-set="total_row_target" t-value="14"/>
+
+        <div class="page ti-page">
+            <t t-call="account_extended.report_style"/>
+
+            <t t-call="account_extended.report_title_band"
+                doc_title.f="JOURNAL ENTRY / قيد يومية"
+                doc_no_label.f="Entry No"
+                doc_no="o.name"
+                doc_date_label.f="Date"
+                doc_date="o.date and o.date.strftime('%d/%m/%Y') or ''"/>
+
+            <!-- ================= ENTRY DETAILS ================= -->
+            <div class="ti-box">
+                <div class="ti-box-head">Entry Details</div>
+                <div class="ti-box-body">
+                    <table>
+                        <tr>
+                            <td width="50%" style="border:none; padding:0 8px 0 0; vertical-align:top;">
+                                <table class="ti-kv">
+                                    <tr>
+                                        <td class="ti-k">Journal</td><td class="ti-sep">:</td>
+                                        <td><span t-field="o.journal_id.name"/></td>
+                                    </tr>
+                                    <tr t-if="o.ref">
+                                        <td class="ti-k">Reference</td><td class="ti-sep">:</td>
+                                        <td><span t-field="o.ref"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td width="50%" style="border:none; padding:0 0 0 8px; vertical-align:top;">
+                                <table class="ti-kv">
+                                    <tr t-if="len(partners) == 1">
+                                        <td class="ti-k">Partner</td><td class="ti-sep">:</td>
+                                        <td><span t-field="partners.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="ti-k">Status</td><td class="ti-sep">:</td>
+                                        <td><span t-field="o.state"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ================= NARRATION ================= -->
+            <div class="ti-memo" t-if="not is_html_empty(o.narration)">
+                <strong>Narration :</strong> <span t-field="o.narration"/>
+            </div>
+            <div t-else="" style="height:14px;"/>
+
+            <!-- ================= LINES ================= -->
+            <table class="ti-lines">
+                <thead>
+                    <tr>
+                        <th class="ti-c" style="width:5%;">#</th>
+                        <th style="width:24%;">Account</th>
+                        <th style="width:17%;">Partner</th>
+                        <th style="width:20%;">Narration</th>
+                        <th style="width:12%;">Analytic</th>
+                        <th class="ti-r" style="width:11%;">Debit</th>
+                        <th class="ti-r" style="width:11%;">Credit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="lines" t-as="line">
+                        <tr t-att-class="'ti-even' if (line_index + 1) % 2 == 0 else ''">
+                            <td class="ti-c"><t t-out="line_index + 1"/></td>
+                            <td><span t-field="line.account_id"/></td>
+                            <td><span t-field="line.partner_id.name"/></td>
+                            <td><span t-field="line.name"/></td>
+                            <td><t t-out="line._get_report_analytic_names()"/></td>
+                            <td class="ti-r">
+                                <span t-if="line.debit" t-field="line.debit"
+                                      t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                            </td>
+                            <td class="ti-r">
+                                <span t-if="line.credit" t-field="line.credit"
+                                      t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                            </td>
+                        </tr>
+                    </t>
+                    <!-- Blank rows so the table always reaches total_row_target
+                         rows and the voucher fills one A4 page. -->
+                    <t t-foreach="range(max(0, total_row_target - len(lines)))" t-as="blank">
+                        <tr t-att-class="'ti-even' if (len(lines) + blank + 1) % 2 == 0 else ''">
+                            <td> </td><td/><td/><td/><td/><td/><td/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+
+            <!-- ================= TOTALS ================= -->
+            <table style="margin-top:14px; page-break-inside:avoid;">
+                <tr>
+                    <td width="55%" style="border:none; padding:0 8px 0 0; vertical-align:bottom;">
+                        <div class="ti-words">
+                            <strong>Amount in words:</strong>
+                            Dhs <t t-out="company_currency.amount_to_text(sum(lines.mapped('debit')))"/> Only
+                        </div>
+                    </td>
+                    <td width="45%" style="border:none; padding:0 0 0 8px; vertical-align:top;">
+                        <table class="ti-totals">
+                            <tr>
+                                <td>Total Debit</td>
+                                <td class="ti-r">
+                                    <span t-out="sum(lines.mapped('debit'))"
+                                          t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                                </td>
+                            </tr>
+                            <tr class="ti-grand">
+                                <td>Total Credit</td>
+                                <td class="ti-r">
+                                    <span t-out="sum(lines.mapped('credit'))"
+                                          t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <t t-call="account_extended.report_signatures" sign_right_label.f="Approved By"/>
+        </div>
+    </template>
+
+    <template id="report_journal_entry">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="show_company_logo" t-value="True"/>
+                <t t-call="web.external_layout">
+                    <t t-call="account_extended.report_journal_entry_document"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_journal_entry" model="ir.actions.report">
+        <field name="name">Journal Entry</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_extended.report_journal_entry</field>
+        <field name="print_report_name">'Journal Entry - %s' % (object.name or '').replace('/', '-')</field>
+        <field name="domain">[('move_type', '=', 'entry')]</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="ribs_real_estate.paperformat_custom_invoice"/>
+    </record>
+
+</odoo>

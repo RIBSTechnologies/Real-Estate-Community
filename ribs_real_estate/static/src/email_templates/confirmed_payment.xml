@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_contract_payment_confirmation" model="mail.template">
+            <field name="name">Contract Payment Invoice &amp; Confirmation</field>
+            <field name="model_id" ref="model_contract_payments"/>
+            <field name="subject">Payment Confirmation {{object.contract_id.tenancy_seq}}</field>
+            <field name="body_html">
+                <![CDATA[
+                <div>
+                    <p>Dear <t t-out="object.contract_id.tenancy_id.name"/>,</p>
+
+
+                    <p>
+                        This is to confirm that we have <b>Received and Confirmed</b> the payment related to your contract.
+                    </p>
+
+                    <h4>Payment Details</h4>
+                    <ul>
+                        <li><b>Contract:</b> <t t-out="object.contract_id.tenancy_seq"/></li>
+                        <li><b>Amount:</b> <t t-out="'%.2f' % object.contract_total_value"/></li>
+                        <li><b>Responsible:</b> <t t-out="object.contract_responsible.name"/></li>
+                    </ul>
+
+                    <p>
+                        The <b>Payment Details</b> for your reference.
+                    </p>
+                    <t t-if="ctx.get('cash_payments')">
+                        <h4 style="margin:20px 0 8px;">Cash Payment Details</h4>
+
+                        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                            <thead>
+                                <tr style="background:#f5f7fa;">
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Date</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Amount</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Type</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Reference</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="ctx.get('cash_payments')" t-as="line">
+                                    <tr>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="line.chq_due_date.strftime('%d/%m/%Y') if line.chq_due_date else ''"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="'%.2f' % line.amount"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="line.journal_id.name"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="line.payment_account_id.name"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="dict(line._fields['line_payment_received'].selection).get(line.line_payment_received)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+
+
+                    <t t-if="ctx.get('bank_payments')">
+                        <h4 style="margin:20px 0 8px;">Bank Payment Details</h4>
+
+                        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                            <thead>
+                                <tr style="background:#f5f7fa;">
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Date</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Amount</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Type</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Reference</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="ctx.get('bank_payments')" t-as="line">
+                                    <tr>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="line.chq_due_date.strftime('%d/%m/%Y') if line.chq_due_date else ''"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="'%.2f' % line.amount"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="line.journal_id.name"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="line.payment_account_id.name"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="dict(line._fields['line_payment_received'].selection).get(line.line_payment_received)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+
+
+                    <t t-if="ctx.get('pdc_payments')">
+                        <h4 style="margin:20px 0 8px;">PDC Payment Details</h4>
+
+                        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                            <thead>
+                                <tr style="background:#f5f7fa;">
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Date</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Amount</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Type</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Reference</th>
+                                    <th style="padding:8px; border:1px solid #e6e6e6;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="ctx.get('pdc_payments')" t-as="line">
+                                    <tr>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="line.chq_due_date.strftime('%d/%m/%Y') if line.chq_due_date else ''"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="'%.2f' % line.amount"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="line.journal_id.name"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="line.payment_pdc_id.name"/>
+                                        </td>
+                                        <td style="padding:8px; border:1px solid #e6e6e6;">
+                                            <t t-out="dict(line._fields['line_payment_received'].selection).get(line.line_payment_received)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                   <t t-set="total_cash"
+                       t-value="sum(ctx.get('cash_payments', []).mapped('amount')) if ctx.get('cash_payments') else 0.0"/>
+
+                    <t t-set="total_bank"
+                       t-value="sum(ctx.get('bank_payments', []).mapped('amount')) if ctx.get('bank_payments') else 0.0"/>
+
+                    <t t-set="total_pdc"
+                       t-value="sum(ctx.get('pdc_payments', []).mapped('amount')) if ctx.get('pdc_payments') else 0.0"/>
+
+                    <t t-set="grand_total" t-value="total_cash + total_bank + total_pdc"/>
+
+
+                    <p>
+                        Total Amount Paid : <b><t t-out="'%.2f' % grand_total"/></b>
+                    </p>
+
+                    <p>
+                        If you have any questions, feel free to contact us.
+                    </p>
+
+                    <p>Thank you,<br/></p>
+                    </p>
+                </div>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

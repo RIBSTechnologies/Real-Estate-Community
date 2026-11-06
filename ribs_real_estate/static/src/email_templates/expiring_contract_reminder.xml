@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="contract_renewal_reminder_template" model="mail.template">
+            <field name="name">Contract Renewal Reminder</field>
+            <field name="model_id" ref="model_tenancy_details"/>
+            <field name="subject">Contract Renewal - {{ object.tenancy_seq }}</field>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family:Arial; font-size:14px; color:#333;">
+
+                    <p>
+                        Dear <strong><t t-out="object.tenancy_id.name"/></strong>,
+                    </p>
+
+                    <!-- ALWAYS SHOWN -->
+                    <p>
+                        Your contract <strong><t t-out="object.tenancy_seq"/></strong>
+                        is set to expire in
+                        <strong><t t-out="ctx.get('days_left') or 0"/></strong> days.
+                    </p>
+
+                    <p>
+                        Please renew your contract to avoid disruption.
+                    </p>
+
+                    <!-- ONLY WHEN UPDATED CONTRACT EXISTS -->
+                    <t t-if="ctx.get('update_rec')">
+
+                        <hr/>
+
+                        <p><strong>Updated Contract Details</strong></p>
+
+                        <table style="width:100%; border-collapse:collapse; margin-top:10px; border:1px solid #ccc;">
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>Property Name</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="ctx.get('update_rec').contract_id.property_project_id.name"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>Unit No</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-call="ribs_real_estate.property_display_value"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>New Contract Start Date</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="ctx.get('update_rec').from_date"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>New Contract End Date</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="ctx.get('update_rec').to_date"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>New Annual Rent</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="'%.2f' % ctx.get('update_rec').new_rent_annually"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>Cheques Under</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="ctx.get('update_rec').contract_id.tenancy_id.print_cheque"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:6px; border:1px solid #ccc;"><strong>Terms of Payments</strong></td>
+                            <td style="padding:6px; border:1px solid #ccc;">
+                                <t t-out="ctx.get('update_rec').duration_id.duration"/>
+                            </td>
+                        </tr>
+                    </table>
+                    </t>
+
+                    <p>Thank you,<br/></p>
+
+                </div>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

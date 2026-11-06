@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="erp_ui_redesign.ThemeSystray">
+        <div class="o_erp_theme_systray">
+            <button class="o_erp_theme_systray_btn"
+                    title="Choose Theme"
+                    aria-label="Choose Theme"
+                    t-on-click="this.onClickChooseTheme">
+                <i class="oi" data-icon="brush"/>
+            </button>
+        </div>
+    </t>
+
+</templates>

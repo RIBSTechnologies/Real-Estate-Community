@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Contract menu reorder
+        ======================
+        Brings items to the top of the "Contract" dropdown (Properties
+        app menu bar), in this order: All Contracts, Single & Multi
+        Contract, New Contract (hidden - see below), Renew Contract,
+        Release & Terminate Contract, Update Contract Payment. The
+        pre-existing items (Expiring Contracts, Waiting For Approval and
+        its 4 sub-items) are NOT removed - only pushed below via
+        sequence, same pattern already used in menu_items.xml for
+        ribs_real_estate.menu_property_new / rental_management.menu_print_report
+        (adjusting an existing menuitem's fields by xmlid from this
+        module, without touching ribs_real_estate/rental_management).
+
+        "New Contract" is set active="False" (hidden, per request) rather
+        than deleted. "Multi Contracts" is relabelled "Single & Multi
+        Contract" (same action, group_multi_contracts_action_) since it's
+        now the only Contract-creation entry left in this menu, covering
+        both cases.
+
+        Every item below opens an EXISTING action - no new business
+        methods, no new model fields. "Renew Contract" and "Release &
+        Terminate Contract" have no dedicated stand-alone page of their
+        own in the app (Renew Contract is a per-record form button; the
+        two closure stages are two separate existing list actions), so:
+          - Renew Contract opens the existing Expiring Contracts list
+            (ribs_real_estate.tenancy_details_action_expiring), which is
+            where that per-record button actually lives on each
+            qualifying contract.
+          - Release & Terminate Contract opens a new list action that
+            reuses the exact same model/fields/business logic as the two
+            existing "Waiting For Approval" closure actions
+            (waiting_closure_first_level_approval /
+            waiting_closure_final_level_approval), just with both of
+            their domains combined into one, so both approval stages
+            show in a single list instead of two separate menu entries.
+    -->
+
+    <!-- Combined view of both closure/termination approval stages.
+         Same res_model/fields/security as the two existing closure
+         actions it merges - only the domain is wider. -->
+    <record id="release_terminate_contract_action" model="ir.actions.act_window">
+        <field name="name">Release &amp; Terminate Contract</field>
+        <field name="res_model">tenancy.details</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('contract_type', 'in', ['closure_pending_approval', 'closure_final_approval'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No contracts pending closure/termination approval.
+            </p>
+        </field>
+    </record>
+
+    <!-- 1. All Contracts - existing item, brought to the top. -->
+    <record id="ribs_real_estate.menu_contract_new" model="ir.ui.menu">
+        <field name="name">All Contracts</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <!-- 2. Single & Multi Contract - existing item, moved up to second
+         place per request (was last, sequence 7). -->
+    <record id="ribs_real_estate.menu_multi_contracts" model="ir.ui.menu">
+        <field name="name">Single &amp; Multi Contract</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <!-- 3. New Contract - hidden per request; kept (inactive) rather than
+         deleted so it can be turned back on later by flipping active
+         back to true, same convention as the pre-existing inactive
+         "Expiring Contracts" item below. -->
+    <menuitem id="menu_contract_new_wizard"
+        name="New Contract"
+        parent="ribs_real_estate.menu_contact"
+        action="rental_management.contract_wizard_action"
+        groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+        sequence="3"
+        active="False"/>
+
+    <!-- 4. Renew Contract -> Expiring Contracts list (same action as the
+         existing, currently-inactive "Expiring Contracts" menu item;
+         left inactive item untouched below, this just adds a second,
+         active entry point to the same page). -->
+    <menuitem id="menu_contract_renew"
+        name="Renew Contract"
+        parent="ribs_real_estate.menu_contact"
+        action="ribs_real_estate.tenancy_details_action_expiring"
+        groups="rental_management.property_rental_manager,rental_management.property_rental_officer"
+        sequence="4"/>
+
+    <!-- 5. Release & Terminate Contract -> combined closure-approval list
+         above. Manager-only, matching the two existing closure-approval
+         menu items it merges (Waiting For Approval > Contract Closure -
+         Waiting For First/Final Approval), which are manager-only too. -->
+    <menuitem id="menu_contract_release_terminate"
+        name="Release &amp; Terminate Contract"
+        parent="ribs_real_estate.menu_contact"
+        action="release_terminate_contract_action"
+        groups="rental_management.property_rental_manager"
+        sequence="5"/>
+
+    <!-- 6. Update Contract Payment - rename of the existing "Update
+         Contract Details" item; same action/page, only label + position
+         change. -->
+    <record id="ribs_real_estate.menu_approve_contract_update_details" model="ir.ui.menu">
+        <field name="name">Update Contract Payment</field>
+        <field name="sequence">6</field>
+    </record>
+
+    <!-- Existing item kept, pushed below the items above (was 3). -->
+    <record id="ribs_real_estate.menu_expiring_contract_new" model="ir.ui.menu">
+        <field name="sequence">7</field>
+    </record>
+
+    <!-- "Multi Contracts" wizard (group.multi.contracts): rename to
+         match the menu item above, in the two other places the old name
+         still showed - the action's breadcrumb/window title, and the
+         wizard's own big <h1> title. Label only; the wizard's fields,
+         Python logic and validations are untouched. -->
+    <record id="ribs_real_estate.group_multi_contracts_action_" model="ir.actions.act_window">
+        <field name="name">Single &amp; Multi Contract</field>
+    </record>
+    <record id="view_group_multi_contracts_form_al_shafar" model="ir.ui.view">
+        <field name="name">group.multi.contracts.form.al.shafar</field>
+        <field name="model">group.multi.contracts</field>
+        <field name="inherit_id" ref="ribs_real_estate.group_multi_contracts_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_title']/h1" position="replace">
+                <h1>Single &amp; Multi Contract</h1>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

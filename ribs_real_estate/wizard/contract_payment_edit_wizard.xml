@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_contract_payment_edit_wizard" model="ir.ui.view">
+            <field name="name">contract.payment.edit.wizard.form</field>
+            <field name="model">contract.payment.edit.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Edit Payment">
+                    <group>
+                        <field name="payment_type"/>
+                        <field name="journal_id"/>
+                        <!-- <field name="payment_id"/> -->
+                        <field name="amount"/>
+                        <field name="cheque_num"/>  
+                        <field name="chq_due_date"/>
+                        <field name="remitter_bank_id"/>
+                        <field name="ref"/>
+                        <field name="leasing_reason"/>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                    </group>
+
+                    <footer>
+                        <button name="action_confirm"
+                                string="Confirm"
+                                type="object"
+                                class="btn-primary"/>
+                        <button string="Cancel"
+                                special="cancel"
+                                class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

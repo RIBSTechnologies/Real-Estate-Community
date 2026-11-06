@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="tenancy_details_qweb_report_template_inherit"
+            inherit_id="rental_management.tenancy_details_qweb_report_template">
+    <xpath expr="//div" position="replace">
+      <div class="page" style="font-family: Arial, sans-serif; font-size: 13px; color: #000; line-height: 1.45;">
+
+        <!-- HEADER -->
+        <table style="width:100%; border:2px solid #145326; border-radius:8px; border-collapse:collapse; margin-bottom:6px;">
+          <tr style="background-color:#f2f6fa;">
+            <td style="width:20%; text-align:center; padding:8px; font-weight:bold; font-size:11px;">
+              <b>Contract No:</b> <span t-out="o.tenancy_seq or '—'"/>
+            </td>
+            <td style="width:60%; text-align:center; padding:8px; font-size:14px; font-weight:bold;">
+              TENANCY CONTRACT
+            </td>
+            <td style="width:20%; text-align:center; padding:8px; font-weight:bold; font-size:11px;">
+              <b>Registration Date:</b> <span t-out="o.start_date.strftime('%d/%m/%Y') if o.start_date else '-'"/>
+            </td>
+          </tr>
+        </table>
+
+        <!-- OWNER -->
+        <table style="width:100%; border:1px solid #145326; border-radius:6px; margin-top:9px;">
+          <tr style="background-color:#145326; color:white; font-weight:bold;">
+            <td colspan="4" style="padding:5px 10px;">OWNER</td>
+          </tr>
+          <tr>
+            <td style="width:25%; padding:5px 8px;"><b>Owner Name</b></td>
+            <td style="width:25%; padding:5px 8px;"><span t-out="o.property_landlord_id.name"/></td>
+            <td style="width:25%; padding:5px 8px;"><b>Owner Number</b></td>
+            <td style="width:25%; padding:5px 8px;"><span t-out="o.property_landlord_id.phone"/></td>
+          </tr>
+          <tr>
+            <td style="padding:5px 8px;"><b>Nationality</b></td>
+            <td colspan="3" style="padding:5px 8px;"><span t-out="o.property_landlord_id.country_id.name"/></td>
+          </tr>
+        </table>
+
+        <!-- LESSOR -->
+        <table style="width:100%; border:1px solid #145326; border-radius:6px; margin-top:9px;">
+          <tr style="background-color:#145326; color:white; font-weight:bold;">
+            <td colspan="4" style="padding:5px 10px;">LESSOR</td>
+          </tr>
+          <tr>
+            <td style="width:25%; padding:5px 8px;"><b>Lessor Name</b></td>
+            <td style="width:25%; padding:5px 8px;"><span t-out="o.company_id.name"/></td>
+            <td style="width:25%; padding:5px 8px;"><b>Trade License Number</b></td>
+            <td style="width:25%; padding:5px 8px;"><span t-out="o.company_id.partner_id.licence_no"/></td>
+          </tr>
+          <tr>
+            <td style="padding:5px 8px;"><b>Tel. No</b></td>
+            <td style="padding:5px 8px;"><span t-out="o.company_id.phone"/></td>
+            <td style="padding:5px 8px;"><b>E-mail</b></td>
+            <td style="padding:5px 8px;"><span t-out="o.company_id.email"/></td>
+          </tr>
+          <tr>
+            <td style="width:25%; padding:5px 8px;"><b>VAT Number</b></td>
+            <td style="width:25%; padding:5px 8px;"><span t-out="o.company_id.vat"/></td>
+            <td style="width:25%; padding:5px 8px;"><b>P.O. BOX</b></td>
+            <td style="width:25%; padding:5px 8px;"><span t-out="o.company_id.zip"/></td>
+          </tr>
+          <tr>
+            <td style="padding:5px 8px;"><b>Address</b></td>
+            <td colspan="3" style="padding:5px 8px;"><span t-out="o.company_id.street or ''"/> <span t-out="o.company_id.street2 or ''"/> <span t-out="o.company_id.city or ''"/> <span t-out="o.company_id.state_id.name or ''"/> <span t-out="o.company_id.country_id.name or ''"/></td>
+          </tr>
+        </table>
+
+        <!-- CONTRACT DETAILS -->
+        <table style="width:100%; border:1px solid #145326; border-radius:6px; margin-top:9px;">
+          <tr style="background-color:#145326; color:white; font-weight:bold;">
+            <td colspan="4" style="padding:5px 10px;">TENANCY CONTRACT DETAILS</td>
+          </tr>
+          <tr>
+            <td style="width:25%; padding:5px 8px;"><b>Start Date</b></td>
+            <td style="width:25%; padding:5px 8px;"><span t-out="o.start_date.strftime('%d/%m/%Y') if o.start_date else '-'"/></td>
+            <td style="width:25%; padding:5px 8px;"><b>End Date</b></td>
+            <td style="width:25%; padding:5px 8px;"><span t-out="o.end_date.strftime('%d/%m/%Y') if o.end_date else '-'"/></td>
+          </tr>
+          <tr t-if="o.grace_period_start_date and o.grace_period_end_date">
+            <td style="padding:5px 8px;"><b>Grace Start Date</b></td>
+            <td style="padding:5px 8px;"><span t-out="o.grace_period_start_date.strftime('%d/%m/%Y')"/></td>
+            <td style="padding:5px 8px;"><b>Grace End Date</b></td>
+            <td style="padding:5px 8px;"><span t-out="o.grace_period_end_date.strftime('%d/%m/%Y')"/></td>
+          </tr>
+          <tr>
+            <td style="width:25%; padding:5px 8px;"><b>Security Deposit</b></td>
+            <td colspan="3" style="padding:5px 8px;"><span t-field="o.deposit_amount" t-options='{"widget":"monetary","display_currency":o.currency_id}'/></td>
+          </tr>
+          <tr>
+            <td style="padding:5px 8px;"><b>Contract Amount</b></td>
+            <td style="padding:5px 8px;"><span t-field="o.contract_value" t-options='{"widget":"monetary","display_currency":o.currency_id}'/></td>
+            <td style="padding:5px 8px;"><b>Annual Amount</b></td>
+            <td style="padding:5px 8px;"><span t-field="o.total_rent_year" t-options='{"widget":"monetary","display_currency":o.currency_id}'/></td>
+          </tr>
+        </table>
+
+        <!-- TENANT -->
+        <table style="width:100%; border:1px solid #145326; border-radius:6px; margin-top:9px;">
+          <tr style="background-color:#145326; color:white; font-weight:bold;">
+              <td colspan="4" style="padding:5px 10px;">TENANT</td>
+          </tr>
+
+          <tr>
+              <td style="width:25%; padding:5px 8px;"><b>Tenant Name</b></td>
+              <td style="width:25%; padding:5px 8px;">
+                  <span t-out="o.tenancy_id.name"/>
+              </td>
+
+              <td style="width:25%; padding:5px 8px;"><b>Tel. No</b></td>
+              <td style="width:25%; padding:5px 8px;">
+                  <span t-out="o.tenancy_id.phone"/>
+              </td>
+          </tr>
+
+          <tr>
+              <td style="padding:5px 8px;"><b>Email ID</b></td>
+              <td style="padding:5px 8px;">
+                  <span t-out="o.tenancy_id.email"/>
+              </td>
+
+              <td style="padding:5px 8px;"><b>Emirates ID</b></td>
+              <td style="padding:5px 8px;">
+                  <span t-out="o.tenancy_id.emirates_id"/>
+              </td>
+          </tr>
+
+          <tr>
+              <td style="padding:5px 8px;"><b>Nationality</b></td>
+              <td colspan="3" style="padding:5px 8px;">
+                  <span t-out="o.tenancy_id.nationality"/>
+              </td>
+          </tr>
+
+          <!-- Commercial tenants only -->
+          <tr t-if="o.tenancy_id.is_company">
+              <td style="padding:5px 8px;"><b>License Number</b></td>
+              <td style="padding:5px 8px;">
+                  <span t-out="o.tenancy_id.licence_no"/>
+              </td>
+
+              <td style="padding:5px 8px;"><b>VAT No</b></td>
+              <td style="padding:5px 8px;">
+                  <span t-out="o.tenancy_id.vat"/>
+              </td>
+          </tr>
+      </table>
+
+        <!-- LEASED UNIT -->
+        <table style="width:100%; border:1px solid #145326; border-radius:6px; margin-top:9px;">
+          <tr style="background-color:#145326; color:white; font-weight:bold;">
+            <td colspan="4" style="padding:5px 10px;">LEASED UNIT</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 8px;"><b>Building Name</b></td>
+            <td style="padding:5px 8px;"><span t-out="o.property_project_id.name"/></td>
+          </tr>
+<!--          <tr>-->
+<!--            <td style="width:25%; padding:5px 8px;"><b>Unit</b></td>-->
+<!--            <td style="width:75%; padding:5px 8px;">-->
+<!--            &lt;!&ndash; Show only the unit's own name, with the building name (already-->
+<!--                 printed above as "Building Name") stripped off if it was-->
+<!--                 entered as a literal prefix, e.g. "Al Shafar Tower 2-Unit 2008"-->
+<!--                 -&gt; "Unit 2008". Local to this report only. &ndash;&gt;-->
+<!--            <t t-set="unit_name" t-value="o.property_id.name or ''"/>-->
+<!--            <t t-set="building_name" t-value="o.property_project_id.name or ''"/>-->
+<!--            <t t-if="building_name and unit_name.startswith(building_name)">-->
+<!--              <span t-out="unit_name[len(building_name):].lstrip('-— ')"/>-->
+<!--            </t>-->
+<!--            <t t-else="1">-->
+<!--              <span t-out="unit_name"/>-->
+<!--            </t>-->
+<!--            </td>-->
+<!--          </tr>-->
+            <tr>
+            <td style="width:25%; padding:5px 8px;"><b>Unit</b></td>
+            <td style="width:75%; padding:5px 8px;">
+                <!-- Strips the building name prefix from the unit name for display -->
+                <t t-set="building_name" t-value="o.property_project_id.name or ''"/>
+
+                <t t-if="o.is_multi_contract">
+                    <t t-set="unit_names" t-value="[]"/>
+                    <t t-foreach="o.unit_ids" t-as="unit">
+                        <t t-set="u_name" t-value="unit.name or ''"/>
+                        <t t-if="building_name and u_name.startswith(building_name)">
+                            <t t-set="unit_names" t-value="unit_names + [u_name[len(building_name):].lstrip('- ')]"/>
+                        </t>
+                        <t t-else="1">
+                            <t t-set="unit_names" t-value="unit_names + [u_name]"/>
+                        </t>
+                    </t>
+                    <span t-out="', '.join(unit_names)"/>
+                </t>
+
+                <t t-else="1">
+                    <t t-set="unit_name" t-value="o.property_id.name or ''"/>
+                    <t t-if="building_name and unit_name.startswith(building_name)">
+                        <span t-out="unit_name[len(building_name):].lstrip('- ')"/>
+                    </t>
+                    <t t-else="1">
+                        <span t-out="unit_name"/>
+                    </t>
+                </t>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:5px 8px;"><b>Unit Size</b></td>
+            <td style="padding:5px 8px;">
+              <span t-out="'%0.2f' % (o.property_id.unit_size or 0.0)"/> / <span t-out="dict(o.fields_get(['measure_unit'])['measure_unit']['selection']).get(o.measure_unit, '-')"/>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:5px 8px;"><b>Land Area</b></td>
+            <td style="padding:5px 8px;"><span t-out="o.property_project_id.land_area"/></td>
+          </tr>
+          <tr>
+            <td style="padding:5px 8px;"><b>Plot No</b></td>
+            <td style="padding:5px 8px;"><span t-out="o.property_project_id.land_number"/></td>
+          </tr>
+          <!-- <tr>
+            <td style="width:25%; padding:5px 8px; white-space:nowrap;"><b>DM No</b></td>
+            <td style="width:25%; padding:5px 8px;"><span t-out="o.property_id.property_seq"/></td>
+          </tr> -->
+          <tr>
+            <td style="width:25%; padding:5px 8px; white-space:nowrap;"><b>Makani No</b></td>
+            <td style="width:25%; padding:5px 8px;"><span t-out="o.property_project_id.makani_number"/></td>
+          </tr>
+          <tr>
+            <td style="padding:5px 8px;"><b>DM Number</b></td>
+            <td colspan="3" style="padding:5px 8px;"><span t-out="o.property_project_id.dm_number"/></td>
+          </tr>
+          <!-- <tr>
+            <td style="padding:5px 8px;"><b>Address</b></td>
+            <td colspan="3" style="padding:5px 8px;"><span t-out="o.property_id.street or ''"/> <span t-out="o.property_id.street2 or ''"/> <span t-out="o.property_id.city or ''"/> <span t-out="o.property_id.state_id.name or ''"/> <span t-out="o.property_id.country_id.name or ''"/></td>
+          </tr> -->
+        </table>
+        <!-- TERMS & CONDITIONS (always starts on a new page) -->
+        <div style="page-break-before: always; margin-top:12px">
+          <div style="display:table;width:100%;background-color:#1a8a3e;color:white;font-weight:bold;border-radius:3px;padding:5px 8px;font-size:13px">
+            <div style="display:table-cell;width:50%;text-align:left">The terms &amp; conditions agreed upon are as follows: -</div>
+            <div style="display:table-cell;width:50%;text-align:right;direction:rtl">الشروط المتفق عليها كما يلي :-</div>
+          </div>
+          <t t-set="default_terms" t-value="env['default.terms.conditions'].sudo().search([], limit=1)"/>
+          <div t-if="default_terms and default_terms.terms_html" style="font-size:11.5px;line-height:1.35">
+            <span t-field="default_terms.terms_html" t-options="{'widget': 'html'}"/>
+          </div>
+          <div t-else="1" style="font-size:11.5px;line-height:1.35">
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">1.</div><div style="display:inline-block;vertical-align:top;width:54%">The lessee inspected the property, the subject of the lease, and agreed to rent the property in its current condition.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">١&#160;</span>عاين المستأجر بالمأجور موضوع هذا العقد وأقر برضاه عن حالته الحالية.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">2.</div><div style="display:inline-block;vertical-align:top;width:54%">The lessee undertakes to use the leased property for the purpose assigned to. The lessee may not transfer or assign the lease contract to a third party or without consideration without the owner's written consent, and the lessee may not rent the leased property or any part of the leased property unless permitted by law.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">٢&#160;</span>يتعهد المستأجر باستعمال المأجور للغرض المخصص له ولا يجوز للمستأجر تحويل أو التنازل عن عقد الايجار للغير بمقابل أو دون مقابل دون موافقة المالك خطياً، كما لا يجوز للمستأجر تأجير المأجور أو أي جزء منه بالباطن ما لم يُسمح بذلك قانوناً.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">3.</div><div style="display:inline-block;vertical-align:top;width:54%">The lessee undertakes not to make any modifications, additions, or removals to the property (the subject hereof) without the written consent of the owner, and the lessee is responsible for any damage, shortage or damage to the property or any part of it.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">٣&#160;</span>يتعهد المستأجر بعدم إجراء أية تعديلات أو إضافات أو إزالة على العقار (موضوع العقد) دون موافقة المالك الخطية ويكون المستأجر مسؤولاً عن أي نقص أو ضرر أو تلف يلحق بالعقار أو أي جزء منه.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">4.</div><div style="display:inline-block;vertical-align:top;width:54%">If the lessee wants to make any repair, restoration, removal or introduction of improvements in the leased property, this will be at his expense and his own account, and has to review the owner and the relevant government authorities to obtain approval.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">٤&#160;</span>إذا أراد المستأجر إحداث أي إصلاح أو ترميم أو إزالة أو إدخال تحسينات على العين المؤجرة فيكون ذلك على نفقته الخاصة وعليه مراجعة المالك والجهات الحكومية المختصة للحصول على الموافقة.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">5.</div><div style="display:inline-block;vertical-align:top;width:54%">The lessee shall be responsible for paying all bills of electricity, water, cooling and gas arising from his works for the leased property, unless otherwise agreed upon in writing.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">٥&#160;</span>يكون المستأجر مسؤولاً عن سداد كافة فواتير الكهرباء والمياه والتبريد والغاز المترتبة عن أشغاله للعين المؤجرة ما لم يتم الاتفاق على غير ذلك خطياً.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">6.</div><div style="display:inline-block;vertical-align:top;width:54%">The lessee undertakes to pay the rental amount agreed upon in this contract on the dates and by the method agreed upon.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">٦&#160;</span>يتعهد المستأجر بسداد مبلغ الايجار المتفق عليه في هذا العقد في التواريخ وبالطريقة المتفق عليها.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">7.</div><div style="display:inline-block;vertical-align:top;width:54%">The lessee undertakes to pay all taxes and fees imposed by all government departments, whether in the present or future, on behalf of the property leased to him.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">٧&#160;</span>يتعهد المستأجر بدفع جميع الضرائب والرسوم التي تفرضها جميع الدوائر الحكومية سواء في الحاضر أو المستقبل عن العين المؤجرة.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">8.</div><div style="display:inline-block;vertical-align:top;width:54%">The lessee shall abide by the regulations and instructions related to the use of the leased property and shared benefits (such as adherence to the car parks designated for the leased property, not to smoke in the corridors, stairs or elevators, to maintain the cleanliness of the swimming pools and around them, and to maintain the health club and all the shared benefits) if any.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">٨&#160;</span>يلتزم المستأجر بالانظمة والتعليمات المتعلقة باستخدام المأجور والمنافع المشتركة (كالالتزام بمواقف السيارات المخصصة للمأجور، عدم التدخين في الممرات أو الادراج أو المصاعد، المحافظة على نظافة أحواض السباحة وما حولها، والمحافظة على النادي الصحي وجميع المنافع المشتركة) ان وجدت.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">9.</div><div style="display:inline-block;vertical-align:top;width:54%">The lessee must inform the lessor that he intends to evacuate from the leased property 60 days before the end of the contract, and in the event the lessor is not notified, the lessee will be obliged to renew the lease contract, and in the event of eviction, the lessee will be obliged to pay a penalty of two months from the expiry date, and in return the lessor must also inform the lessee of his intention to increase the rent price at least 90 days before the end of the contract, if the lessee is not notified before the mentioned period, the lease contract will be renewed at the same price as the previous rental.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">٩&#160;</span>يجب على المستأجر اعلام المالك بأنه يعتزم الاخلاء من العين المؤجرة قبل 60 يوماً من انتهاء العقد وفي حالة عدم اخطار المؤجر فيكون المستأجر ملزماً بتجديد عقد الايجار وفي حال الاخلاء سيكون المستأجر ملزماً بدفع غرامة شهرين من تاريخ انتهاء العقد، وفي المقابل يجب على المؤجر ايضاً اخطار المستأجر برغبته في زيادة سعر الايجار قبل 90 يوماً على الاقل من انتهاء العقد وفي حال عدم اخطار المستأجر بذلك خلال المدة المذكورة فان عقد الايجار سيجدد بنفس سعر الايجار السابق.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">10.</div><div style="display:inline-block;vertical-align:top;width:54%">Upon evacuation, the lessee undertakes not to remove anything fixed or hanging on the wall, such as glass, electrical installations, water pipes, plumbing installations, doors, and other things that may cause damage to the walls, floors or ceilings of the rental property.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">١٠&#160;</span>عند الاخلاء يتعهد المستأجر بعدم ازالة أي شيء مثبت أو معلق على الجدار مثل الزجاج والتمديدات الكهربائية وانابيب المياه والتمديدات الصحية والابواب وغيرها مما قد يسبب اضراراً في الجدران أو الارضيات أو الاسقف للعين المؤجرة.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">11.</div><div style="display:inline-block;vertical-align:top;width:54%">In the event that the lessee does not remove his items from the leased property after the end of the lease term or its termination, the lessor may remove, store or dispose of that property as he deems appropriate, and the lessee shall bear the cost of such removal, storage or disposal without reference to the lessee.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">١١&#160;</span>في حال عدم ازالة المستأجر لممتلكاته من العين المؤجرة بعد انتهاء مدة عقد الايجار أو فسخه، يجوز للمؤجر ازالة تلك الممتلكات أو تخزينها أو التصرف بها كيفما يرى مناسباً، ويتحمل المستأجر تكلفة تلك الازالة أو التخزين أو التصرف دون الرجوع للمستأجر.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">12.</div><div style="display:inline-block;vertical-align:top;width:54%">In the event that the lessee expresses his desire to renew the lease contract, he must pay the value of the new lease contract according to what was agreed upon at least 15 days before the end of the previous contract. In the event that the lease expires and the lessee does not renew the contract, delay penalties of the amount of 10% of the lease value for each month of delay.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">١٢&#160;</span>في حال رغب المستأجر في تجديد عقد الايجار، عليه أن يقوم بسداد قيمة عقد الايجار الجديد حسب ما هو متفق عليه قبل 15 يوماً على الاقل من انتهاء العقد السابق. وفي حال انتهاء العقد ولم يقم المستأجر بتجديد عقد الايجار فيتم وضع غرامات تأخير بقيمة 10% من قيمة الايجار عن كل شهر تأخير.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">13.</div><div style="display:inline-block;vertical-align:top;width:54%">In the event that the lessee wishes to cancel the lease contract before the expiry of its term, he must pay the rental value in full until the end of the contract.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">١٣&#160;</span>في حال رغب المستأجر في فسخ عقد الايجار قبل انتهاء مدته عليه الالتزام بدفع القيمة الايجارية كاملة حتى نهاية العقد.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">14.</div><div style="display:inline-block;vertical-align:top;width:54%">The parties to the contract acknowledge that the addresses and phone numbers mentioned above are correct, and these addresses are officially approved for notifications and judicial announcements in the event of any dispute between the parties to the contract, and if the lessee changes his address, he must inform the lessor in writing.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">١٤&#160;</span>يقر أطراف العقد بصحة العناوين وارقام الهواتف المذكورة أعلاه، وتكون تلك العناوين المعتمدة رسمياً للاخطارات والاعلانات القضائية في حالة أي نزاع بين أطراف العقد، وفي حال تغيير المستأجر لعنوانه عليه اخطار المؤجر بذلك خطياً.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">15.</div><div style="display:inline-block;vertical-align:top;width:54%">At the time of vacating the premises, the lessee shall produce the Final Bill/DEWA Certificate, original receipt of security deposit and any keys/access card etc. applied during the tenancy.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">١٥&#160;</span>عند الاخلاء الوحدة المؤجرة، على المستأجر تسليم براءة الذمة من هيئة الكهرباء والمياه (الفاتورة النهائية)، وأصل ايصال مبلغ التأمين، وأية مفاتيح/بطاقات دخول المرفق او مسلمة له خلال مدة الايجار عند او قبل تاريخ الاخلاء.</div></div>
+            <div style="page-break-inside:avoid;break-inside:avoid-page;padding:3px 6px"><div style="display:inline-block;vertical-align:top;width:3.5%;font-weight:bold">16.</div><div style="display:inline-block;vertical-align:top;width:54%">In the event of any dispute between the lessor and the lessee, only the Arabic text shall be considered.</div><div style="display:inline-block;vertical-align:top;width:41%;text-align:right;direction:rtl"><span style="font-weight:bold">١٦&#160;</span>في حال حدوث أي نزاع بين المؤجر والمستأجر يتم الاخذ بالنص العربي فقط.</div></div>
+          </div>
+          <div style="page-break-before: always; display:table;width:100%;background-color:#1a8a3e;color:white;font-weight:bold;border-radius:3px;margin-top:12px;padding:5px 8px;font-size:13px">
+            <div style="display:table-cell;width:50%;text-align:left">Additional Terms</div>
+            <div style="display:table-cell;width:50%;text-align:right;direction:rtl">شروط اضافية</div>
+          </div>
+          <t t-set="additional_term_lines" t-value="o.additional_term_ids.sorted('sequence')"/>
+          <t t-set="additional_term_lines_count" t-value="len(additional_term_lines)"/>
+          <t t-if="additional_term_lines_count == 0">
+            <div style="display:table;width:100%;padding:20px 4px 6px 4px;font-size:12px">
+              <div style="display:table-cell;width:3%;vertical-align:bottom;">1.</div>
+              <div style="display:table-cell;vertical-align:bottom;border-bottom:1px dotted #333">Tenant has to pay AED 1,000.00 penalty for every bounce cheque or withdraw cheque.</div>
+              <div style="display:table-cell;width:3%;vertical-align:bottom;direction:rtl">١</div>
+            </div>
+          </t>
+          <t t-foreach="additional_term_lines" t-as="additional_term_line">
+            <div style="display:table;width:100%;padding:20px 4px 6px 4px;font-size:12px">
+              <div style="display:table-cell;width:3%;vertical-align:bottom;"><t t-out="additional_term_line_index + 1"/>.</div>
+              <div style="display:table-cell;vertical-align:bottom;border-bottom:1px dotted #333"><t t-out="additional_term_line.description or ''"/></div>
+              <div style="display:table-cell;width:3%;vertical-align:bottom;direction:rtl"><t t-out="str(additional_term_line_index + 1).translate(str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩'))"/></div>
+            </div>
+          </t>
+          <t t-set="additional_term_lines_min" t-value="1 if additional_term_lines_count == 0 else additional_term_lines_count"/>
+          <t t-if="additional_term_lines_min &lt; 3">
+            <t t-foreach="range(additional_term_lines_min, 3)" t-as="blank_line">
+              <div style="display:table;width:100%;padding:20px 4px 6px 4px;font-size:12px">
+                <div style="display:table-cell;width:3%;vertical-align:bottom;"><t t-out="blank_line + 1"/>.</div>
+                <div style="display:table-cell;vertical-align:bottom;border-bottom:1px dotted #333">&#160;</div>
+                <div style="display:table-cell;width:3%;vertical-align:bottom;direction:rtl"><t t-out="str(blank_line + 1).translate(str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩'))"/></div>
+              </div>
+            </t>
+          </t>
+          <div style="display:table;width:100%;font-size:11px;padding:8px 4px 4px 4px">
+            <div style="display:table-cell;width:50%;text-align:left">Note: You may add an addendum to this tenancy contract.</div>
+            <div style="display:table-cell;width:50%;text-align:right;direction:rtl">ملاحظة:- يمكن اضافة ملحق لعقد الايجار.</div>
+          </div>
+          <div style="display:table;width:100%;margin-top:35px;font-size:11px">
+            <div style="display:table-cell;width:50%;vertical-align:top;text-align:center;padding:4px">
+              <div style="direction:rtl">توقيع المستأجر</div>
+              <div>Tenant Signature</div>
+              <div style="margin-top:35px">Date_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <span style="direction:rtl">التاريخ</span></div>
+            </div>
+            <div style="display:table-cell;width:50%;vertical-align:top;text-align:center;padding:4px">
+              <div style="direction:rtl">توقيع المؤجر</div>
+              <div>Landlord Signature</div>
+              <div style="margin-top:35px">Date_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <span style="direction:rtl">التاريخ</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </xpath>
+  </template>
+</odoo>

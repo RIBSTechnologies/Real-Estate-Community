@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Payment Receipt / Draft Payment Receipt (ribs_real_estate) are called
+         Receipt Voucher / Draft Receipt Voucher. -->
+    <record id="ribs_real_estate.tenancy_pdc_details_report_id" model="ir.actions.report">
+        <field name="name">Receipt Voucher</field>
+        <field name="print_report_name">'Receipt Voucher - %s' % (object.tenancy_seq or '')</field>
+    </record>
+
+    <record id="ribs_real_estate.tenancy_pdc_details_report_html" model="ir.actions.report">
+        <field name="name">Draft Receipt Voucher</field>
+        <field name="print_report_name">'Draft Receipt Voucher - %s' % (object.tenancy_seq or '')</field>
+    </record>
+
+    <!-- Draft Receipt Voucher: every contract payment line. With
+         received_only (set by the Receipt Voucher below) only the lines
+         marked Received - cash, bank and PDC - in the same layout. -->
+    <template id="tenancy_pdc_details_report_draft_receipt_voucher"
+              inherit_id="ribs_real_estate.tenancy_pdc_details_qweb_report_template_draft">
+        <xpath expr="//t[@t-set='all_matched_payments']" position="attributes">
+            <attribute name="t-value">o.contract_payment_ids.filtered(lambda p: p.line_payment_received == 'received') if received_only else o.contract_payment_ids</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='all_pdc_payments']" position="attributes">
+            <attribute name="t-value">all_matched_payments</attribute>
+        </xpath>
+        <xpath expr="//div[contains(text(), 'Draft Payment Receipt')]" position="replace">
+            <div style="text-align:center; font-weight:bold; font-size:20px; text-decoration:underline; margin-bottom:10px;">
+                <t t-out="'Receipt Voucher' if received_only else 'Draft Receipt Voucher'"/>
+            </div>
+        </xpath>
+        <!-- Building Account: the building's name (was its income account). -->
+        <xpath expr="//span[contains(@t-out, 'invoice_creation_id')]" position="attributes">
+            <attribute name="t-esc">o.property_project_id.name or ''</attribute>
+        </xpath>
+        <xpath expr="//b[text()='Building Account:']/.." position="after">
+            <div style="margin-bottom:8px;">
+                <b>Unit Name:</b>
+                <span t-out="o.property_id.name or ''"/>
+            </div>
+        </xpath>
+        <!-- PDC table: "Date" is the cheque date. -->
+        <xpath expr="//t[@t-if='pdc_payments']//th[5]" position="replace">
+            <th style="padding:6px;">Cheque Date</th>
+        </xpath>
+    </template>
+
+    <!-- Receipt Voucher: same layout as the Draft Receipt Voucher (Cash /
+         Bank / PDC tables from the contract payment lines), received lines
+         only. The base version read PDCs from the invoices and filtered
+         them on a value they never have, so received PDCs never showed. -->
+    <template id="tenancy_pdc_details_report_receipt_voucher"
+              inherit_id="ribs_real_estate.tenancy_pdc_details_qweb_report_template">
+        <xpath expr="//t[@t-call='web.html_container']" position="replace">
+            <t t-set="received_only" t-value="True"/>
+            <t t-call="ribs_real_estate.tenancy_pdc_details_qweb_report_template_draft"/>
+        </xpath>
+    </template>
+
+</odoo>

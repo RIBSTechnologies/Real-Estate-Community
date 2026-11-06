@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="maintenance_request_view_search_rating" model="ir.ui.view">
+            <field name="name">maintenance.request.search.rating</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="building_id_parent"/>
+                    <field name="user_ids"/>
+                    <filter name="rated_filter" string="Rated by Tenant" domain="[('tenant_rating', '!=', False)]"/>
+                    <group>
+                        <filter name="group_by_building" string="Building" context="{'group_by': 'building_id_parent'}"/>
+                        <filter name="group_by_technician" string="Technician" context="{'group_by': 'user_ids'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="maintenance_request_view_pivot_rating" model="ir.ui.view">
+            <field name="name">maintenance.request.pivot.rating</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <pivot string="Tenant Satisfaction">
+                    <field name="building_id_parent" type="row"/>
+                    <field name="user_ids" type="row"/>
+                    <field name="tenant_rating_value" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="maintenance_request_view_graph_rating" model="ir.ui.view">
+            <field name="name">maintenance.request.graph.rating</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <graph string="Tenant Satisfaction" type="bar">
+                    <field name="building_id_parent"/>
+                    <field name="tenant_rating_value" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="maintenance_tenant_satisfaction_action" model="ir.actions.act_window">
+            <field name="name">Tenant Satisfaction</field>
+            <field name="res_model">maintenance.request</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="domain">[('tenant_rating', '!=', False)]</field>
+            <field name="search_view_id" ref="maintenance_request_view_search_rating"/>
+        </record>
+
+        <menuitem id="menu_maintenance_tenant_satisfaction"
+                  name="Tenant Satisfaction"
+                  parent="maintenance.menu_maintenance_configuration"
+                  action="maintenance_tenant_satisfaction_action"
+                  sequence="30"/>
+    </data>
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+access_hr_employee_broad_factor_user,access.hr.employee.broad.factor.user,hr.employee.broad.factor,base.group_user,r,
+access_account_analytic_line_manager,access_account_analytic_line_manager,account.analytic.line,hr.group_hr_manager,crud,
+access_account_analytic_line_user,access_account_analytic_line_user,account.analytic.line,hr.group_hr_user,cru,
+access_hr_leave_manager,access_hr_leave_manager,hr.leave,hr.group_hr_manager,crud,
+access_hr_leave_user,access_hr_leave_user,hr.leave,hr.group_hr_user,cru,

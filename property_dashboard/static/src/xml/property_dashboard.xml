@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="property_dashboard.Dashboard">
+        <div class="ad-dashboard-container" t-ref="this.root">
+            <!-- ============ HEADER ============ -->
+            <div class="ad-header">
+                <div class="ad-comet-bg">
+                    <div class="rdb_orb rdb_orb--purple"/>
+                    <div class="rdb_orb rdb_orb--blue"/>
+                    <div class="rdb_comet rdb_comet--gold"><div class="rdb_comet_trail"/><div class="rdb_comet_head"/></div>
+                    <div class="rdb_comet rdb_comet--purple"><div class="rdb_comet_trail"/><div class="rdb_comet_head"/></div>
+                </div>
+                <div class="ad-header-left">
+                    <h1 class="ad-title"><i class="fa fa-building ad-title-icon"/> Property Dashboard</h1>
+                    <p class="ad-subtitle">
+                        <span class="ad-date-badge"><i class="fa fa-th-large"/> Al-Shafar Real Estate</span>
+                        <span class="ad-date-badge" t-if="this.state.periodLabel"><i class="fa fa-calendar"/> <t t-out="this.state.periodLabel"/></span>
+                    </p>
+                </div>
+                <div class="ad-header-right">
+                    <div class="ad-theme-switcher">
+                        <button class="ad-theme-btn" t-att-class="{'ad-theme-btn-active': this.state.theme === 'purple'}" t-on-click="() => this.switchTheme('purple')"><i class="fa fa-diamond"/> Purple</button>
+                        <button class="ad-theme-btn" t-att-class="{'ad-theme-btn-active': this.state.theme === 'ocean'}" t-on-click="() => this.switchTheme('ocean')"><i class="fa fa-tint"/> Ocean</button>
+                        <button class="ad-theme-btn" t-att-class="{'ad-theme-btn-active': this.state.theme === 'light'}" t-on-click="() => this.switchTheme('light')"><i class="fa fa-sun-o"/> Light</button>
+                        <button class="ad-theme-btn" t-att-class="{'ad-theme-btn-active': this.state.theme === 'dark'}" t-on-click="() => this.switchTheme('dark')"><i class="fa fa-moon-o"/> Dark</button>
+                        <button class="ad-theme-btn" t-att-class="{'ad-theme-btn-active': this.state.theme === 'comet'}" t-on-click="() => this.switchTheme('comet')"><i class="fa fa-star"/> Comet</button>
+                    </div>
+                    <button class="ad-refresh-btn" t-on-click="() => this.refresh()"><i class="fa fa-refresh"/> Refresh</button>
+                    <button class="ad-refresh-btn" t-on-click="() => this.toggleDiagnostics()" title="Why is my dashboard empty?"><i class="fa fa-stethoscope"/> Check</button>
+                </div>
+            </div>
+
+            <!-- ============ FILTERS ============ -->
+            <div class="ad-filters-bar">
+                <div class="ad-filter-group">
+                    <label class="ad-filter-label"><i class="fa fa-home"/> Property Type</label>
+                    <select class="ad-filter-select" t-on-change="(ev) => this.onFilter('type', ev)">
+                        <option value="">All Types</option>
+                        <t t-foreach="this.state.filters.types" t-as="ty" t-key="ty.id">
+                            <option t-att-value="ty.id" t-att-selected="this.state.sel.type === ty.id"><t t-out="ty.name"/></option>
+                        </t>
+                    </select>
+                </div>
+                <div class="ad-filter-group">
+                    <label class="ad-filter-label"><i class="fa fa-exchange"/> For</label>
+                    <select class="ad-filter-select" t-on-change="(ev) => this.onFilter('sale_lease', ev)">
+                        <option value="">Sale &amp; Rent</option>
+                        <t t-foreach="this.state.filters.sale_lease" t-as="sl" t-key="sl.id">
+                            <option t-att-value="sl.id" t-att-selected="this.state.sel.sale_lease === sl.id"><t t-out="sl.name"/></option>
+                        </t>
+                    </select>
+                </div>
+                <div class="ad-filter-group">
+                    <label class="ad-filter-label"><i class="fa fa-map-marker"/> Region</label>
+                    <select class="ad-filter-select" t-on-change="(ev) => this.onFilter('region', ev)">
+                        <option value="">All Regions</option>
+                        <t t-foreach="this.state.filters.regions" t-as="rg" t-key="rg.id">
+                            <option t-att-value="rg.id" t-att-selected="this.state.sel.region === rg.id"><t t-out="rg.name"/></option>
+                        </t>
+                    </select>
+                </div>
+                <div class="ad-filter-group">
+                    <label class="ad-filter-label"><i class="fa fa-building-o"/> Building</label>
+                    <select class="ad-filter-select" t-on-change="(ev) => this.onFilter('building', ev)">
+                        <option value="">All Buildings</option>
+                        <t t-foreach="this.state.filters.buildings" t-as="bd" t-key="bd.id">
+                            <option t-att-value="bd.id" t-att-selected="this.state.sel.building === bd.id"><t t-out="bd.name"/></option>
+                        </t>
+                    </select>
+                </div>
+                <div class="ad-filter-group">
+                    <label class="ad-filter-label"><i class="fa fa-tags"/> Sub Type</label>
+                    <select class="ad-filter-select" t-on-change="(ev) => this.onFilter('subtype', ev)">
+                        <option value="">All Sub Types</option>
+                        <t t-foreach="this.subtypesForType" t-as="st" t-key="st.id">
+                            <option t-att-value="st.id" t-att-selected="this.state.sel.subtype === st.id"><t t-out="st.name"/></option>
+                        </t>
+                    </select>
+                </div>
+                <div class="ad-filter-group">
+                    <label class="ad-filter-label"><i class="fa fa-calendar-check-o"/> Year</label>
+                    <select class="ad-filter-select" t-on-change="(ev) => this.onFilter('fiscal_year', ev)">
+                        <option value="">All Years</option>
+                        <t t-foreach="this.state.filters.fiscal_years" t-as="fy" t-key="fy.value">
+                            <option t-att-value="fy.value"
+
+                                    t-att-selected="this.isYear(fy.value)"><t t-out="fy.label"/></option>
+                        </t>
+                    </select>
+                </div>
+                <div class="ad-filter-group">
+                    <label class="ad-filter-label"><i class="fa fa-clock-o"/> Month</label>
+                    <select class="ad-filter-select" t-on-change="(ev) => this.onFilter('month', ev)">
+                        <option value="">Full Year</option>
+                        <t t-foreach="this.state.filters.months" t-as="mo" t-key="mo.value">
+                            <option t-att-value="mo.value"
+
+                                    t-att-selected="this.isMonth(mo.value)"><t t-out="mo.label"/></option>
+                        </t>
+                    </select>
+                </div>
+                <div class="ad-filter-group">
+                    <label class="ad-filter-label">&#160;</label>
+                    <button class="ad-refresh-btn" t-on-click="() => this.resetFilters()"><i class="fa fa-eraser"/> Reset</button>
+                </div>
+            </div>
+
+            <!-- ============ ERROR / DIAGNOSTICS ============ -->
+            <div class="ad-chart-card" t-if="this.state.error" style="margin:0 18px 12px;border-left:4px solid #EF4444;">
+                <div class="ad-chart-header"><h3><i class="fa fa-exclamation-triangle"/> Dashboard could not load</h3></div>
+                <div class="ad-chart-body" style="height:auto;padding:12px 18px;white-space:pre-wrap;font-size:12px;">
+                    <t t-out="this.state.error"/>
+                </div>
+            </div>
+
+            <div class="ad-chart-card" t-if="this.state.diagOpen" style="margin:0 18px 12px;">
+                <div class="ad-chart-header"><h3><i class="fa fa-stethoscope"/> Data source check</h3></div>
+                <div class="ad-chart-body ad-table-wrap" style="height:auto;max-height:340px;">
+                    <table class="ad-outstanding-table">
+                        <thead><tr><th>Check</th><th>Status</th><th>Detail</th></tr></thead>
+                        <tbody>
+                            <t t-foreach="this.state.diag" t-as="dg" t-key="dg_index">
+                                <tr>
+                                    <td><t t-out="dg.label"/></td>
+                                    <td><span class="ad-status-pill" t-out="dg.ok ? 'OK' : 'MISSING'"/></td>
+                                    <td style="font-size:11px;opacity:.8;"><t t-out="dg.detail"/></td>
+                                </tr>
+                            </t>
+                            <tr t-if="!this.state.diag.length"><td colspan="3" class="ad-empty">Running checks...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ============ CONTENT ============ -->
+            <div class="ad-dashboard-inner">
+                <t t-if="this.state.loading">
+                    <div class="ad-loading-overlay">
+                        <div class="ad-loading-spinner"><i class="fa fa-spinner fa-spin fa-3x"/><p>Loading Dashboard...</p></div>
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <!-- KPI GRID -->
+                    <div class="ad-kpi-grid">
+                        <div class="ad-kpi-card ad-kpi-sales" t-on-click="() => this.onKpi('total')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-th-large"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Total Properties</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.animKpis.total_properties)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-gp" t-on-click="() => this.onKpi('available')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-check-circle"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Available</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.animKpis.available)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-salary" t-on-click="() => this.onKpi('on_rent')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-key"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">On Rent</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.animKpis.on_rent)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-cogs" t-on-click="() => this.onKpi('sold')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-handshake-o"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Sold</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.animKpis.sold)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-net" t-on-click="() => this.onKpi('buildings')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-building"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Buildings</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.animKpis.buildings)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-exp" t-on-click="() => this.onKpi('tenancies')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-file-text-o"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Active Tenancies</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.animKpis.active_tenancies)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-sales" t-on-click="() => this.onKpi('tenants')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-users"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Tenants</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.animKpis.tenants)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-gp">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-percent"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Occupancy</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.animKpis.occupancy)"/>%</span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-salary">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-money"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Rent Invoiced</span>
+                                <span class="ad-kpi-value" style="font-size:20px;"><t t-out="this.money(this.state.animKpis.rent_invoiced)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-cogs">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-exclamation-circle"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Outstanding</span>
+                                <span class="ad-kpi-value" style="font-size:20px;"><t t-out="this.money(this.state.animKpis.outstanding)"/></span></div>
+                        </div>
+                    </div>
+
+                    <!-- CONTRACT STATUS -->
+                    <div class="ad-section-title"><i class="fa fa-file-text-o"/> Contract Status</div>
+                    <div class="ad-kpi-grid ad-kpi-grid-4" t-if="this.state.data.contract_status_tiles">
+                        <div class="ad-kpi-card ad-kpi-net" t-on-click="() => this.onKpi('new')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-plus-circle"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">New</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.data.contract_status_tiles.new.value)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-gp" t-on-click="() => this.onKpi('renew')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-refresh"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Renew</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.data.contract_status_tiles.renew.value)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-exp" t-on-click="() => this.onKpi('release')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-sign-out"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Release</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.data.contract_status_tiles.release.value)"/></span></div>
+                        </div>
+                        <div class="ad-kpi-card ad-kpi-cogs" t-on-click="() => this.onKpi('termination')">
+                            <div class="ad-kpi-icon-wrap"><i class="fa fa-times-circle"/></div>
+                            <div class="ad-kpi-content"><span class="ad-kpi-label">Termination</span>
+                                <span class="ad-kpi-value"><t t-out="this.fmt(this.state.data.contract_status_tiles.termination.value)"/></span></div>
+                        </div>
+                    </div>
+
+                    <!-- CHART ROW 1 -->
+                    <div class="ad-charts-row">
+                        <div class="ad-chart-card">
+                            <div class="ad-chart-header"><h3><i class="fa fa-tasks"/> Properties by Status</h3></div>
+                            <div class="ad-chart-body"><canvas t-if="this.hasData(this.state.data.by_stage)" class="pd-stage-canvas"/>
+                                <div t-else="" class="ad-empty" style="padding:40px 0;text-align:center;">No data for this filter.</div></div>
+                        </div>
+                        <div class="ad-chart-card">
+                            <div class="ad-chart-header"><h3><i class="fa fa-th"/> Properties by Type</h3></div>
+                            <div class="ad-chart-body"><canvas t-if="this.hasData(this.state.data.by_type)" class="pd-type-canvas"/>
+                                <div t-else="" class="ad-empty" style="padding:40px 0;text-align:center;">No data for this filter.</div></div>
+                        </div>
+                    </div>
+
+                    <!-- CHART ROW 2 -->
+                    <div class="ad-charts-row">
+                        <div class="ad-chart-card ad-chart-wide">
+                            <div class="ad-chart-header"><h3><i class="fa fa-line-chart"/> Rent Invoiced — Monthly</h3></div>
+                            <div class="ad-chart-body"><canvas t-if="this.hasData(this.state.data.monthly_invoiced)" class="pd-trend-canvas"/>
+                                <div t-else="" class="ad-empty" style="padding:40px 0;text-align:center;">No data for this filter.</div></div>
+                        </div>
+                        <div class="ad-chart-card">
+                            <div class="ad-chart-header"><h3><i class="fa fa-tags"/> By Sub-Type (Villa / Apartment …)</h3></div>
+                            <div class="ad-chart-body"><canvas t-if="this.hasData(this.state.data.by_subtype)" class="pd-subtype-canvas"/>
+                                <div t-else="" class="ad-empty" style="padding:40px 0;text-align:center;">No data for this filter.</div></div>
+                        </div>
+                    </div>
+
+                    <!-- CHART ROW 3 -->
+                    <div class="ad-charts-row">
+                        <div class="ad-chart-card">
+                            <div class="ad-chart-header"><h3><i class="fa fa-file-text"/> Contracts by Status</h3></div>
+                            <div class="ad-chart-body"><canvas t-if="this.hasData(this.state.data.contracts_by_status)" class="pd-contracts-canvas"/>
+                                <div t-else="" class="ad-empty" style="padding:40px 0;text-align:center;">No data for this filter.</div></div>
+                        </div>
+                        <div class="ad-chart-card">
+                            <div class="ad-chart-header"><h3><i class="fa fa-map-marker"/> Properties by Region</h3></div>
+                            <div class="ad-chart-body">
+                                <canvas t-if="this.hasData(this.state.data.by_region)" class="pd-region-canvas"/>
+                                <div t-else="" class="ad-empty" style="padding:40px 0;text-align:center;">No data for this filter.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHART ROW 4 -->
+                    <div class="ad-charts-row">
+                        <div class="ad-chart-card">
+                            <div class="ad-chart-header"><h3><i class="fa fa-building"/> Top Buildings by Units</h3></div>
+                            <div class="ad-chart-body"><canvas t-if="this.hasData(this.state.data.by_building)" class="pd-building-canvas"/>
+                                <div t-else="" class="ad-empty" style="padding:40px 0;text-align:center;">No data for this filter.</div></div>
+                        </div>
+                    </div>
+
+                    <!-- TABLES -->
+                    <div class="ad-charts-row">
+                        <div class="ad-chart-card ad-chart-wide">
+                            <div class="ad-chart-header"><h3><i class="fa fa-clock-o"/> Recent Contracts</h3></div>
+                            <div class="ad-chart-body ad-table-wrap">
+                                <table class="ad-outstanding-table">
+                                    <thead><tr><th>Contract</th><th>Tenant</th><th>Property</th><th>Rent</th><th>Status</th><th>End</th></tr></thead>
+                                    <tbody>
+                                        <t t-foreach="this.state.data.recent_contracts or []" t-as="c" t-key="c.id">
+                                            <tr t-on-click="() => this.onContractRow(c.id)" style="cursor:pointer;">
+                                                <td><t t-out="c.name"/></td>
+                                                <td><t t-out="c.tenant"/></td>
+                                                <td><t t-out="c.property"/></td>
+                                                <td><t t-out="this.money(c.rent)"/></td>
+                                                <td><span class="ad-status-pill"><t t-out="c.status"/></span></td>
+                                                <td><t t-out="c.end"/></td>
+                                            </tr>
+                                        </t>
+                                        <tr t-if="!(this.state.data.recent_contracts or []).length"><td colspan="6" class="ad-empty">No contracts found.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="ad-chart-card">
+                            <div class="ad-chart-header"><h3><i class="fa fa-exclamation-triangle"/> Top Outstanding Invoices</h3></div>
+                            <div class="ad-chart-body ad-table-wrap">
+                                <table class="ad-outstanding-table">
+                                    <thead><tr><th>Invoice</th><th>Tenant</th><th>Due</th></tr></thead>
+                                    <tbody>
+                                        <t t-foreach="this.state.data.outstanding_invoices or []" t-as="inv" t-key="inv.id">
+                                            <tr t-on-click="() => this.onInvoiceRow(inv.id)" style="cursor:pointer;">
+                                                <td><t t-out="inv.number"/></td>
+                                                <td><t t-out="inv.tenant"/></td>
+                                                <td><t t-out="this.money(inv.amount)"/></td>
+                                            </tr>
+                                        </t>
+                                        <tr t-if="!(this.state.data.outstanding_invoices or []).length"><td colspan="3" class="ad-empty">Nothing outstanding.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>
+

@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+        <template id="external_layout_standard_custom"
+                  inherit_id="web.external_layout_standard">
+
+            <xpath expr="//t[@t-name='web.external_layout_standard']" position="replace">
+
+                <t t-name="web.external_layout_standard">
+
+                    <!-- COMPANY -->
+                    <t t-set="company" t-value="o and o.company_id or res_company"/>
+
+                    <!-- ================= BODY ================= -->
+                    <div t-attf-class="article o_company_#{company.id}_layout"
+                         t-att-data-oe-model="o and o._name"
+                         t-att-data-oe-id="o and o.id"
+                         t-att-data-oe-lang="o and o.env.context.get('lang')"
+                         style="margin:0; padding:0;">
+
+                        <!-- ================= FIRST PAGE HEADER ================= -->
+                        <!-- o_ribs_header: lets layouts derived from the standard one
+                             (account_edi_ubl_cii) find "header ... /table" here -->
+                        <div t-attf-class="o_ribs_header"
+                             style="width:100%; margin:0 0 10px 0; padding:0;">
+
+                            <table style="width:100%;
+                                          border-collapse:collapse;
+                                          border:none;
+                                          margin:0;
+                                          padding:0;"
+                                   class="table table-borderless">
+
+                                <tr>
+
+                                    <!-- LEFT -->
+                                    <td width="60%"
+                                        style="border:none;
+                                               padding:0;
+                                               margin:0;
+                                               vertical-align:top;">
+
+                                        <!-- Company logo next to the name, only for reports that
+                                             set show_company_logo (e.g. Material Requisition and
+                                             Local Purchase Order in purchase_extended). Every other
+                                             report keeps the name-only header below. -->
+                                        <table t-if="show_company_logo and company.logo"
+                                               style="border-collapse:collapse; border:none; margin:0; padding:0;">
+                                            <tr>
+                                                <td style="border:none; padding:0 14px 0 0; vertical-align:middle;">
+                                                    <img t-att-src="image_data_uri(company.logo)"
+                                                         style="max-height:70px; max-width:230px;"
+                                                         alt="Logo"/>
+                                                </td>
+                                                <td style="border:none; padding:0; vertical-align:middle;">
+                                                    <div style="font-size:14pt; font-weight:bold; margin:0; padding:0;">
+                                                        علي عبدالله علي الشعفار المري
+                                                    </div>
+                                                    <div style="font-size:17pt; font-weight:bold; margin:0; padding:0;"
+                                                         t-field="company.name"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <t t-else="">
+                                        <div style="font-size:14pt;
+                                                    font-weight:bold;
+                                                    margin:0;
+                                                    padding:0;">
+                                            علي عبدالله علي الشعفار المري
+                                        </div>
+
+                                        <div style="font-size:17pt;
+                                                    font-weight:bold;
+                                                    margin:0;
+                                                    padding:0;"
+                                             t-field="company.name"/>
+                                        </t>
+
+                                    </td>
+
+                                    <!-- RIGHT -->
+                                    <td width="40%"
+                                        style="border:none;
+                                               padding:0;
+                                               margin:0;
+                                               text-align:right;
+                                               vertical-align:top;
+                                               font-size:9pt;
+                                               line-height:1.3;">
+
+                                        <div t-field="company.street"/>
+
+                                        <div t-if="company.street2"
+                                             t-field="company.street2"/>
+
+                                        <div>
+                                            <span t-out="company.city or ''"/>
+                                            <t t-if="company.city">, </t>
+                                            <span t-out="company.state_id.name or ''"/>
+                                            <t t-if="company.zip">
+                                                <t t-out="company.zip"/>
+                                            </t>
+                                        </div>
+
+                                        <div>
+                                            <span t-out="company.country_id.name or ''"/>
+                                        </div>
+
+                                        <div>
+                                            Tel No :
+                                            <span t-field="company.phone"/>
+                                        </div>
+
+                                        <div>
+                                            Tax Reg. No :
+                                            <span t-field="company.vat"/>
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            </table>
+
+                        </div>
+
+                        <!-- ================= ADDRESS ================= -->
+                        <t t-call="web.address_layout"/>
+
+                        <!-- ================= REPORT CONTENT ================= -->
+                        <t t-out="0"/>
+
+                    </div>
+
+
+                    <!-- ================= FOOTER ================= -->
+                    <div t-attf-class="footer o_company_#{company.id}_layout"
+                         style="border-top:1px solid #000;
+                                padding-top:3px;
+                                margin:0;
+                                font-size:9pt;">
+
+                        <div style="width:100%;
+                                    display:table;
+                                    margin:0;
+                                    padding:0;">
+
+                            <div style="display:table-row;">
+
+                                <div style="display:table-cell;
+                                            text-align:right;
+                                            padding:0;
+                                            margin:0;">
+
+                                    <t t-if="report_type == 'pdf'">
+                                        Page <span class="page"/> / <span class="topage"/>
+                                    </t>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </t>
+
+            </xpath>
+
+        </template>
+        <template id="report_uae_rental_tax_invoice">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="web.external_layout_standard" object="o">
+                    <hr/>
+						<style>
+
+                            body {
+                                font-family: 'Amiri','Arial','Tahoma',sans-serif !important;
+                                font-size: 11pt;
+                                line-height: 1.5;
+                                color: #000;
+                            }
+
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                            }
+
+                            th, td {
+                                border: 1px solid #000;
+                                padding: 6px 8px;
+                            }
+
+                            thead th {
+                                font-weight: bold;
+                                border-bottom: 2px solid #000;
+                            }
+
+                            .section-table {
+                                width: 100%;
+                                margin-bottom: 15px;
+                                border:none;
+                            }
+
+                            .company-name-en {
+                                font-size: 20pt;
+                                font-weight: bold;
+                            }
+
+                            .company-name-ar {
+                                font-size: 16pt;
+                                font-weight: bold;
+                            }
+
+                            h2 {
+                                text-align: center;
+                                font-weight: bold;
+                                margin: 12px 0;
+                            }
+
+                            .text-right { text-align: right; }
+                            .text-left { text-align: left; }
+                            .small { font-size: 9pt; }
+                            </style>
+					
+						<h2>Tax Invoice</h2>
+						<!-- ================= CUSTOMER + INVOICE INFO ================= -->
+						<table class="table table-borderless">
+							<tr>
+								<!-- Customer -->
+								<td width="60%" style="border:none; vertical-align:top;">
+									<strong>Customer Name &amp; Address:</strong>
+									<br/>
+									<span style="font-weight:bold; font-size:14pt;" t-field="o.partner_id.name"/>
+									<br/>
+									<br/>
+									<br/>
+									<br/>
+									<!-- <span t-field="o.partner_id.street"/>
+									<br/>
+									<span t-field="o.partner_id.city"/>
+									<br/>
+									<span t-field="o.partner_id.country_id.name"/>
+									<br/> -->
+                                    Phone : 
+									<span t-field="o.partner_id.phone"/>
+									<br/>
+									<span t-field="o.partner_id.email"/>
+                                    <br/>
+                                    <span width="50%" style="border:none;">
+                                        <strong>Building:</strong>
+                                        <span t-field="o.tenancy_id.property_project_id.name"/>
+                                    </span>
+                                    <br/>
+                                    <br/>
+                                            
+
+								</td>
+								<!-- Invoice Info -->
+								<td width="40%" style="border:none; vertical-align:top;">
+                                    <span style="border:none; text-align:right;">
+                                        <strong>Invoice No.</strong>
+                                    </span>
+                                    <span style="border:none; width:10px;">:</span>
+                                    <span style="border:none;">
+                                        <span t-field="o.name"/>
+                                    </span>
+                                    <br/>
+
+                                    <span style="border:none; text-align:right;">
+                                        <strong>Invoice Date</strong>
+                                    </span>
+                                    <span style="border:none;">:</span>
+                                    <span style="border:none;">
+                                        <span t-field="o.invoice_date"
+                                            t-options='{"format":"dd/MM/yyyy"}'/>
+                                    </span>
+                                    <br/>
+
+                                    <span style="border:none; text-align:right;">
+                                        <strong>Customer TRN</strong>
+                                    </span>
+                                    <span style="border:none;">:</span>
+                                    <span style="border:none;">
+                                        <span t-field="o.partner_id.vat"/>
+                                    </span>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <!-- <br/> -->
+                                    <span width="50%" style="border:none; text-align:right;">
+                                        <strong>Unit No:</strong>
+                                        <!-- <span t-field="o.tenancy_id.property_id.name"/> -->
+                                        <t t-call="ribs_real_estate.property_display_value"/>
+                                    </span>
+                                    <br/>
+								</td>
+							</tr>
+                            <tr>
+                            <td>
+                            <span>
+                            <div style="margin-bottom:15px;">
+                                <strong>Memo :</strong> VAT Invoice for Rent Income for the Period from
+                                <span t-field="o.tenancy_id.start_date" t-options='{"format":"dd/MM/yyyy"}'/>
+                                    to <span t-field="o.tenancy_id.end_date_copy" t-options='{"format":"dd/MM/yyyy"}'/> for the Contract <span t-field="o.tenancy_id.tenancy_seq"/>,
+                                    Unit # 
+                                    <t t-call="ribs_real_estate.property_display_value"/>
+                                    <!-- <span t-field="o.tenancy_id.property_id.name"/> -->
+                                    , Building Name: <span t-field="o.tenancy_id.property_project_id.name"/>
+                            </div>
+                            </span></td></tr>
+                            </table>
+						
+						
+						<table>
+							<thead>
+								<tr>
+									<th>Item</th>
+									<th>Description</th>
+									<th class="text-right">Amount</th>
+									<th class="text-right">VAT %</th>
+									<th class="text-right">with VAT Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+                            <t t-foreach="o.invoice_line_ids" t-as="line">
+                                <tr>
+                                    <td>
+                                        <span t-field="line.product_id.name"/>
+                                    </td>
+
+                                    <td>
+                                        <span t-field="line.name"/>
+                                    </td>
+
+                                    <td class="text-right">
+                                        <span t-field="line.price_subtotal"
+                                            t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                                    </td>
+
+                                    <td class="text-right">
+                                        <t t-foreach="line.tax_ids" t-as="tax">
+                                            <span t-out="tax.amount"/>%
+                                        </t>
+                                    </td>
+
+                                    <td class="text-right">
+                                        <span t-field="line.price_total"
+                                            t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                                    </td>
+
+                                </tr>
+                            </t>
+                        </tbody>
+
+						</table>
+						<!-- ================= TOTALS ================= -->
+						<table style="width:40%; margin-top:20px; margin-left:auto;">
+							<tr>
+								<td>
+									<strong>TOTAL:</strong>
+								</td>
+								<td class="text-right">
+									<span t-field="o.amount_untaxed"
+                                    t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<strong>VAT Amount:</strong>
+								</td>
+								<td class="text-right">
+									<span t-field="o.amount_tax"
+                                        t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<strong>Total Amount After VAT :</strong>
+								</td>
+								<td class="text-right">
+									<span t-field="o.amount_total"
+                                        t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+								</td>
+							</tr>
+						</table>
+						<div style="margin-top:5px; text-align:right;">
+                            Dhs 
+							<span t-field="o.amount_total_words"/> Only
+
+						</div>
+						<!-- ================= SIGNATURES ================= -->
+                        <t t-if="report_type == 'pdf' and page == topage">
+                            <div style="page-break-inside: avoid; margin-top:300px;">
+                                <table class="table table-borderless" style="width:100%;">
+                                    <tr>
+                                        <td width="50%" style="border:none;">
+                                            Prepared By: _______________________
+                                        </td>
+                                                                    <td width="50%" style="border:none; text-align:right;">
+                                            Received By: _______________________
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+					</t>
+				</t>
+			</t>
+		</template>
+        <record id="paperformat_custom_invoice" model="report.paperformat">
+                <field name="name">European A4</field>
+                <field name="format">A4</field>
+
+                <!-- Orientation -->
+                <field name="orientation">Portrait</field>
+
+                <!-- Margins (Default Odoo) -->
+                <field name="margin_top">10</field>
+                <field name="margin_bottom">5</field>
+                <field name="margin_left">0</field>
+                <field name="margin_right">0</field>
+
+                <!-- Header -->
+                <field name="header_line" eval="False"/>
+                <field name="header_spacing">34</field>
+
+                <field name="dpi">90</field>
+            </record>
+        <!-- Set here rather than in rental_management, which is installed first -->
+        <record id="rental_management.tenancy_details_report_id" model="ir.actions.report">
+            <field name="paperformat_id" ref="paperformat_custom_invoice"/>
+        </record>
+
+		<record id="action_report_uae_rental_invoice" model="ir.actions.report">
+			<field name="name">UAE Rental Tax Invoice</field>
+			<field name="model">account.move</field>
+			<field name="report_type">qweb-pdf</field>
+			<field name="report_name">ribs_real_estate.report_uae_rental_tax_invoice</field>
+			<field name="binding_model_id" ref="account.model_account_move"/>
+			<field name="binding_type">report</field>
+            <field name="paperformat_id" ref="ribs_real_estate.paperformat_custom_invoice"/>
+		</record>
+	</data>
+</odoo>

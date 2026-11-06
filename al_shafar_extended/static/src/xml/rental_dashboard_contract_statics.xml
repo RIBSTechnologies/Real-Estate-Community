@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!--
+        "Rent Contract Statics" section (rental_management.rental_dashboard):
+          - Adds "Total Contracts" before "Draft Contracts".
+          - Hides "Draft Contracts" when its count is 0 (it currently
+            always renders, unlike the Finance/Leasing/Unreceived-Payments
+            tiles further down this same template, which already do
+            t-if="...count 
+> 0").
+          - Adds "Running Contracts", using state.propertyStats.running_contract -
+            the base method (rental_management) already computes and
+            returns this key; it was just never shown as a tile.
+          - Renames "Expiring Contracts" -> "Expiring Soon" (label only).
+            Its data key is 'close_contract' and its click-through domain
+            is days_left between 1-120 - already "expiring soon" by
+            actual definition (see the base method's own comment: "just
+            changed the domain of (getting about to expire contract
+            instead of close contract)"), just mislabelled in the UI
+            until now.
+          - "Expired Contracts" is untouched.
+          - Recolours Total/Active/Expiring Soon to the palette used
+            elsewhere on this dashboard for the same concepts (blue for a
+            grand total, green for "active/good", orange for "needs
+            attention soon") - was reusing danger-bg (red) on "Expiring
+            Soon" and mismatched colours on Total/Active.
+          - "Total Contracts" is a grouped card (same tk-group-card
+            pattern as the Portfolio Overview's Normal/Parking Units):
+            header = grand total, one stats row = Single/Multi Unit
+            Contracts breakdown. Replaces the separate "Contract
+            Portfolio" row this used to add after this section - same
+            counts/click-throughs (single_unit_contracts_total_count /
+            multi_unit_contracts_total_count, is_multi_contract domain in
+            rental_dashboard_contract_statics.js), just folded into this
+            one tile instead of a whole extra row.
+          - "Documents - Not Verified" and "Contracts - Unreceived
+            Payments" are hidden here (position="replace" on their own
+            tiles) - they're moved out of "Rent Contract Statics" into a
+            new "Action Required" section instead, added by
+            rental_dashboard_expiring_soon_days.xml (right after
+            "Expiring Soon Contracts", before "Accounting Information" -
+            see that file for why it lives there and not here). Same
+            state keys/click-throughs as the originals - "Contracts -
+            Unreceived Payments" still reads
+            state.propertyStats['new_leads'] (a misleading key name left
+            over from old CRM code, but its actual query -
+            rental_management/models/property_details.py - already
+            correctly counts running contracts with payments_received in
+            [False, 'not_received'], not CRM leads) and still calls
+            viewCRM('new_lead'), which despite its name already opens the
+            Contract Payment Summary filtered to "not received" (see
+            rental.js) - not a CRM view. Nothing about its behavior
+            needed changing, only its position.
+        Anchored on each tile's unique t-on-click/h4 text rather than
+        shared card classes, since several tiles in this row reuse the
+        same card colour class.
+    -->
+    <t t-name="al_shafar_extended.rental_dashboard_contract_statics"
+       t-inherit="rental_management.rental_dashboard"
+       t-inherit-mode="extension">
+
+        <!-- Total Contracts, before Draft Contracts - grouped card with
+             the Single/Multi Unit Contracts breakdown folded in. -->
+        <xpath expr="//h4[contains(text(),'Draft Contracts')]/../../.." position="before">
+            <div class="col-12 col-sm-6 col-lg-3 mb-4 mt8 mb16">
+                <div class="card info-bg p-32 tk-group-card">
+                    <div class="card-body info-bg tk-card-body tk-group-card-body">
+                        <div class="tk-group-header"
+                             t-on-click="() => this.viewPropertyTenancies('total_contracts')">
+                            <img alt="contracts" width="40" src="/rental_management/static/src/img/contract.svg"/>
+                            <div class="tk-group-header-text">
+                                <h4 class="tk-st-1 info-bg">Total Contracts</h4>
+                                <h6 class="tk-st-2 info-bg"><t t-out="this.state.propertyStats['total_contracts_count']"/></h6>
+                            </div>
+                        </div>
+                        <hr class="tk-group-divider"/>
+                        <div class="tk-group-stats-row">
+                            <div class="tk-group-stat" t-on-click="() => this.viewPropertyTenancies('single_unit_contracts')">
+                                <span class="tk-group-stat-label">Single Unit Contracts</span>
+                                <span class="tk-group-stat-value"><t t-out="this.state.propertyStats['single_unit_contracts_total_count']"/></span>
+                            </div>
+                            <div class="tk-group-stat" t-on-click="() => this.viewPropertyTenancies('multi_unit_contracts')">
+                                <span class="tk-group-stat-label">Multi-Unit Contracts</span>
+                                <span class="tk-group-stat-value"><t t-out="this.state.propertyStats['multi_unit_contracts_total_count']"/></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Draft Contracts: hide when zero -->
+        <xpath expr="//h4[contains(text(),'Draft Contracts')]/../../.." position="attributes">
+            <attribute name="t-if">this.state.propertyStats.draft_contract > 0</attribute>
+        </xpath>
+
+        <!-- Running Contracts, right after Draft Contracts -->
+        <xpath expr="//h4[contains(text(),'Draft Contracts')]/../../.." position="after">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 mt8 mb16"
+                 t-on-click="() => this.viewPropertyTenancies('running_contract')">
+                <div class="card active-bg p-32">
+                    <div class="card-body active-bg tk-card-body">
+                        <img alt="running contracts" width="40" src="/rental_management/static/src/img/running_c.svg"/>
+                        <h4 class="tk-st-1 active-bg">Running Contracts</h4>
+                        <h6 class="tk-st-2 active-bg"><t t-out="this.state.propertyStats['running_contract']"/></h6>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- "Expiring Contracts" -> "Expiring Soon" (label + colour: was
+             danger-bg/red, now warn-bg/orange - same tile the base
+             template renders as a single card/card-body/h4/h6, all
+             carrying the colour class, so each needs its own xpath. -->
+        <xpath expr="//h4[contains(text(),'Expiring Contracts')]/../.." position="attributes">
+            <attribute name="class">card warn-bg p-32</attribute>
+        </xpath>
+        <xpath expr="//h4[contains(text(),'Expiring Contracts')]/.." position="attributes">
+            <attribute name="class">card-body warn-bg tk-card-body</attribute>
+        </xpath>
+        <xpath expr="//h4[contains(text(),'Expiring Contracts')]" position="replace">
+            <h4 class="tk-st-1 warn-bg">Expiring Soon</h4>
+        </xpath>
+        <xpath expr="//t[@t-out=&quot;this.state.propertyStats['close_contract']&quot;]/.." position="attributes">
+            <attribute name="class">tk-st-2 warn-bg</attribute>
+        </xpath>
+
+        <!-- Hide the two originals in "Rent Contract Statics" - moved
+             into "Action Required" below instead. -->
+        <xpath expr="//*[contains(@t-on-click,&quot;this.viewDocs('pending')&quot;)]" position="replace">
+            <t/>
+        </xpath>
+        <xpath expr="//h4[contains(text(),'Contracts - Unreceived Payments')]/../../.." position="replace">
+            <t/>
+        </xpath>
+
+        <!-- "Action Required" (Documents - Not Verified / Documents
+             Expired / Contracts - Unreceived Payments) is added by
+             rental_dashboard_expiring_soon_days.xml instead of here, so
+             it lands deterministically right after "Expiring Soon
+             Contracts" - both anchored on the same "Accounting
+             Information" heading would leave their relative order
+             dependent on view-application priority between the two
+             files. -->
+
+    </t>
+
+</templates>

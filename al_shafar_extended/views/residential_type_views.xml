@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Residential Type List View -->
+    <record id="residential_type_list" model="ir.ui.view">
+        <field name="name">residential.type.list</field>
+        <field name="model">residential.type</field>
+        <field name="arch" type="xml">
+            <list string="Property Types">
+                <field name="name"/>
+                <field name="analytic_plan_id"/>
+                <field name="analytic_account_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Residential Type Form View -->
+    <record id="residential_type_form" model="ir.ui.view">
+        <field name="name">residential.type.form</field>
+        <field name="model">residential.type</field>
+        <field name="arch" type="xml">
+            <form string="Property Type">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g., Residential, Villa, Commercial, Land"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Analytic Configuration">
+                            <field name="analytic_plan_id" readonly="1"/>
+                            <field name="analytic_account_id" readonly="1"/>
+                        </group>
+                        <group string="Status">
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Residential Type Search View -->
+    <record id="residential_type_search" model="ir.ui.view">
+        <field name="name">residential.type.search</field>
+        <field name="model">residential.type</field>
+        <field name="arch" type="xml">
+            <search string="Property Types">
+                <field name="name" string="Property Type"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Residential Type Action -->
+    <record id="action_residential_type" model="ir.actions.act_window">
+        <field name="name">Property Types</field>
+        <field name="res_model">residential.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Property Type
+            </p>
+            <p>
+                Property Types (Residential, Villa, Commercial, Land) are automatically
+                created with their corresponding Analytic Plans and Accounts.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item under Configuration -->
+    <menuitem id="menu_residential_type"
+        name="Property Types"
+        action="action_residential_type"
+        parent="rental_management.menu_configuration"
+        sequence="30"/>
+
+</odoo>

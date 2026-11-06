@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Copy icon before the delete icon of invoice / journal entry lines
+         (ListRenderer.onCopyMoveLine in move_line_copy.js), like the copy
+         icon of the analytic distribution popup. -->
+    <t t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="extension">
+        <xpath expr="//button[@name='delete']" position="before">
+            <span t-if="this.canCopyMoveLine(record)" class="oi cursor-pointer me-2 d-print-none" data-icon="content_copy"
+                  title="Copy this line"
+                  t-on-click.stop="() => this.onCopyMoveLine(record)"/>
+        </xpath>
+        <xpath expr="//td[hasclass('o_list_record_remove')]" position="attributes">
+            <attribute name="class" add="text-nowrap" separator=" "/>
+        </xpath>
+    </t>
+
+</templates>

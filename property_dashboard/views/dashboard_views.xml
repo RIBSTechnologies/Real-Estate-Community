@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================= CLIENT ACTIONS ================= -->
+    <record id="action_property_dashboard" model="ir.actions.client">
+        <field name="name">Property Dashboard</field>
+        <field name="tag">property_dashboard.dashboard</field>
+    </record>
+
+    <record id="action_property_statistics" model="ir.actions.client">
+        <field name="name">Statistics</field>
+        <field name="tag">property_dashboard.statistics</field>
+    </record>
+
+    <!-- ================= MENUS =================
+         "Statistics" is created under the Properties app root, then
+         sync_menus() moves it under Properties > Property (that parent has
+         no stable XML id, so it has to be resolved at runtime).
+
+         "Property Dashboard" is its OWN standalone top-level app (own tile
+         on the home screen, own icon) - sync_menus() explicitly leaves this
+         one alone, see menu_sync.py.
+    -->
+    <menuitem id="menu_property_statistics"
+              name="Statistics"
+              parent="rental_management.main_menu_rental_management"
+              action="action_property_statistics"
+              sequence="1"
+              groups="rental_management.property_rental_manager,rental_management.property_rental_officer"/>
+
+    <menuitem id="menu_property_dashboard"
+              name="Property Dashboard"
+              action="action_property_dashboard"
+              web_icon="property_dashboard,static/description/icon.png"
+              sequence="20"
+              groups="rental_management.property_rental_manager,rental_management.property_rental_officer"/>
+
+    <!-- Re-runnable from Settings > Technical > Actions > Server Actions -->
+    <record id="action_server_fix_menus" model="ir.actions.server">
+        <field name="name">Property Dashboard: Fix Menu Placement</field>
+        <field name="model_id" ref="base.model_ir_ui_menu"/>
+        <field name="state">code</field>
+        <field name="code">env['property.dashboard.menu.sync'].sync_menus()</field>
+    </record>
+
+    <!-- Runs on install AND on every upgrade. Idempotent. -->
+    <function model="property.dashboard.menu.sync" name="sync_menus"/>
+
+</odoo>

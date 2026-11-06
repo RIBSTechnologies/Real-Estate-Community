@@ -1,0 +1,245 @@
+/* ============================================================
+   al_shafar_extended/static/src/css/rental_dashboard_redesign.css
+
+   Visual-only redesign of the Dashboard (rental_management.rental_dashboard,
+   RentalDashboard). Everything here is scoped under .tk_rental_dash (the
+   dashboard's own outer wrapper), so it can't leak into any other page.
+
+   Deliberately does NOT touch rental_management's existing .card:hover
+   lift (style.scss already does translateY/scale on hover) - this only
+   adds what was missing: a resting-state shadow + rounded corners + a
+   soft gradient sheen (the "3D" card look), a small plain icon (down
+   from the original bare 40px image - no circle/badge wrapper, since
+   the icon artwork carries its own baked-in background and a circle
+   clip just showed that background's square edges poking out), and
+   tighter, more deliberate spacing/typography. No new markup, no JS, no
+   data changes - existing colours (.info-bg/.danger-bg/etc., defined in
+   rental_management/static/src/scss/style.scss) are left exactly as-is;
+   this only layers background-image/shadow/radius on top of them.
+   ============================================================ */
+
+/* Bootstrap's default .container caps out at a fixed max-width per
+   breakpoint (540/720/960/1140/1320px) and centers itself with side
+   gutters - fine for a marketing page, but it leaves visible empty
+   bands left/right of the dashboard on wide screens instead of using
+   the space. Make it fluid (full viewport width) for this dashboard
+   only, with a modest fixed side gutter instead of Bootstrap's
+   breakpoint-based max-width. */
+.tk_rental_dash .container {
+    max-width: 100% !important;
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* The above only fixes .container's own cap - Odoo's backend still wraps
+   the whole dashboard action in its own content area, which carries a
+   left/right padding of its own (not something this module owns a class
+   for, so it can't be targeted directly). Break the section out of that
+   ancestor padding with the standard "full-bleed" trick: pull it out to
+   the true viewport edges with vw-based negative margins, independent of
+   whatever padding value the ancestor happens to use. */
+.tk_rental_dash {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    box-sizing: border-box;
+}
+
+.tk_rental_dash .card {
+    border-radius: 14px !important;
+    box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.06),
+        0 6px 16px rgba(15, 23, 42, 0.08) !important;
+    background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 60%);
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+    /* Bootstrap's row already stretches every column in a line to the
+       tallest one's height (align-items: stretch, the flex default) - but
+       a block-level child doesn't fill that height on its own, so the
+       card itself stayed only as tall as its own content. The 4
+       Portfolio Overview tiles otherwise ended up 2 different heights:
+       the plain stat tiles (Total Properties/Total Units) are short,
+       the grouped Normal/Parking Units cards are tall. */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.tk_rental_dash .card > .card-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Plain stat tiles only (Total Properties/Total Units, and any other
+   single-number tile) - center their icon/title/number in whatever
+   extra height flex now gives them, so they don't sit glued to the top
+   of a taller card. The grouped cards (tk-group-card-body, which sets
+   its own text-align: left) keep their own top-down layout instead. */
+.tk_rental_dash .tk-card-body:not(.tk-group-card-body) {
+    justify-content: center;
+}
+
+/* Existing style.scss :hover already lifts the card (translateY/scale);
+   this only deepens the shadow to match, so the lift actually reads as
+   "closer to the light" instead of just floating with a flat shadow. */
+.tk_rental_dash .card:hover {
+    box-shadow:
+        0 2px 4px rgba(15, 23, 42, 0.08),
+        0 16px 32px rgba(15, 23, 42, 0.14) !important;
+}
+
+/* The card's own size was mostly coming from .p-32 (style.scss:
+   `.p-32 { padding: 32px !important }`, applied straight on the card
+   element) plus tk-card-body's own padding stacked on top of that. Both
+   cut down together for a compact tile instead of a mostly-empty one. */
+.tk_rental_dash .card.p-32 {
+    padding: 20px !important;
+}
+
+.tk_rental_dash .tk-card-body {
+    padding: 10px 8px !important;
+}
+
+/* Small, plain icon - replacing the bare 40px image. No badge/circle
+   wrapper: the source icon artwork carries its own baked-in background,
+   so wrapping it in a circle just showed that background's square edges
+   poking out of the circle. width/height override the inline width="40"
+   HTML attribute the templates set - a plain CSS rule always wins over a
+   presentational HTML attribute regardless of specificity, so no XML
+   changes needed. */
+.tk_rental_dash .tk-card-body img {
+    width: 26px !important;
+    height: 26px !important;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+.tk_rental_dash .tk-st-1 {
+    font-size: 0.76rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.01em;
+    margin-top: 2px !important;
+    opacity: 0.9;
+}
+
+.tk_rental_dash .tk-st-2 {
+    font-size: 1.3rem !important;
+    font-weight: 800 !important;
+    line-height: 1.2;
+}
+
+/* Tiles are laid out with Bootstrap's mb-4 (1.5rem bottom margin) in the
+   templates. Kept slightly tighter than the Bootstrap default so more
+   tiles stay comfortably in view, but not as cramped as before now that
+   the cards themselves are bigger again. Scoped to the dashboard's own
+   grid columns only. */
+.tk_rental_dash [class*="col-"].mb-4 {
+    margin-bottom: 1.1rem !important;
+}
+
+/* Section headings ("Rent Contract Statics", "Portfolio Overview", ...) -
+   a touch tighter and less shouty than the current plain h4 + full-width
+   rule. */
+.tk_rental_dash h4.tk-primary {
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em;
+}
+
+.tk_rental_dash hr.border-primary {
+    border: none !important;
+    border-top: 1px solid rgba(43, 53, 71, 0.12) !important;
+    opacity: 1 !important;
+    margin-top: 6px;
+    margin-bottom: 20px;
+}
+
+/* ============================================================
+   "Normal Units" / "Parking Units" grouped cards (Portfolio Overview):
+   a header (icon + title + big total, same look as the plain stat
+   tiles) followed by two rows of clickable mini-stats - On Rent /
+   Available, then Single Unit Contracts / Multi-Unit Contracts - each
+   own drill-through, same as every other tile on this dashboard.
+   ============================================================ */
+
+.tk_rental_dash .tk-group-card-body {
+    text-align: left;
+}
+
+.tk_rental_dash .tk-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    cursor: pointer;
+}
+
+/* The plain stat tiles center their icon/title/number (tk-card-body img
+   already centers itself via margin: 0 auto); inside the group header
+   the icon sits to the left of the title/number instead, so undo that
+   centering just here. */
+.tk_rental_dash .tk-group-header img {
+    margin: 0 !important;
+    flex: none;
+}
+
+.tk_rental_dash .tk-group-header-text {
+    text-align: center;
+}
+
+.tk_rental_dash .tk-group-header-text .tk-st-1,
+.tk_rental_dash .tk-group-header-text .tk-st-2 {
+    margin-top: 0 !important;
+}
+
+.tk_rental_dash hr.tk-group-divider {
+    border: none !important;
+    border-top: 1px solid rgba(15, 23, 42, 0.1) !important;
+    opacity: 1 !important;
+    margin: 14px 0;
+}
+
+.tk_rental_dash .tk-group-stats-row {
+    display: flex;
+    align-items: stretch;
+}
+
+.tk_rental_dash .tk-group-stats-row + .tk-group-stats-row {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(15, 23, 42, 0.12);
+}
+
+.tk_rental_dash .tk-group-stat {
+    flex: 1 1 0;
+    text-align: center;
+    padding: 2px 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.15s ease;
+}
+
+.tk_rental_dash .tk-group-stat:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.tk_rental_dash .tk-group-stat + .tk-group-stat {
+    border-left: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.tk_rental_dash .tk-group-stat-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    opacity: 0.85;
+    line-height: 1.25;
+}
+
+.tk_rental_dash .tk-group-stat-value {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin-top: 2px;
+}

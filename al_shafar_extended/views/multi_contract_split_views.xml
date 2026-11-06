@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Inherit the Multi Contract wizard to add the
+        "Single Contract vs Split into Unit Contracts" option.
+    -->
+    <record id="view_group_multi_contracts_form_inherit_split"
+            model="ir.ui.view">
+        <field name="name">group.multi.contracts.form.inherit.split</field>
+        <field name="model">group.multi.contracts</field>
+        <field name="inherit_id"
+               ref="ribs_real_estate.group_multi_contracts_form_view"/>
+        <field name="arch" type="xml">
+
+            <!--
+                Inject the split option right inside the General Information
+                group, after the deposit fields, so it is visible up front.
+            -->
+            <xpath expr="//field[@name='unit_ids']" position="after">
+                <field name="split_into_units" widget="boolean_toggle"/>
+            </xpath>
+
+            <!--
+                Change the "Create Contract" footer button label to reflect
+                the chosen mode dynamically.
+            -->
+            <xpath expr="//button[@name='contract_action']" position="attributes">
+                <attribute name="string">Create Contract</attribute>
+                <!-- contract_action (single and split mode) already handles
+                     Full Payment, so don't hide the button for it. -->
+                <attribute name="invisible">not is_contract_available or not unit_ids</attribute>
+            </xpath>
+
+            <!-- Rent can be entered per unit (e.g. a unit with zero rent);
+                 it feeds Total Rent, the contract and its payments. -->
+            <xpath expr="//field[@name='unit_line_ids']/list/field[@name='total_rent_year']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="required">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

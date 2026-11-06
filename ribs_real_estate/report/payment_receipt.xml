@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="tenancy_pdc_details_qweb_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 16px; color: #000; line-height: 1.5;">
+                        <div style="text-align:center; font-weight:bold; font-size:20px; text-decoration:underline; margin-bottom:10px;">
+                            Receipt Voucher
+                        </div>
+                        <div style="text-align:center; font-size:16px; margin-bottom:10px;">
+                            <b>TRN:</b>
+                        <!--<span t-out="o.trn"/>-->
+                        </div>
+
+                        <!-- Row 1: Date / RV No -->
+                        <div style="width:100%; overflow:auto; margin-bottom:8px;">
+                            <span style="float:left;">
+                                <b>Date:</b>
+                                <span t-out="datetime.date.today().strftime('%d-%m-%y')"/>
+                            </span>
+
+                            <span style="float:right;">
+                                <b>RV. No.:</b>
+                                <!-- <span t-out="o.rv_no"/> -->
+                            </span>
+                        </div>
+
+                        <!-- Row 2: Received from / Amount -->
+                        <div style="width:100%; overflow:auto; margin-bottom:8px;">
+                            <span style="float:left;">
+                                <b>Received From:</b>
+                                <span t-out="o.tenancy_id.name"/>
+                            </span>
+
+                            <span style="float:right;">
+                                <b>Amount:</b>
+                                <span t-out="o.total_contract_value" t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                            </span>
+                        </div>
+
+                        <!-- Other details (no extra spacing above) -->
+                        <div style="font-size:16px; clear:both;">
+
+                            <div style="margin-bottom:8px;">
+                                <b>Building Account:</b>
+                                <span t-out="o.property_project_id.invoice_creation_id.name or ''"/>
+                            </div>
+
+                            <div style="margin-bottom:8px;">
+                                <b>Dirhams:</b>
+                                <b><span t-out="'** '+o.currency_id.amount_to_text(o.total_contract_value).replace(o.currency_id.name, '').strip() + ' Only **'"/></b>
+                            </div>
+                            <div style="margin-bottom:15px;">
+                                <b>Being:</b>
+                                <span t-out="'Rent - Ejari - Sec.Dep. Flat ' + (o.property_id.name or '') + ' Con ' + (o.tenancy_seq or '') + ' From ' + ((o.start_date and o.start_date.strftime('%d-%m-%Y')) or '') + '-' + ((o.end_date and o.end_date.strftime('%d-%m-%Y')) or '')"/>
+                            </div>
+
+                        </div>
+
+                        <!-- <t t-set="all_matched_payments" t-value="o.rent_invoice_ids.mapped('rent_invoice_id.matched_payment_ids')"/> -->
+                        <t t-set="all_matched_payments" t-value="o.contract_payment_ids"/>
+                        <t t-set="all_pdc_payments" t-value="o.rent_invoice_ids.mapped('rent_invoice_id.pdc_payment_ids')"/>
+
+                        <t t-set="cash_payments" t-value="all_matched_payments.filtered(lambda p: p.journal_id and p.journal_id.type == 'cash')"/>
+                        <t t-if="cash_payments">
+                            <table style="width:100%; border:1px solid #145326; border-radius:6px; border-collapse:collapse; margin-bottom:30px;">
+                                <tr style="font-weight:bold;">
+                                    <td colspan="6" style="padding:6px 10px;">CASH PAYMENT DETAILS</td>
+                                </tr>
+
+                                <tr style="background-color:#f2f6fa; font-weight:bold; border:1px solid #145326;">
+                                    <th style="padding:6px;"><b>Type</b></th>
+                                    <th style="padding:6px;"><b>Beneficiary Bank</b></th>
+                                    <th style="padding:6px; text-align:right;"><b>Amount</b></th>
+                                    <th style="padding:6px;"><b>Date</b></th>
+                                    <th style="padding:6px;"><b>Remitter Bank</b></th>
+                                    <th style="padding:6px;"><b>Ref</b></th>
+                                </tr>
+
+                                <t t-foreach="cash_payments" t-as="line">
+                                    <tr>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="dict(line._fields['payment_type'].selection).get(line.payment_type)"/>
+                                        </td>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.journal_id.name"/>
+                                        </td>
+
+                                        <td style="padding:6px; text-align:right; border:1px solid #145326;">
+                                            <span t-field="line.amount" t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                                        </td>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.chq_due_date.strftime('%d/%m/%Y') if line.chq_due_date else ''"/>
+                                        </td>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.remitter_bank_id.name or line.remitter_bank or ''"/>
+                                        </td>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.ref or ''"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+                            </table>
+                        </t>
+
+
+                        <!-- ===================================================== -->
+                        <!-- =============== BANK PAYMENT TABLE ================= -->
+                        <!-- ===================================================== -->
+                        <t t-set="bank_payments" t-value="all_matched_payments.filtered(lambda p: p.payment_type == 'bank')"/>
+                        <t t-if="bank_payments">
+                            <table style="width:100%; border:1px solid #145326; border-radius:6px; border-collapse:collapse; margin-bottom:30px;">
+                                <tr style="font-weight:bold;">
+                                    <td colspan="6" style="padding:6px 10px;">BANK PAYMENT DETAILS</td>
+                                </tr>
+
+                                <tr style="background-color:#f2f6fa; font-weight:bold; border:1px solid #145326;">
+                                    <th style="padding:6px;"><b>Type</b></th>
+                                    <th style="padding:6px;"><b>Beneficiary Bank</b></th>
+                                    <th style="padding:6px; text-align:right;"><b>Amount</b></th>
+                                    <th style="padding:6px;"><b>Date</b></th>
+                                    <th style="padding:6px;"><b>Remitter Bank</b></th>
+                                    <th style="padding:6px;"><b>Ref</b></th>
+                                </tr>
+
+                                <t t-foreach="bank_payments" t-as="line">
+                                    <tr>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="dict(line._fields['payment_type'].selection).get(line.payment_type)"/>
+                                        </td>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.journal_id.name"/>
+                                        </td>
+
+                                        <td style="padding:6px; text-align:right; border:1px solid #145326;">
+                                            <span t-field="line.amount" t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                                        </td>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.chq_due_date.strftime('%d/%m/%Y') if line.chq_due_date else ''"/>
+                                        </td>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.remitter_bank_id.name or line.remitter_bank or ''"/>
+                                        </td>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.ref or ''"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+                            </table>
+                        </t>
+                        <!--  CASH PAYMENTS -->
+                        <!-- <t t-set="cash_payments" t-value="all_matched_payments.filtered(lambda p: p.journal_id.name == 'Cash')"/>
+                        <t t-if="cash_payments">
+                            <table style="width:100%; border:1px solid #145326; border-radius:6px; border-collapse:collapse; margin-bottom:30px;">
+                                <tr style="font-weight:bold;">
+                                    <td colspan="7" style="padding:6px 10px;">CASH PAYMENT DETAILS</td>
+                                </tr>
+                                <tr style="background-color:#f2f6fa; font-weight:bold; border:1px solid #145326;">
+                                    <th style="padding:6px;"><b>Date</b></th>
+                                    <th style="padding:6px;"><b>Invoice Reference</b></th>
+                                    <th style="padding:6px;"><b>Journal</b></th>
+                                    <th style="padding:6px;"><b>Deposit To</b></th>
+                                    <th style="padding:6px;"><b>CUC Account</b></th>
+                                    <th style="padding:6px; text-align:right;"><b>Amount</b></th>
+                                    <th style="padding:6px;"><b>Status</b></th>
+                                </tr>
+                                <t t-foreach="cash_payments" t-as="line">
+                                    <tr>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.date.strftime('%d/%m/%Y') if line.date else ''"/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.get_invoice_id()"/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.journal_id.name"/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.company_id.partner_id.bank_ids and ((line.company_id.partner_id.bank_ids[0].bank_name or '') + ' ' + (line.company_id.partner_id.bank_ids[0].account_number or '')).strip() or ''"/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.partner_id.bank_ids and ((line.partner_id.bank_ids[0].bank_name or '') + ' ' + (line.partner_id.bank_ids[0].account_number or '')).strip() or ''"/>
+                                        </td>
+                                        <td style="padding:6px; text-align:right; border:1px solid #145326;">
+                                            <span t-field="line.amount" t-options='{"widget":"monetary","display_currency":line.currency_id}'/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line._fields['state'].convert_to_export(line.state, line)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </t> -->
+
+                        <!--  BANK PAYMENTS -->
+                        <!-- <t t-set="bank_payments" t-value="all_matched_payments.filtered(lambda p: p.journal_id.name == 'Bank' and not p.journal_id.is_pdc_journal)"/>
+                        <t t-if="bank_payments">
+                            <table style="width:100%; border:1px solid #145326; border-radius:6px; border-collapse:collapse; margin-bottom:30px;">
+                                <tr style="font-weight:bold;">
+                                    <td colspan="7" style="padding:6px 10px;">BANK PAYMENT DETAILS</td>
+                                </tr>
+                                <tr style="background-color:#f2f6fa; font-weight:bold; border:1px solid #145326;">
+                                    <th style="padding:6px;"><b>Cheque Ref</b></th>
+                                    <th style="padding:6px;"><b>Date</b></th>
+                                    <th style="padding:6px;"><b>Invoice Reference</b></th>
+                                    <th style="padding:6px;"><b>Journal</b></th>
+                                    <th style="padding:6px;"><b>Deposit To</b></th>
+                                    <th style="padding:6px;"><b>CUC Account</b></th>
+                                    <th style="padding:6px; text-align:right;"><b>Amount</b></th>
+                                    <th style="padding:6px;"><b>Status</b></th>
+                                </tr>
+                                <t t-foreach="bank_payments" t-as="line">
+                                    <tr>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.cheque_ref"/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.date.strftime('%d/%m/%Y') if line.date else ''"/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.get_invoice_id()"/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.journal_id.name"/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.company_id.partner_id.bank_ids and ((line.company_id.partner_id.bank_ids[0].bank_name or '') + ' ' + (line.company_id.partner_id.bank_ids[0].account_number or '')).strip() or ''"/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.partner_id.bank_ids and ((line.partner_id.bank_ids[0].bank_name or '') + ' ' + (line.partner_id.bank_ids[0].account_number or '')).strip() or ''"/>
+                                        </td>
+                                        <td style="padding:6px; text-align:right; border:1px solid #145326;">
+                                            <span t-field="line.amount" t-options='{"widget":"monetary","display_currency":line.currency_id}'/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line._fields['state'].convert_to_export(line.state, line)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </t> -->
+
+                        <!--  PDC PAYMENTS -->
+                        <t t-set="pdc_payments" t-value="all_pdc_payments.filtered(lambda p: p.payment_type == 'cheque')"/>
+                        <t t-if="pdc_payments">
+                            <table style="width:100%; border:1px solid #145326; border-radius:6px; border-collapse:collapse; margin-bottom:30px;">
+                                <tr style="font-weight:bold;">
+                                    <td colspan="8" style="padding:6px 10px;">PDC PAYMENT DETAILS</td>
+                                </tr>
+                                <tr style="background-color:#f2f6fa; font-weight:bold; border:1px solid #145326;">
+                                    <!-- <th style="padding:6px;"><b>Cheque Ref</b></th> -->
+                                    <th style="padding:6px;"><b>Bank Name</b></th>
+                                    <th style="padding:6px;"><b>Cheque Date</b></th>
+                                    <th style="padding:6px;"><b>Remitter Bank</b></th>
+                                    <th style="padding:6px;"><b>Payment Reference</b></th>
+                                    <!-- <th style="padding:6px;"><b>Journal</b></th> -->
+                                    <th style="padding:6px;"><b>Deposit To</b></th>
+                                    <th style="padding:6px; text-align:right;"><b>Amount</b></th>
+                                    <th style="padding:6px;"><b>Status</b></th>
+                                </tr>
+                                <t t-foreach="pdc_payments" t-as="line">
+                                    <tr>
+                                        <!-- <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.ref"/>
+                                        </td> -->
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.journal_id.name"/>
+                                        </td> 
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.due_date.strftime('%d/%m/%Y') if line.due_date else ''"/>
+                                        </td>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.remitter_bank_id.name or line.remitter_bank or ''"/>
+                                        </td>
+
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.name"/>
+                                        </td>
+                                        <!-- <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line.journal_id.name"/>
+                                        </td> -->
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span>PDC Received</span>
+                                        </td>
+                                        <!-- <td style="padding:6px; border:1px solid #145326;">
+                                            <t t-if="line.bank_account">
+                                                <span t-out="((line.bank_account.bank_name or '') + ' ' + (line.bank_account.account_number or '')).strip()"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span></span>
+                                            </t>
+                                        </td> -->
+                                        <td style="padding:6px; text-align:right; border:1px solid #145326;">
+                                            <span t-field="line.payment_amount" t-options='{"widget":"monetary","display_currency":line.currency_id}'/>
+                                        </td>
+                                        <td style="padding:6px; border:1px solid #145326;">
+                                            <span t-out="line._fields['state'].convert_to_export(line.state, line)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </t>
+
+                        <!--  NO RECORDS CASE -->
+                        <t t-if="not (cash_payments or bank_payments or pdc_payments)">
+                            <table style="width:100%; border:1px solid #145326; border-collapse:collapse; margin-bottom:30px;">
+                                <tr>
+                                    <td colspan="7" style="text-align:center; padding:8px; border:1px solid #145326;">
+                                        No payment details available.
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                        <t t-set="total_cash" t-value="sum(cash_payments.mapped('amount')) if cash_payments else 0.0"/>
+                        <t t-set="total_bank" t-value="sum(bank_payments.mapped('amount')) if bank_payments else 0.0"/>
+                        <t t-set="total_pdc" t-value="sum(pdc_payments.mapped('payment_amount')) if pdc_payments else 0.0"/>
+                        <t t-set="grand_total" t-value="total_cash + total_bank + total_pdc"/>
+                        <table style="width:100%; border:1px solid #145326; border-collapse:collapse; margin-top:10px;">
+                            <tr>
+                                <td style="padding:8px;"><b>TOTAL: </b> <span t-out="'** '+ o.currency_id.amount_to_text(grand_total).replace(o.currency_id.name, '').strip() + ' Only' + ' **'"/></td>
+                                <td style="padding:8px; text-align:right; color:#145326;">
+                                    <span t-out="grand_total" t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <t t-set="pdc_images"
+                        t-value="pdc_payments.filtered(lambda l: l.attachment_ids)"/>
+
+                        <t t-if="pdc_images">
+                            <div style="margin-top:20px;">
+
+                                <div style="font-weight:bold; margin-bottom:10px; font-size:16px;">
+                                    PDC Cheque Images
+                                </div>
+                                <t t-foreach="pdc_images" t-as="pdc">
+                                    <t t-if="pdc.attachment_ids">
+
+                                        <t t-set="latest_att"
+                                        t-value="
+                                            pdc.attachment_ids
+                                            .filtered(lambda a: a.mimetype and a.mimetype.startswith('image'))
+                                            .sorted(lambda a: a.id, reverse=True)[0]
+                                        "/>
+
+                                        <div style="
+                                            width:100%;
+                                            border:1px solid #145326;
+                                            padding:10px;
+                                            margin-bottom:20px;
+                                            border-radius:6px;
+                                            text-align:center;
+                                            page-break-inside:avoid;">
+                                            
+                                            <img t-att-src="image_data_uri(latest_att.raw)"
+                                                style="width:100%; height:auto; max-height:500px; object-fit:contain;"/>
+
+                                            <div style="margin-top:8px; font-size:12px; color:#555;">
+                                                <span t-out="latest_att.name or 'Cheque Image'"/>
+                                            </div>
+                                        </div>
+
+                                    </t>
+                                </t>
+
+                            </div>
+                        </t>
+                        
+                        <div style="width:100%; margin-top:150px;">
+                            <span style="display:inline-block; width:24%; text-align:center;">Accountant</span>
+                            <span style="display:inline-block; width:24%; text-align:center;">Finance Manager</span>
+                            <span style="display:inline-block; width:24%; text-align:center;">Management</span>
+                            <span style="display:inline-block; width:24%; text-align:center;">Received By</span>
+                        </div>
+                    </div>
+                    <div class="footer" style="font-size:14px; text-align:center; letter-spacing:0.5px; word-spacing:8px; height:100vh; display:flex; justify-content:center; align-items:center;">
+                        Email: <span t-out="o.company_id.email"/>  Tel:<span t-out="o.company_id.phone or 'mobile'"/>  Fax:<span t-out="o.company_id.fax"/>  P.O.Box:<span t-out="o.company_id.zip"/>, <span t-out="o.company_id.state_id.name"/>, <span t-out="o.company_id.country_id.name"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <record id="tenancy_pdc_details_report_id" model="ir.actions.report">
+        <field name="name">Payment Receipt</field>
+        <field name="model">tenancy.details</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ribs_real_estate.tenancy_pdc_details_qweb_report_template</field>
+        <field name="binding_model_id" ref="model_tenancy_details" />
+        <field name="binding_type">report</field>
+        <field name="print_report_name">"%s PDC's" %(object.tenancy_seq)</field>
+        <field name="paperformat_id" ref="ribs_real_estate.paperformat_custom_invoice"/>
+    </record>
+    <!-- <record id="tenancy_pdc_details_report_id" model="ir.actions.report">
+        <field name="name">PDC Report</field>
+        <field name="model">tenancy.details</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">ribs_real_estate.tenancy_pdc_details_qweb_report_template</field>
+        <field name="binding_model_id" ref="model_tenancy_details" />
+        <field name="binding_type">report</field>
+        <field name="print_report_name">"%s PDC's" %(object.tenancy_seq)</field>
+    </record> -->
+</odoo>

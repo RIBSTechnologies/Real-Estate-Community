@@ -1,0 +1,176 @@
+/* ============================================================
+   PDC Cheque Payment Summary – Inline Row Dashboard Panel
+   al_shafar_extended/static/src/css/pdc_payment_summary_list.css
+   ============================================================ */
+
+/* ── Expand Toggle Cell ───────────────────────────────────── */
+.pdcps-expand-cell {
+    cursor: pointer;
+    vertical-align: middle !important;
+    width: 40px;
+}
+
+.pdcps-expand-icon {
+    transition: transform 0.2s ease;
+}
+
+.pdcps-icon-open {
+    transform: rotate(180deg);
+}
+
+/* ── Inline Detail Row ────────────────────────────────────── */
+.pdcps-detail-row {
+    background-color: #fbfaf5 !important;
+}
+
+.pdcps-detail-row > td.pdcps-detail-cell {
+    border-bottom: 2px solid #a67c2e !important;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* ── Panel Container ──────────────────────────────────────── */
+.pdcps-panel {
+    padding: 12px 16px 16px 36px;
+    background: #fefdfb;
+    animation: pdcps-expand-down 0.2s ease-out;
+}
+
+@keyframes pdcps-expand-down {
+    from { opacity: 0; transform: translateY(-5px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Panel Header ─────────────────────────────────────────── */
+.pdcps-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.pdcps-panel-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #6e4f14;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pdcps-contract-name {
+    font-weight: 600;
+    color: #a67c2e;
+    text-transform: none;
+    font-size: 12px;
+}
+
+.pdcps-panel-count {
+    font-size: 11px;
+    background: #a67c2e;
+    color: #fff;
+    border-radius: 10px;
+    padding: 2px 8px;
+}
+
+.pdcps-close-btn {
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
+    opacity: 0.6;
+}
+
+.pdcps-close-btn:hover { opacity: 1; }
+
+/* ── Action buttons ───────────────────────────────────────── */
+.pdcps-action-cell { white-space: nowrap; }
+
+.pdcps-btn-return {
+    color: #155724;
+    background: #d4edda;
+    border: 1px solid #b8dac4;
+    padding: 2px 7px;
+    font-size: 11px;
+    border-radius: 4px;
+    line-height: 1.3;
+}
+.pdcps-btn-return:hover { background: #28a745; color: #fff; border-color: #28a745; }
+
+/* ── Loading ──────────────────────────────────────────────── */
+.pdcps-loading-wrap {
+    padding: 12px 4px;
+    color: #6c757d;
+    font-size: 12px;
+}
+
+/* ── Cheque table ──────────────────────────────────────────── */
+.pdcps-table-wrap {
+    overflow-x: auto;
+    border-radius: 4px;
+    border: 1px solid #ebe0c7;
+}
+
+.pdcps-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    background: #fff;
+}
+
+.pdcps-table thead tr {
+    background: #a67c2e;
+    color: #fff;
+}
+
+.pdcps-table thead th {
+    padding: 6px 8px;
+    font-weight: 600;
+    white-space: nowrap;
+    border: none;
+}
+
+.pdcps-table tbody tr {
+    border-bottom: 1px solid #f4eedb;
+}
+
+.pdcps-table tbody tr:hover { background: #fbf7ea !important; }
+
+.pdcps-table tbody td {
+    padding: 6px 8px;
+    vertical-align: middle;
+    color: #3d3d3d;
+}
+
+.pdcps-row-registered { background: #fffdf5; }
+.pdcps-row-returned { background: #f4fbf5; }
+
+.pdcps-td-seq { text-align: center; color: #888; font-size: 10px; width: 28px; }
+
+.pdcps-td-amount {
+    font-weight: 600;
+    text-align: right;
+    color: #2e7d32;
+    white-space: nowrap;
+}
+
+.pdcps-currency { font-size: 9px; color: #777; margin-left: 2px; }
+
+/* ── Total footer ─────────────────────────────────────────── */
+.pdcps-total-row { background: #f7f0dd !important; border-top: 1px solid #a67c2e; }
+.pdcps-total-row td { padding: 6px 8px !important; font-size: 11px; color: #6e4f14; }
+
+/* ── Badges ───────────────────────────────────────────────── */
+.pdcps-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 1px 7px;
+    white-space: nowrap;
+}
+
+.badge-pdcps-draft      { background: #e2e3e5; color: #383d41; }
+.badge-pdcps-registered { background: #fff3cd; color: #856404; }
+.badge-pdcps-returned   { background: #f8d7da; color: #721c24; }
+.badge-pdcps-bounced    { background: #f8d7da; color: #721c24; }
+.badge-pdcps-deposited  { background: #cce5ff; color: #004085; }
+.badge-pdcps-done       { background: #d4edda; color: #155724; }
+.badge-pdcps-default    { background: #e2e3e5; color: #383d41; }

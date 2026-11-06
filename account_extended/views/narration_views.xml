@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Views that hard-code "Memo" / "Label" instead of using the field's
+         own label (renamed to "Narration" in models/narration.py). -->
+    <record id="view_account_payment_form_narration" model="ir.ui.view">
+        <field name="name">account.payment.form.narration</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='memo']" position="attributes">
+                <attribute name="string">Narration</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_register_form_narration" model="ir.ui.view">
+        <field name="name">account.payment.register.form.narration</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='writeoff_label']" position="attributes">
+                <attribute name="string">Narration</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
