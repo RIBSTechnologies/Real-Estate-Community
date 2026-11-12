@@ -10,7 +10,7 @@
     'maintainer': 'RIBS Technologies',
     'website': "https://www.ribstechnologies.com",
     'category': 'Services',
-    'depends': ['account','rental_management','contacts','sh_pdc', 'base_automation','many2many_binary_field_preview','website'],
+    'depends': ['account','sale','rental_management','skit_contract_entries','contacts','sh_pdc', 'base_automation','many2many_binary_field_preview','website'],
     'data': [
         # security
         'security/groups.xml',

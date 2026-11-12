@@ -6,6 +6,7 @@
                 <field name="name">Accountant</field>
                 <field name="implied_ids" eval="[(4, ref('rental_management.property_rental_manager'))]"/>
                 <field name="privilege_id" ref="rental_management.res_groups_privilege_rental_management"/>
+                <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
             </record>
         </data>
     </data>

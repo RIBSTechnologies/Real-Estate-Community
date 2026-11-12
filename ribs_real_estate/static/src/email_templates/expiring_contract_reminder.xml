@@ -35,7 +35,7 @@
                         <tr>
                             <td style="padding:6px; border:1px solid #ccc;"><strong>Property Name</strong></td>
                             <td style="padding:6px; border:1px solid #ccc;">
-                                <t t-out="ctx.get('update_rec').contract_id.property_project_id.name"/>
+                                <t t-out="(ctx.get('update_rec') or object.env['contract.update.register']).contract_id.property_project_id.name"/>
                             </td>
                         </tr>
 
@@ -49,35 +49,35 @@
                         <tr>
                             <td style="padding:6px; border:1px solid #ccc;"><strong>New Contract Start Date</strong></td>
                             <td style="padding:6px; border:1px solid #ccc;">
-                                <t t-out="ctx.get('update_rec').from_date"/>
+                                <t t-out="(ctx.get('update_rec') or object.env['contract.update.register']).from_date"/>
                             </td>
                         </tr>
 
                         <tr>
                             <td style="padding:6px; border:1px solid #ccc;"><strong>New Contract End Date</strong></td>
                             <td style="padding:6px; border:1px solid #ccc;">
-                                <t t-out="ctx.get('update_rec').to_date"/>
+                                <t t-out="(ctx.get('update_rec') or object.env['contract.update.register']).to_date"/>
                             </td>
                         </tr>
 
                         <tr>
                             <td style="padding:6px; border:1px solid #ccc;"><strong>New Annual Rent</strong></td>
                             <td style="padding:6px; border:1px solid #ccc;">
-                                <t t-out="'%.2f' % ctx.get('update_rec').new_rent_annually"/>
+                                <t t-out="'%.2f' % (ctx.get('update_rec') or object.env['contract.update.register']).new_rent_annually"/>
                             </td>
                         </tr>
 
                         <tr>
                             <td style="padding:6px; border:1px solid #ccc;"><strong>Cheques Under</strong></td>
                             <td style="padding:6px; border:1px solid #ccc;">
-                                <t t-out="ctx.get('update_rec').contract_id.tenancy_id.print_cheque"/>
+                                <t t-out="(ctx.get('update_rec') or object.env['contract.update.register']).contract_id.tenancy_id.print_cheque"/>
                             </td>
                         </tr>
 
                         <tr>
                             <td style="padding:6px; border:1px solid #ccc;"><strong>Terms of Payments</strong></td>
                             <td style="padding:6px; border:1px solid #ccc;">
-                                <t t-out="ctx.get('update_rec').duration_id.duration"/>
+                                <t t-out="(ctx.get('update_rec') or object.env['contract.update.register']).duration_id.duration"/>
                             </td>
                         </tr>
                     </table>

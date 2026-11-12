@@ -12,7 +12,7 @@
 
                 <p>
                     We hope you are doing well. This is a gentle reminder that the following documents 
-                    related to your contract <strong><t t-out="ctx.get('contract').tenancy_seq"/></strong> have expired.
+                    related to your contract <strong><t t-out="(ctx.get('contract') or object).tenancy_seq"/></strong> have expired.
                 </p>
 
                 <p>Please take the necessary action at your earliest convenience.</p>

@@ -10,7 +10,9 @@ from odoo import fields, models
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    name = fields.Char(string='Narration')
+    # Must keep the core field type (Text since Odoo 19); a different type
+    # replaces the field and drops its compute, which breaks invoice posting.
+    name = fields.Text(string='Narration')
 
 
 class AccountBankStatementLine(models.Model):

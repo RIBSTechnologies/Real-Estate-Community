@@ -1,0 +1,27 @@
+///
+/// Nova base (dark): surfaces elevate by lightening, not shadow (HIG dark-mode).
+///
+.o_web_client, .o_action_manager {
+    background-color: $o-webclient-background-color;
+}
+
+.o_web_client *::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+::selection {
+    background: color-mix(in srgb, var(--nova-accent, #3AAFA9) 35%, transparent);
+}
+
+// Same honest-motion guard as the light bundle. No `transform: none`:
+// that would strip positioning transforms (centering, badge offsets).
+@media (prefers-reduced-motion: reduce) {
+    .o_web_client *, .o_web_client *::before, .o_web_client *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}

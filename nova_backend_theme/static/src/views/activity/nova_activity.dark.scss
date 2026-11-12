@@ -1,0 +1,65 @@
+///
+/// Nova activity view (dark).
+///
+/// NOTE: the light activity shell also loads in dark sessions, so every
+/// rule below carries an extra .o_web_client scope to guard the ties.
+///
+.o_web_client .o_activity_view {
+    background: $o-view-background-color;
+    border-color: $o-border-color;
+    box-shadow: none;
+}
+
+.o_web_client .o_activity_view > table thead th {
+    --table-bg: linear-gradient(to bottom,
+        #{$o-gray-200}, #{rgba($o-gray-200, 0.75)});
+    background: var(--table-bg);
+    box-shadow: inset 0px -1px 0 0 $o-border-color;
+    color: $nova-ink;
+}
+
+.o_web_client .o_activity_view .o_activity_summary_cell .o-mail-ActivityCell-counter {
+    color: $nova-ink;
+}
+
+.o_web_client .o_activity_view > table tfoot.o_activity_view_table_footer {
+    background-color: $o-gray-200;
+}
+
+// Summary cells: neutral canvas + 3px state edge (same recipe as the
+// light bundle). This REPLACES the old translucent severity fills below —
+// full-bleed salmon/tan/green slabs clash with "calm" in either mode.
+// The .o_web_client scope beats both the stock utilities and the light
+// bundle's copy of the same recipe, whatever the bundle order.
+.o_web_client .o_activity_view .o_activity_summary_cell {
+    background-color: $o-view-background-color !important;
+    background-image: none !important;
+
+    &.bg-danger-light {
+        box-shadow: inset 3px 0 0 map-get($o-theme-text-colors, "danger");
+    }
+
+    &.bg-warning-light {
+        box-shadow: inset 3px 0 0 map-get($o-theme-text-colors, "warning");
+    }
+
+    &.bg-success-light {
+        box-shadow: inset 3px 0 0 map-get($o-theme-text-colors, "success");
+    }
+
+    &.bg-dark-light {
+        box-shadow: inset 3px 0 0 $nova-ink-muted;
+    }
+
+    &, a {
+        color: $nova-ink;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+}
+
+.o_activity_record > div:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
