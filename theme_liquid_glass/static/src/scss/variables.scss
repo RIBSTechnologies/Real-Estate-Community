@@ -1,21 +1,22 @@
-$glass-bg-light: rgba(255, 255, 255, 0.15);
-$glass-bg-medium: rgba(255, 255, 255, 0.10);
-$glass-bg-dark: rgba(255, 255, 255, 0.08);
-$glass-bg-darker: rgba(255, 255, 255, 0.05);
-$glass-dropdown: rgba(70, 80, 90, 0.85);
-$glass-border: rgba(255, 255, 255, 0.18);
-$glass-border-light: rgba(255, 255, 255, 0.25);
+$glass-bg-light: var(--lg-glass-light, rgba(255, 255, 255, 0.15));
+$glass-bg-medium: var(--lg-glass-medium, rgba(255, 255, 255, 0.10));
+$glass-bg-dark: var(--lg-glass-dark, rgba(255, 255, 255, 0.08));
+$glass-bg-darker: var(--lg-glass-darker, rgba(255, 255, 255, 0.05));
+$glass-dropdown: var(--lg-dropdown, rgba(70, 80, 90, 0.85));
+$glass-border: var(--lg-border, rgba(255, 255, 255, 0.18));
+$glass-border-light: var(--lg-border-strong, rgba(255, 255, 255, 0.25));
 
 $blur-light: 30px;
 $blur-medium: 35px;
 $blur-heavy: 40px;
 
-$primary-color: rgba(6, 190, 160, 1);
-$primary-gradient: linear-gradient(90deg, rgba(6, 190, 160, 0.6), rgba(10, 160, 140, 0.5));
-$hover-bg: rgba(255, 255, 255, 0.18);
+// Accent: CSS variable so light mode (light.scss) can retint it; dark keeps the original green.
+$primary-color: var(--lg-primary, rgba(6, 190, 160, 1));
+$primary-gradient: var(--lg-primary-gradient, linear-gradient(90deg, rgba(6, 190, 160, 0.6), rgba(10, 160, 140, 0.5)));
+$hover-bg: var(--lg-hover, rgba(255, 255, 255, 0.18));
 
-$text-white: #ffffff;
-$text-muted: rgba(255, 255, 255, 0.65);
+$text-white: var(--lg-text, #ffffff);
+$text-muted: var(--lg-text-muted, rgba(255, 255, 255, 0.65));
 
 $radius-sm: 12px;
 $radius-md: 18px;
@@ -23,8 +24,8 @@ $radius-lg: 22px;
 $radius-xl: 26px;
 $radius-pill: 999px;
 
-$shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.4);
-$shadow-heavy: 0 20px 70px rgba(0, 0, 0, 0.5);
+$shadow-medium: var(--lg-shadow-medium, 0 10px 40px rgba(0, 0, 0, 0.4));
+$shadow-heavy: var(--lg-shadow-heavy, 0 20px 70px rgba(0, 0, 0, 0.5));
 
 $transition-base: all 0.25s ease;
 

@@ -118,6 +118,7 @@ colour/typography/spacing systems and Meta's clarity language.
             "nova_backend_theme/static/src/webclient/navbar/nova_dark_mode.js",
             "nova_backend_theme/static/src/scss/nova_theme_apply.js",
             "nova_backend_theme/static/src/scss/nova_bridge.scss",
+            "nova_backend_theme/static/src/scss/nova_ocean.scss",
         ],
         "web.assets_backend_lazy": [
             "nova_backend_theme/static/src/views/pivot/nova_pivot.scss",

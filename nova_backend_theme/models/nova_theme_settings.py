@@ -46,6 +46,7 @@ NOVA_WORDMARK_RATIO = 2.0
 # "one teal" story stay coherent.
 NOVA_ACCENTS = [
     ("#0E7C8A", "Teal (Nova default)"),
+    ("#00838F", "Ocean (Property Dashboard)"),
     ("#0866FF", "Blue (brand override)"),
     ("#7C3AED", "Violet (brand override)"),
     ("#0A7D2C", "Green (brand override)"),
@@ -151,7 +152,8 @@ def accent_tones(value):
     accent = value if isinstance(value, str) and HEX_RE.match(value) else "#0E7C8A"
     white_contrast = _contrast(accent, "#FFFFFF")
     black_contrast = _contrast(accent, "#000000")
-    fg = "#FFFFFF" if white_contrast >= black_contrast else "#101214"
+    # White text whenever it passes WCAG AA (4.5:1); otherwise the better of the two.
+    fg = "#FFFFFF" if white_contrast >= 4.5 or white_contrast >= black_contrast else "#101214"
     return {
         "accent": accent,
         "hover": _mix("#FFFFFF", accent, 0.16),

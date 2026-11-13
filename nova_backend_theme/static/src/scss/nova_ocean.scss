@@ -1,0 +1,112 @@
+///
+/// Nova "Ocean" light backdrop — same look as the Property Dashboard Ocean
+/// theme: airy aqua gradient with soft colour orbs behind frosted-glass
+/// surfaces. Light mode only: the dark bundle compiles this same file with
+/// a dark $nova-surface-app, so the guard below drops every rule there.
+///
+
+@if lightness($nova-surface-app) > 50% {
+
+    // ---- Backdrop ---------------------------------------------------------
+    .o_web_client {
+        background-color: $nova-surface-app;
+        background-image:
+            radial-gradient(circle at 12% 18%, $nova-ocean-orb-1 0, transparent 38%),
+            radial-gradient(circle at 88% 82%, $nova-ocean-orb-2 0, transparent 42%),
+            $nova-ocean-gradient;
+        background-attachment: fixed;
+    }
+
+    // Let the gradient show through the view chrome.
+    .o_web_client {
+        .o_action_manager,
+        .o_action_manager > .o_action,
+        .o_view_controller,
+        .o_content,
+        .o_form_sheet_bg,
+        .o_kanban_renderer,
+        .o_calendar_container,
+        .o_pivot,
+        .o_graph_renderer,
+        .o_activity_view,
+        .o_view_nocontent {
+            background-color: transparent;
+            background: transparent;
+        }
+    }
+
+    // ---- Frosted bars -----------------------------------------------------
+    .o_main_navbar {
+        background: rgba($o-white, 0.62);
+        border-bottom: 1px solid $nova-glass-border;
+        box-shadow: 0 2px 14px rgba(0, 150, 136, 0.05);
+        @supports (backdrop-filter: blur(1px)) {
+            backdrop-filter: $nova-blur-bar;
+        }
+    }
+
+    .o_control_panel {
+        background: rgba($o-white, 0.5);
+        border-bottom: 1px solid $nova-glass-border;
+        @supports (backdrop-filter: blur(1px)) {
+            backdrop-filter: $nova-blur-bar;
+        }
+    }
+
+    // ---- Glass cards ------------------------------------------------------
+    %nova-glass-card {
+        background: $nova-glass;
+        border: 1px solid $nova-glass-border;
+        box-shadow: $nova-glass-shadow;
+        @supports (backdrop-filter: blur(1px)) {
+            backdrop-filter: blur(12px) saturate(1.3);
+        }
+    }
+
+    // Form sheet (outranks Nova's paper rule: .o_web_client .o_form_view .o_form_sheet).
+    .o_web_client .o_form_view .o_form_sheet_bg .o_form_sheet {
+        @extend %nova-glass-card;
+        border-radius: 20px;
+    }
+
+    // Form status bar strip and chatter panel.
+    .o_web_client .o_form_view .o_form_statusbar,
+    .o_web_client .o_form_view .o-mail-ChatterContainer,
+    .o_web_client .o_form_view .o-mail-Form-chatter {
+        background: $nova-glass;
+    }
+
+    // List: the table sits on one glass card.
+    .o_web_client .o_list_view .o_list_renderer {
+        @extend %nova-glass-card;
+        border-radius: 16px;
+        margin: 12px $o-horizontal-padding;
+        width: auto;
+    }
+    .o_web_client .o_list_view .o_list_table {
+        background: transparent;
+        thead, tfoot, thead th, tfoot td {
+            background: rgba($o-white, 0.55);
+        }
+    }
+
+    // Kanban cards and grouped columns.
+    .o_web_client .o_kanban_renderer {
+        --KanbanGroup-background: #{rgba($o-white, 0.35)};
+        .o_kanban_record {
+            @extend %nova-glass-card;
+            border-radius: 16px;
+            transition: box-shadow $nova-dur-base $o-easing-enter, background $nova-dur-base $o-easing-enter;
+            &:hover {
+                background: $nova-glass-strong;
+                box-shadow: $nova-glass-shadow-hover;
+            }
+        }
+    }
+
+    // Settings and dashboards built on the same surfaces.
+    .o_web_client .o_setting_container .o_settings_container,
+    .o_web_client .o_calendar_container .o_calendar_sidebar_container {
+        background: $nova-glass;
+    }
+}

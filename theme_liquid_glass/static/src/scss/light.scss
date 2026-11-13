@@ -1,0 +1,262 @@
+// =====================================================================
+//  Liquid Glass - LIGHT appearance
+//  Every theme colour is `var(--lg-xxx, <dark value>)`. Dark mode leaves
+//  the variables undefined (so the original look is untouched); light
+//  mode defines them here. Toggled by the `o_lg_light` class on <html>
+//  (see static/src/js/color_scheme.js).
+// =====================================================================
+
+// Ocean palette (same as the Property Dashboard "Ocean" theme)
+$lgl-text: #1a3c4d;
+$lgl-teal: #0097A7;
+$lgl-teal-dark: #00838F;
+
+html.o_lg_light {
+    color-scheme: light;
+
+    // Ink = colour used for text, borders, hover tints (was white)
+    --lg-ink: 26, 60, 77;
+    --lg-text: #{$lgl-text};
+    --lg-text-muted: #4f7385;
+
+    // Accent used by buttons, focus rings, active states
+    --lg-primary: #{$lgl-teal};
+    --lg-primary-rgb: 0, 151, 167;
+    --lg-primary-gradient: linear-gradient(90deg, #{$lgl-teal}, #{$lgl-teal-dark});
+
+    // Glass surfaces: frosted white over the light background
+    --lg-glass-light: rgba(255, 255, 255, 0.70);
+    --lg-glass-medium: rgba(255, 255, 255, 0.60);
+    --lg-glass-dark: rgba(255, 255, 255, 0.55);
+    --lg-glass-darker: rgba(255, 255, 255, 0.45);
+    --lg-dropdown: rgba(255, 255, 255, 0.97);
+    --lg-panel: rgba(255, 255, 255, 0.98);
+    --lg-border: rgba(0, 151, 167, 0.16);
+    --lg-border-strong: rgba(0, 151, 167, 0.28);
+    --lg-hover: rgba(0, 151, 167, 0.10);
+    --lg-shadow-medium: 0 2px 14px rgba(0, 150, 136, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.35) inset;
+    --lg-shadow-heavy: 0 8px 32px rgba(0, 188, 212, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.45) inset;
+
+    // Record form layers (compact.scss)
+    --lg-sheet-bg: rgba(255, 255, 255, 0.55);
+    --lg-label-text: #{$lgl-teal-dark};
+    --lg-link: #0b72c7;
+
+    // Bootstrap / Odoo tokens used by core widgets
+    --body-color: #{$lgl-text};
+    --o-main-text-color: #{$lgl-text};
+}
+
+// ---------------------------------------------------------------------
+// Page background
+// ---------------------------------------------------------------------
+html.o_lg_light .o_web_client {
+    // Ocean: airy aqua gradient with two soft orbs (Property Dashboard look)
+    background:
+        radial-gradient(circle at 12% 18%, rgba(0, 188, 212, 0.10) 0, transparent 38%),
+        radial-gradient(circle at 88% 82%, rgba(3, 169, 244, 0.08) 0, transparent 42%),
+        linear-gradient(160deg, #e0f7fa 0%, #e1f5fe 25%, #e0f2f1 50%, #e8f5e9 75%, #e0f7fa 100%) fixed !important;
+    background-size: cover;
+}
+
+// ---------------------------------------------------------------------
+// Top bar: Odoo's navbar uses its own (white) entry colour variables
+// ---------------------------------------------------------------------
+html.o_lg_light .o_main_navbar {
+    --NavBar-entry-color: #{$lgl-text};
+    --NavBar-entry-color--hover: #{$lgl-teal-dark};
+    --NavBar-entry-color--active: #{$lgl-teal-dark};
+    --NavBar-brand-color: #{$lgl-text};
+
+    .o_menu_brand,
+    .o_menu_sections .o_nav_entry,
+    .o_menu_sections .dropdown-toggle,
+    .o_menu_sections a,
+    .o_menu_sections button,
+    .o_navbar_apps_menu button,
+    .o_menu_toggle,
+    .o_menu_systray .o_nav_entry,
+    .o_menu_systray .dropdown-toggle,
+    .o_menu_systray > div > button,
+    .o_menu_systray button,
+    .o_menu_systray a,
+    .o_menu_systray i,
+    .o_menu_systray .fa,
+    .o_menu_systray .oi,
+    .o_menu_systray svg,
+    .oe_topbar_name {
+        color: $lgl-text !important;
+    }
+
+    .o_menu_brand {
+        font-weight: 600;
+    }
+
+    .o_menu_sections .o_nav_entry:hover,
+    .o_menu_sections .dropdown-toggle:hover,
+    .o_menu_sections .show > .dropdown-toggle,
+    .o_menu_sections .dropdown-toggle.show {
+        color: $lgl-teal-dark !important;
+    }
+
+    // Counter badges stay white on their green fill
+    .badge,
+    .o-mail-MessagingMenu-counter,
+    .o_activity_menu_counter {
+        color: #ffffff !important;
+    }
+}
+
+// ---------------------------------------------------------------------
+// Keep white text where it sits on a coloured fill
+// ---------------------------------------------------------------------
+html.o_lg_light {
+    .btn-primary,
+    .btn-primary *,
+    .btn-success,
+    .btn-success *,
+    .btn-danger,
+    .btn-danger *,
+    .btn-info,
+    .btn-info *,
+    .o_arrow_button.btn-primary,
+    .o_arrow_button.o_arrow_button_current,
+    .o_arrow_button_current *,
+    .badge.text-bg-primary,
+    .badge.text-bg-success,
+    .badge.text-bg-danger,
+    .badge.text-bg-info,
+    .text-bg-primary,
+    .text-bg-success,
+    .text-bg-danger,
+    .o_lg_on_fill,
+    .o_lg_on_fill * {
+        color: #ffffff !important;
+    }
+
+    // Statusbar: muted steps readable on light glass. The current step also
+    // carries .btn-secondary in Odoo 20, so exclude it (it keeps white on teal).
+    .o_form_statusbar .o_arrow_button.btn-secondary:not(.o_arrow_button_current) {
+        color: rgba(26, 60, 77, 0.6) !important;
+    }
+    .o_form_statusbar .o_arrow_button.o_arrow_button_current,
+    .o_form_statusbar .o_arrow_button.o_arrow_button_current * {
+        color: #ffffff !important;
+    }
+
+    // Bootstrap "light" buttons were made transparent+white by the theme
+    .btn-light,
+    .btn-secondary {
+        color: $lgl-text !important;
+    }
+    .btn-secondary {
+        border: 1px solid rgba(26, 60, 77, 0.10) !important;
+    }
+
+    // Links / accents
+    .o_content a:not(.btn):not(.dropdown-item):not(.nav-link) {
+        color: $lgl-teal-dark;
+    }
+    .o_form_uri,
+    .o_form_uri span {
+        color: #0b72c7 !important;
+    }
+
+    // Inputs
+    .o_input,
+    .form-control,
+    .form-select {
+        color: $lgl-text !important;
+    }
+    .o_input::placeholder,
+    .form-control::placeholder {
+        color: rgba(26, 60, 77, 0.4) !important;
+    }
+
+    // Record: value boxes as clean white cards in light mode
+    .o_action_manager .o_form_view .o_inner_group .o_cell:not(.o_wrap_label):not(.o_no_box) {
+        background: rgba(255, 255, 255, 0.85) !important;
+        border-color: rgba(26, 60, 77, 0.12) !important;
+
+        &:hover,
+        &:focus-within {
+            background: #ffffff !important;
+            border-color: rgba(0, 151, 167, 0.45) !important;
+        }
+    }
+    .o_action_manager .o_form_view .o_inner_group .o_cell.o_wrap_label {
+        background: rgba(0, 151, 167, 0.10) !important;
+        border-color: rgba(0, 151, 167, 0.30) !important;
+    }
+
+    // Apps grid panel
+    .o-dropdown--menu.o_lg_apps_grid .o_lg_app_name {
+        color: $lgl-text !important;
+    }
+    .o-dropdown--menu.o_lg_apps_grid .o_lg_app_icon {
+        box-shadow: 0 3px 10px rgba(0, 131, 143, 0.15);
+    }
+
+    // Lists
+    .o_list_table thead {
+        background: rgba(255, 255, 255, 0.75) !important;
+    }
+
+    // Scrollbars
+    * {
+        scrollbar-color: rgba(26, 60, 77, 0.25) transparent;
+    }
+}
+
+// ---------------------------------------------------------------------
+// Appearance switcher (systray)
+// ---------------------------------------------------------------------
+.o_lg_scheme_toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0 !important;
+    border-radius: 50% !important;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.o-dropdown--menu.o_lg_scheme_menu {
+    min-width: 190px;
+    padding: 6px !important;
+    border-radius: $radius-sm !important;
+
+    .o_lg_scheme_item {
+        display: flex !important;
+        align-items: center;
+        gap: 10px;
+        border-radius: 8px;
+        padding: 7px 10px !important;
+
+        svg {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 16px;
+        }
+
+        .o_lg_scheme_check {
+            margin-left: auto;
+            visibility: hidden;
+        }
+
+        &.o_lg_active {
+            background: $hover-bg !important;
+            font-weight: 600;
+
+            .o_lg_scheme_check {
+                visibility: visible;
+                color: $primary-color !important;
+            }
+        }
+    }
+}

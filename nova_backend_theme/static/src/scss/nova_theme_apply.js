@@ -207,8 +207,10 @@ function paintTheme(theme) {
             const hover = dark ? mix("#FFFFFF", accent, 0.18) : mix("#000000", accent, 0.12);
             const active = dark ? mix("#FFFFFF", accent, 0.35) : mix("#000000", accent, 0.3);
             const soft = dark ? rgba(accent, 0.22) : rgba(accent, 0.12);
-            // Readable text on top of the accent: white unless black wins.
-            const fg = contrast(accent, "#FFFFFF") >= contrast(accent, "#101214")
+            // Readable text on top of the accent: white whenever it passes
+            // WCAG AA (4.5:1), otherwise whichever of white/black wins.
+            const whiteContrast = contrast(accent, "#FFFFFF");
+            const fg = whiteContrast >= 4.5 || whiteContrast >= contrast(accent, "#101214")
                 ? "#FFFFFF"
                 : "#101214";
             const [r, g, b] = hexToRgb(accent);

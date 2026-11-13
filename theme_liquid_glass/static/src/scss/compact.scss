@@ -13,7 +13,7 @@ $lg-font-sm: 12px;
 // 1. Apps grid
 // ---------------------------------------------------------------------
 .o-dropdown--menu.o_lg_apps_grid {
-    @include glass-effect(rgba(30, 40, 55, 0.92), $blur-heavy);
+    @include glass-effect(var(--lg-panel, rgba(30, 40, 55, 0.92)), $blur-heavy);
     @include glass-border;
     border-radius: $radius-lg !important;
     box-shadow: $shadow-heavy !important;
@@ -252,15 +252,15 @@ input[type="submit"],
 // ---------------------------------------------------------------------
 // 4. Form colour layers: record sheet / field label / field value
 // ---------------------------------------------------------------------
-$lg-sheet-bg: rgba(12, 22, 40, 0.55);
-$lg-sheet-border: rgba(6, 190, 160, 0.25);
-$lg-label-bg: rgba(6, 190, 160, 0.16);
-$lg-label-border: rgba(6, 190, 160, 0.40);
-$lg-label-text: #8eeedd;
-$lg-value-bg: rgba(255, 255, 255, 0.07);
-$lg-value-bg-hover: rgba(255, 255, 255, 0.12);
-$lg-value-border: rgba(255, 255, 255, 0.14);
-$lg-value-text: #ffffff;
+$lg-sheet-bg: var(--lg-sheet-bg, rgba(12, 22, 40, 0.55));
+$lg-sheet-border: RGBA(var(--lg-primary-rgb, 6, 190, 160), 0.25);
+$lg-label-bg: RGBA(var(--lg-primary-rgb, 6, 190, 160), 0.16);
+$lg-label-border: RGBA(var(--lg-primary-rgb, 6, 190, 160), 0.40);
+$lg-label-text: var(--lg-label-text, #8eeedd);
+$lg-value-bg: RGBA(var(--lg-ink, 255, 255, 255), 0.07);
+$lg-value-bg-hover: RGBA(var(--lg-ink, 255, 255, 255), 0.12);
+$lg-value-border: RGBA(var(--lg-ink, 255, 255, 255), 0.14);
+$lg-value-text: var(--lg-text, #ffffff);
 
 .o_action_manager .o_form_view {
     // Record sheet
@@ -281,8 +281,8 @@ $lg-value-text: #ffffff;
         border: 1px solid $lg-label-border !important;
 
         &:hover {
-            background: rgba(6, 190, 160, 0.22) !important;
-            border-color: rgba(6, 190, 160, 0.55) !important;
+            background: RGBA(var(--lg-primary-rgb, 6, 190, 160), 0.22) !important;
+            border-color: RGBA(var(--lg-primary-rgb, 6, 190, 160), 0.55) !important;
         }
 
         .o_form_label,
@@ -302,7 +302,7 @@ $lg-value-text: #ffffff;
         &:hover,
         &:focus-within {
             background: $lg-value-bg-hover !important;
-            border-color: rgba(255, 255, 255, 0.28) !important;
+            border-color: RGBA(var(--lg-ink, 255, 255, 255), 0.28) !important;
         }
 
         .o_field_widget,
@@ -315,13 +315,13 @@ $lg-value-text: #ffffff;
         }
 
         .o_input::placeholder {
-            color: rgba(255, 255, 255, 0.4) !important;
+            color: RGBA(var(--lg-ink, 255, 255, 255), 0.4) !important;
         }
 
         a,
         .o_form_uri,
         .o_form_uri span {
-            color: #5fd4ff !important;
+            color: var(--lg-link, #5fd4ff) !important;
         }
     }
 }

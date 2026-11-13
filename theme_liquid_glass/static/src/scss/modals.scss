@@ -6,16 +6,16 @@
         margin: 1.75rem auto !important;
 
         .modal-content {
-            background: rgba(8, 12, 20, 0.99) !important;
+            background: var(--lg-panel, rgba(8, 12, 20, 0.99)) !important;
             backdrop-filter: blur(40px) saturate(180%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.12) !important;
             border-radius: 20px !important;
             box-shadow: 0 20px 70px rgba(0, 0, 0, 0.8) !important;
             color: $text-white !important;
 
             .modal-header {
                 @include transparent-bg;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-bottom: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.1) !important;
                 padding: 16px 28px !important;
 
                 .modal-title {
@@ -58,9 +58,9 @@
 
                 // Single clean lighter background panel for the form as shown in the reference image
                 .o_form_sheet {
-                    background: rgba(255, 255, 255, 0.08) !important;
+                    background: RGBA(var(--lg-ink, 255, 255, 255), 0.08) !important;
                     backdrop-filter: blur(20px) saturate(180%) !important;
-                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    border: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.1) !important;
                     border-radius: 16px !important;
                     padding: 24px !important;
                     margin: 0 !important;
@@ -155,11 +155,11 @@
                         margin: 0 0 6px 0 !important;
                         font-size: 26px !important;
                         font-weight: 600 !important;
-                        color: #ffffff !important;
+                        color: var(--lg-text, #ffffff) !important;
                     }
 
                     div[name="email"] {
-                        border-bottom: 1px solid rgba(255, 255, 255, 0.35) !important;
+                        border-bottom: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.35) !important;
                         padding-bottom: 4px !important;
                         margin-bottom: 6px !important;
                         width: fit-content !important;
@@ -170,7 +170,7 @@
                         gap: 8px !important;
 
                         i, input, span {
-                            color: rgba(255, 255, 255, 0.9) !important;
+                            color: RGBA(var(--lg-ink, 255, 255, 255), 0.9) !important;
                             background: transparent !important;
                             border: none !important;
                             font-size: 14px !important;
@@ -183,7 +183,7 @@
                         gap: 8px !important;
 
                         i, input, span {
-                            color: rgba(255, 255, 255, 0.9) !important;
+                            color: RGBA(var(--lg-ink, 255, 255, 255), 0.9) !important;
                             background: transparent !important;
                             border: none !important;
                             font-size: 14px !important;
@@ -212,20 +212,20 @@
                             padding: 8px 22px !important;
                             font-size: 14px !important;
                             font-weight: 500 !important;
-                            background: rgba(255, 255, 255, 0.08) !important;
-                            color: rgba(255, 255, 255, 0.65) !important;
+                            background: RGBA(var(--lg-ink, 255, 255, 255), 0.08) !important;
+                            color: RGBA(var(--lg-ink, 255, 255, 255), 0.65) !important;
                             border: 1px solid transparent !important;
                             transition: $transition-base;
 
                             &:hover {
-                                color: #ffffff !important;
-                                background: rgba(255, 255, 255, 0.14) !important;
+                                color: var(--lg-text, #ffffff) !important;
+                                background: RGBA(var(--lg-ink, 255, 255, 255), 0.14) !important;
                             }
 
                             &.active {
-                                background: rgba(255, 255, 255, 0.12) !important;
-                                border: 1.5px solid rgba(255, 255, 255, 0.7) !important;
-                                color: #ffffff !important;
+                                background: RGBA(var(--lg-ink, 255, 255, 255), 0.12) !important;
+                                border: 1.5px solid RGBA(var(--lg-ink, 255, 255, 255), 0.7) !important;
+                                color: var(--lg-text, #ffffff) !important;
                             }
                         }
                     }
@@ -266,8 +266,8 @@
                     margin-bottom: 16px !important;
 
                     .o_cell {
-                        background: rgba(255, 255, 255, 0.06) !important;
-                        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                        background: RGBA(var(--lg-ink, 255, 255, 255), 0.06) !important;
+                        border: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.15) !important;
                         border-radius: 12px !important;
                         padding: 12px 18px !important;
                         margin: 0 !important;
@@ -275,21 +275,21 @@
                         display: flex !important;
                         align-items: center !important;
                         min-height: 52px;
-                        color: #ffffff !important;
+                        color: var(--lg-text, #ffffff) !important;
 
                         &:hover {
-                            background: rgba(255, 255, 255, 0.1) !important;
-                            border-color: rgba(255, 255, 255, 0.25) !important;
+                            background: RGBA(var(--lg-ink, 255, 255, 255), 0.1) !important;
+                            border-color: RGBA(var(--lg-ink, 255, 255, 255), 0.25) !important;
                         }
 
                         &.o_wrap_label {
-                            color: #ffffff !important;
+                            color: var(--lg-text, #ffffff) !important;
                             font-weight: 600 !important;
                             font-size: 13.5px !important;
                             white-space: nowrap;
 
                             label, .o_form_label {
-                                color: #ffffff !important;
+                                color: var(--lg-text, #ffffff) !important;
                                 margin-bottom: 0 !important;
                                 font-weight: 600 !important;
                             }
@@ -297,7 +297,7 @@
 
                         // Input/content cells (both .o_wrap_input and .o_cell_custom)
                         &:not(.o_wrap_label) {
-                            color: #ffffff !important;
+                            color: var(--lg-text, #ffffff) !important;
                             min-width: 0;
 
                             // The .o_row container (used for Language select + Globe button)
@@ -339,8 +339,8 @@
                                     background: transparent !important;
                                     border: none !important;
                                     box-shadow: none !important;
-                                    color: #ffffff !important;
-                                    -webkit-text-fill-color: #ffffff !important;
+                                    color: var(--lg-text, #ffffff) !important;
+                                    -webkit-text-fill-color: var(--lg-text, #ffffff) !important;
                                     opacity: 1 !important;
                                     font-size: 14px !important;
                                     font-weight: 500 !important;
@@ -352,13 +352,13 @@
                                     visibility: visible !important;
 
                                     &::placeholder {
-                                        color: rgba(255, 255, 255, 0.7) !important;
-                                        -webkit-text-fill-color: rgba(255, 255, 255, 0.7) !important;
+                                        color: RGBA(var(--lg-ink, 255, 255, 255), 0.7) !important;
+                                        -webkit-text-fill-color: RGBA(var(--lg-ink, 255, 255, 255), 0.7) !important;
                                     }
                                 }
 
                                 .o_select_menu_toggler_slot {
-                                    color: #ffffff !important;
+                                    color: var(--lg-text, #ffffff) !important;
                                     font-size: 14px !important;
                                     font-weight: 500 !important;
                                     white-space: nowrap !important;
@@ -373,7 +373,7 @@
                                 button[title*="language"],
                                 button[data-icon="public"] {
                                     flex: 0 0 auto !important;
-                                    color: rgba(255, 255, 255, 0.75) !important;
+                                    color: RGBA(var(--lg-ink, 255, 255, 255), 0.75) !important;
                                     background: transparent !important;
                                     border: none !important;
                                     padding: 0 4px !important;
@@ -383,7 +383,7 @@
                                     cursor: pointer !important;
 
                                     &:hover {
-                                        color: #ffffff !important;
+                                        color: var(--lg-text, #ffffff) !important;
                                     }
                                 }
                             }
@@ -396,8 +396,8 @@
                                 background: transparent !important;
                                 border: none !important;
                                 box-shadow: none !important;
-                                color: #ffffff !important;
-                                -webkit-text-fill-color: #ffffff !important;
+                                color: var(--lg-text, #ffffff) !important;
+                                -webkit-text-fill-color: var(--lg-text, #ffffff) !important;
                                 opacity: 1 !important;
                                 font-size: 14px !important;
                                 font-weight: 500 !important;
@@ -405,13 +405,13 @@
                                 width: 100% !important;
 
                                 &::placeholder {
-                                    color: rgba(255, 255, 255, 0.7) !important;
-                                    -webkit-text-fill-color: rgba(255, 255, 255, 0.7) !important;
+                                    color: RGBA(var(--lg-ink, 255, 255, 255), 0.7) !important;
+                                    -webkit-text-fill-color: RGBA(var(--lg-ink, 255, 255, 255), 0.7) !important;
                                 }
 
                                 option {
-                                    background: #202733 !important;
-                                    color: #ffffff !important;
+                                    background: var(--lg-panel, #202733) !important;
+                                    color: var(--lg-text, #ffffff) !important;
                                 }
                             }
 
@@ -452,20 +452,20 @@
                                         padding: 0 !important;
                                         border-radius: 50% !important;
                                         flex: 0 0 16px !important;
-                                        accent-color: #06bea0 !important;
+                                        accent-color: var(--lg-primary, #06bea0) !important;
                                         background-color: transparent !important;
-                                        border: 2px solid rgba(255, 255, 255, 0.6) !important;
+                                        border: 2px solid RGBA(var(--lg-ink, 255, 255, 255), 0.6) !important;
                                         cursor: pointer !important;
 
                                         &:checked {
-                                            background-color: #06bea0 !important;
-                                            border-color: #06bea0 !important;
+                                            background-color: var(--lg-primary, #06bea0) !important;
+                                            border-color: var(--lg-primary, #06bea0) !important;
                                         }
                                     }
 
                                     .form-check-label,
                                     .o_form_label {
-                                        color: #ffffff !important;
+                                        color: var(--lg-text, #ffffff) !important;
                                         font-size: 14px !important;
                                         font-weight: 500 !important;
                                         margin: 0 !important;
@@ -508,10 +508,10 @@
                         // Exactly ONE inner box: the editable area containing the signature text
                         .odoo-editor-editable,
                         textarea {
-                            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                            border: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.15) !important;
                             border-radius: 8px !important;
                             background: transparent !important;
-                            color: #ffffff !important;
+                            color: var(--lg-text, #ffffff) !important;
                             padding: 10px 14px !important;
                             width: 100% !important;
                             min-height: 110px !important;
@@ -519,7 +519,7 @@
                             outline: none !important;
 
                             p, div, span {
-                                color: #ffffff !important;
+                                color: var(--lg-text, #ffffff) !important;
                                 margin: 0 !important;
                                 font-size: 14px !important;
                             }
@@ -537,7 +537,7 @@
 
             .modal-footer {
                 @include transparent-bg;
-                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-top: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.1) !important;
                 justify-content: flex-start !important;
                 gap: 12px !important;
                 padding: 16px 28px !important;
@@ -553,7 +553,7 @@
                 .btn-primary,
                 button[name="preference_save"] {
                     background: #1ea880 !important;
-                    color: #ffffff !important;
+                    color: var(--lg-text, #ffffff) !important;
                     border: none !important;
 
                     &:hover {
@@ -563,12 +563,12 @@
 
                 .btn-secondary,
                 button[name="preference_cancel"] {
-                    background: rgba(255, 255, 255, 0.15) !important;
-                    color: #ffffff !important;
+                    background: RGBA(var(--lg-ink, 255, 255, 255), 0.15) !important;
+                    color: var(--lg-text, #ffffff) !important;
                     border: none !important;
 
                     &:hover {
-                        background: rgba(255, 255, 255, 0.25) !important;
+                        background: RGBA(var(--lg-ink, 255, 255, 255), 0.25) !important;
                     }
                 }
             }

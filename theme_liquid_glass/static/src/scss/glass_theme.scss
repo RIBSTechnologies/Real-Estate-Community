@@ -34,7 +34,7 @@ span, div, p {
 a {
     color: $text-white;
     &:hover {
-        color: rgba(255, 255, 255, 0.8);
+        color: RGBA(var(--lg-ink, 255, 255, 255), 0.8);
     }
 }
 
@@ -47,7 +47,7 @@ table {
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+    scrollbar-color: RGBA(var(--lg-ink, 255, 255, 255), 0.25) transparent;
 }
 
 .o_searchview,
@@ -169,7 +169,7 @@ table {
             border: none !important;
             box-shadow: none !important;
             outline: none !important;
-            color: rgba(255, 255, 255, 0.65) !important;
+            color: RGBA(var(--lg-ink, 255, 255, 255), 0.65) !important;
         }
 
         // Font Awesome cog icon (fa-cog)
@@ -300,10 +300,10 @@ table {
 // and style all inner cells with the liquid-glass palette.
 
 .o_datetime_picker {
-    background: rgba(10, 16, 28, 0.92) !important;
+    background: var(--lg-panel, rgba(10, 16, 28, 0.92)) !important;
     backdrop-filter: blur(40px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.15) !important;
     border-radius: $radius-md !important;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7) !important;
     color: $text-white !important;
@@ -337,8 +337,8 @@ table {
     // ---- Day-of-week header row (Mon, Tue, ... Sun) ----
     .o_day_of_week_cell,
     .o_week_number_cell {
-        background: rgba(255, 255, 255, 0.06) !important;
-        color: rgba(255, 255, 255, 0.5) !important;
+        background: RGBA(var(--lg-ink, 255, 255, 255), 0.06) !important;
+        color: RGBA(var(--lg-ink, 255, 255, 255), 0.5) !important;
         font-size: 11px !important;
         font-weight: 600 !important;
         letter-spacing: 0.5px;
@@ -361,12 +361,12 @@ table {
 
         // Days outside the current month — dimmed
         &.o_out_of_range {
-            color: rgba(255, 255, 255, 0.3) !important;
+            color: RGBA(var(--lg-ink, 255, 255, 255), 0.3) !important;
         }
 
         // Disabled cells
         &[disabled] {
-            color: rgba(255, 255, 255, 0.2) !important;
+            color: RGBA(var(--lg-ink, 255, 255, 255), 0.2) !important;
             cursor: not-allowed !important;
         }
     }
@@ -374,7 +374,7 @@ table {
     // ---- Today's date — teal filled circle ----
     .o_today > div,
     .o_today {
-        background-color: rgba(6, 190, 160, 0.25) !important;
+        background-color: RGBA(var(--lg-primary-rgb, 6, 190, 160), 0.25) !important;
         border-radius: 50% !important;
         color: $primary-color !important;
         font-weight: 700 !important;
@@ -385,7 +385,7 @@ table {
     .o_selected,
     .o_selected > div {
         background: $primary-color !important;
-        color: #ffffff !important;
+        color: var(--lg-text, #ffffff) !important;
         border-radius: 50% !important;
         font-weight: 700 !important;
         border: none !important;
@@ -395,7 +395,7 @@ table {
     .o_select_start,
     .o_select_end {
         background: $primary-color !important;
-        color: #ffffff !important;
+        color: var(--lg-text, #ffffff) !important;
         font-weight: 700 !important;
     }
 
@@ -407,13 +407,13 @@ table {
 
     // ---- Time picker section ----
     .o_time_picker {
-        border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-top: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.12) !important;
         background: transparent !important;
         color: $text-white !important;
 
         input {
-            background: rgba(255, 255, 255, 0.08) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            background: RGBA(var(--lg-ink, 255, 255, 255), 0.08) !important;
+            border: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.15) !important;
             border-radius: $radius-sm !important;
             color: $text-white !important;
             text-align: center !important;
@@ -421,20 +421,20 @@ table {
             &:focus {
                 border-color: $primary-color !important;
                 outline: none !important;
-                box-shadow: 0 0 0 2px rgba(6, 190, 160, 0.25) !important;
+                box-shadow: 0 0 0 2px RGBA(var(--lg-primary-rgb, 6, 190, 160), 0.25) !important;
             }
         }
 
         .o_time_picker_select {
-            background: rgba(255, 255, 255, 0.08) !important;
+            background: RGBA(var(--lg-ink, 255, 255, 255), 0.08) !important;
             color: $text-white !important;
-            border-color: rgba(255, 255, 255, 0.15) !important;
+            border-color: RGBA(var(--lg-ink, 255, 255, 255), 0.15) !important;
         }
     }
 
     // ---- Footer / "Today" / "Now" buttons ----
     .o_datetime_picker_footer {
-        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-top: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.1) !important;
         background: transparent !important;
 
         .o_datetime_button,
@@ -445,7 +445,7 @@ table {
             font-weight: 600 !important;
 
             &:hover {
-                background: rgba(6, 190, 160, 0.15) !important;
+                background: RGBA(var(--lg-primary-rgb, 6, 190, 160), 0.15) !important;
                 border-radius: $radius-sm !important;
             }
         }
@@ -581,7 +581,7 @@ table {
 input[type="checkbox"] {
     --bs-form-check-bg: transparent;
     background-color: transparent !important;
-    border-color: rgba(255, 255, 255, 0.5) !important;
+    border-color: RGBA(var(--lg-ink, 255, 255, 255), 0.5) !important;
     border-radius: 3px !important;
 }
 
@@ -684,7 +684,7 @@ input[type="radio"]:checked {
 
 // Outer wrapper: border, shadow, radius
 .o_resizable_panel.o-mail-DiscussApp-sidebar {
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.12) !important;
     border-radius: $radius-md !important;
     box-shadow: $shadow-heavy;
     overflow: hidden !important;
@@ -694,9 +694,9 @@ input[type="radio"]:checked {
 .o-mail-MessagingMenu-container.d-flex,
 .o-mail-MessagingMenu.d-flex,
 .o-mail-MessagingMenu-navbar.d-flex {
-    background: rgba(20, 32, 50, 0.97) !important;
+    background: var(--lg-panel, rgba(20, 32, 50, 0.97)) !important;
     backdrop-filter: blur(24px) saturate(180%) !important;
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: RGBA(var(--lg-ink, 255, 255, 255), 0.9) !important;
 }
 
 // Inner layout containers — transparent (parent bg shows through)
@@ -704,55 +704,55 @@ input[type="radio"]:checked {
 .o-mail-MessagingMenu-tabContent,
 .o-mail-MessagingMenu-filters {
     background: transparent !important;
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: RGBA(var(--lg-ink, 255, 255, 255), 0.9) !important;
 }
 
 // Individual message items — subtle lighter glass card
 .o-mail-MessagingMenuItem.rounded-4 {
-    background: rgba(255, 255, 255, 0.07) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: RGBA(var(--lg-ink, 255, 255, 255), 0.07) !important;
+    border: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.1) !important;
     border-radius: $radius-sm !important;
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: RGBA(var(--lg-ink, 255, 255, 255), 0.9) !important;
     margin-bottom: 3px !important;
 
     &:hover {
-        background: rgba(255, 255, 255, 0.13) !important;
+        background: RGBA(var(--lg-ink, 255, 255, 255), 0.13) !important;
     }
 }
 
 // Tab nav buttons — transparent on dark bg
 .o-mail-MessagingMenu-tab.btn {
     background: transparent !important;
-    color: rgba(255, 255, 255, 0.7) !important;
+    color: RGBA(var(--lg-ink, 255, 255, 255), 0.7) !important;
     border-radius: $radius-sm !important;
 
     &.active {
-        color: rgba(255, 255, 255, 1) !important;
+        color: RGBA(var(--lg-ink, 255, 255, 255), 1) !important;
     }
 
     &:hover {
-        background: rgba(255, 255, 255, 0.08) !important;
+        background: RGBA(var(--lg-ink, 255, 255, 255), 0.08) !important;
     }
 
     .o-mail-MessagingMenu-tabIcon {
-        background: rgba(255, 255, 255, 0.1) !important;
-        color: rgba(255, 255, 255, 0.85) !important;
+        background: RGBA(var(--lg-ink, 255, 255, 255), 0.1) !important;
+        color: RGBA(var(--lg-ink, 255, 255, 255), 0.85) !important;
     }
 
     &.active .o-mail-MessagingMenu-tabIcon {
         background: $primary-color !important;
-        color: white !important;
+        color: var(--lg-text, white) !important;
     }
 }
 
 // Filter pills (All / Unread / Group)
 .o-mail-MessagingMenu-filter.btn {
-    color: rgba(255, 255, 255, 0.7) !important;
-    --btn-border-color: rgba(255, 255, 255, 0.2);
-    --btn-hover-border-color: rgba(255, 255, 255, 0.4);
+    color: RGBA(var(--lg-ink, 255, 255, 255), 0.7) !important;
+    --btn-border-color: RGBA(var(--lg-ink, 255, 255, 255), 0.2);
+    --btn-hover-border-color: RGBA(var(--lg-ink, 255, 255, 255), 0.4);
 
     &.o-active {
-        color: white !important;
+        color: var(--lg-text, white) !important;
         background: $primary-color !important;
         --btn-border-color: #{$primary-color};
     }
@@ -762,14 +762,14 @@ input[type="radio"]:checked {
 .o-mail-MessagingMenu-searchRow .btn-primary {
     background: $primary-color !important;
     border-color: $primary-color !important;
-    color: white !important;
+    color: var(--lg-text, white) !important;
 }
 
 // Notification items text
 .o-mail-MessagingMenuItem-name,
 .o-mail-MessagingMenuItem-body,
 .o-mail-NotificationItem {
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: RGBA(var(--lg-ink, 255, 255, 255), 0.85) !important;
 }
 
 // DiscussSearch bar — fix white background
@@ -779,27 +779,27 @@ input[type="radio"]:checked {
 .o-mail-MessagingMenu.d-flex,
 .o-mail-MessagingMenu-container.d-flex {
     // Redefine the CSS variable so the !important rule in Odoo SCSS gets the dark value
-    --mail-DiscussSearch-inputBgColor: rgba(255, 255, 255, 0.06);
+    --mail-DiscussSearch-inputBgColor: RGBA(var(--lg-ink, 255, 255, 255), 0.06);
 }
 
 .o-mail-DiscussSearch-inputContainer.border,
 .o-mail-DiscussSearch .o-mail-DiscussSearch-inputContainer {
-    background: rgba(255, 255, 255, 0.06) !important;
-    border-color: rgba(255, 255, 255, 0.2) !important;
+    background: RGBA(var(--lg-ink, 255, 255, 255), 0.06) !important;
+    border-color: RGBA(var(--lg-ink, 255, 255, 255), 0.2) !important;
 
     input,
     .form-control {
         background: transparent !important;
-        color: rgba(255, 255, 255, 0.9) !important;
-        caret-color: white;
+        color: RGBA(var(--lg-ink, 255, 255, 255), 0.9) !important;
+        caret-color: var(--lg-text, white);
 
         &::placeholder {
-            color: rgba(255, 255, 255, 0.4) !important;
+            color: RGBA(var(--lg-ink, 255, 255, 255), 0.4) !important;
         }
     }
 
     .oi {
-        color: rgba(255, 255, 255, 0.5) !important;
+        color: RGBA(var(--lg-ink, 255, 255, 255), 0.5) !important;
     }
 }
 
@@ -1071,7 +1071,7 @@ select.date_filter_values,
     color: $text-muted !important;
 
     option {
-        background: rgba(20, 25, 35, 0.98) !important;
+        background: var(--lg-panel, rgba(20, 25, 35, 0.98)) !important;
         border-radius: $radius-xl !important;
 
         &:hover {
@@ -1456,47 +1456,47 @@ select {
 
     .bg-view,
     div:has(> .o_date_filter_wrapper) {
-        background: rgba(255, 255, 255, 0.08) !important;
+        background: RGBA(var(--lg-ink, 255, 255, 255), 0.08) !important;
         backdrop-filter: blur(20px) saturate(180%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.15) !important;
         border-radius: 12px !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
 
         .o_date_filter_wrapper {
             background: transparent !important;
-            border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-right: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.12) !important;
 
             button, .btn {
                 background: transparent !important;
                 border: none !important;
-                color: #ffffff !important;
+                color: var(--lg-text, #ffffff) !important;
                 font-size: 14px !important;
                 font-weight: 500 !important;
                 padding: 6px 14px !important;
 
                 &:hover {
-                    background: rgba(255, 255, 255, 0.1) !important;
+                    background: RGBA(var(--lg-ink, 255, 255, 255), 0.1) !important;
                 }
 
                 .oi, i {
-                    color: rgba(255, 255, 255, 0.8) !important;
+                    color: RGBA(var(--lg-ink, 255, 255, 255), 0.8) !important;
                 }
             }
         }
 
         .o_cards_container {
-            border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-left: 1px solid RGBA(var(--lg-ink, 255, 255, 255), 0.12) !important;
 
             .text-body,
             span.text-body,
             span.fw-bold:not(.fs-4) {
-                color: rgba(255, 255, 255, 0.85) !important;
+                color: RGBA(var(--lg-ink, 255, 255, 255), 0.85) !important;
                 font-size: 13px !important;
                 font-weight: 600 !important;
             }
 
             span.fs-4 {
-                color: #ffffff !important;
+                color: var(--lg-text, #ffffff) !important;
                 font-weight: 700 !important;
             }
 
