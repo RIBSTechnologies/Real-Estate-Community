@@ -8,13 +8,14 @@ add a round-trip to every anonymous page view and could not be cached.
 """
 import base64
 import binascii
-import os
 
 from odoo import http
 from odoo.http import request
+from odoo.tools import file_open
 
-_DEFAULT_LOGO = "/nova_backend_theme/static/src/webclient/icons/nova_favicon.svg"
-_DEFAULT_FAVICON = "/nova_backend_theme/static/src/webclient/icons/nova_favicon.svg"
+# Fallbacks when the company has not uploaded its own assets: stock Odoo icons.
+_DEFAULT_LOGO = "/web/static/img/odoo-icon.svg"
+_DEFAULT_FAVICON = "/web/static/img/favicon.ico"
 
 
 def _sniff_mimetype(raw):
@@ -37,11 +38,10 @@ def _default_bytes(url):
     """Read a bundled static file off disk (the public fallback asset)."""
     path = url.lstrip("/").split("?", 1)[0]
     try:
-        module_path = os.path.dirname(os.path.dirname(__file__))
-        relative = path.split("/", 1)[1] if "/" in path else path
-        with open(os.path.join(module_path, relative), "rb") as handle:
+        # file_open resolves "<addon>/static/..." across the addons path.
+        with file_open(path, "rb") as handle:
             return handle.read()
-    except OSError:
+    except (OSError, ValueError):
         return None
 
 
@@ -66,7 +66,7 @@ class NovaBranding(http.Controller):
                     raw = None
         if not raw:
             raw = _default_bytes(fallback_url)
-            mimetype = "image/svg+xml"
+            mimetype = _sniff_mimetype(raw) if raw else "image/svg+xml"
         else:
             mimetype = getattr(data, "mimetype", None) or _sniff_mimetype(raw)
         if not raw:

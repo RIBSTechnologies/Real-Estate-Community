@@ -170,7 +170,7 @@ class TestNovaBranding(TransactionCase):
     def test_branding_name_falls_back_to_default(self):
         company = self.company
         company.write({"nova_brand_name": False})
-        self.assertEqual(company._nova_branding()["name"], "Zeetavix")
+        self.assertEqual(company._nova_branding()["name"], "Odoo")
 
     def test_logo_upload_sets_metadata_and_cache_buster(self):
         company = self.company

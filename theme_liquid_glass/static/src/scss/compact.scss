@@ -1,0 +1,327 @@
+// =====================================================================
+//  Liquid Glass - local adjustments
+//   1. Apps menu (⊞) as an icon grid instead of a text list
+//   2. Properties dashboard base text colour
+//   3. Medium ("compact") density: smaller font, fields, buttons, gaps
+//  Loaded last so it wins over the theme's own rules.
+// =====================================================================
+
+$lg-font: 13px;
+$lg-font-sm: 12px;
+
+// ---------------------------------------------------------------------
+// 1. Apps grid
+// ---------------------------------------------------------------------
+.o-dropdown--menu.o_lg_apps_grid {
+    @include glass-effect(rgba(30, 40, 55, 0.92), $blur-heavy);
+    @include glass-border;
+    border-radius: $radius-lg !important;
+    box-shadow: $shadow-heavy !important;
+    padding: 14px !important;
+    width: 560px;
+    max-width: 92vw;
+    max-height: 75vh;
+    overflow-y: auto;
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 6px;
+
+    .o_lg_app_tile.dropdown-item {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 6px;
+        padding: 10px 4px !important;
+        border-radius: $radius-sm !important;
+        background: transparent !important;
+        white-space: normal;
+        text-align: center;
+        transition: $transition-base;
+
+        &:hover,
+        &.focus,
+        &:focus {
+            background: $hover-bg !important;
+            transform: translateY(-2px);
+        }
+    }
+
+    .o_lg_app_icon {
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        i {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+    }
+
+    .o_lg_app_name {
+        font-size: $lg-font-sm;
+        line-height: 1.25;
+        color: $text-white !important;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
+    }
+}
+
+// ---------------------------------------------------------------------
+// 2. Properties > Dashboard: dark base text on its light cards
+//    (the theme's forced white text is excluded there, see glass_theme)
+// ---------------------------------------------------------------------
+.tk_rental_dash {
+    color: #2b3648;
+}
+
+// ---------------------------------------------------------------------
+// 3. Medium density
+// ---------------------------------------------------------------------
+
+// Top bar & page frame
+.o_navbar {
+    margin: 8px 12px;
+    padding: 4px 10px;
+}
+
+.o_main_navbar {
+    font-size: $lg-font;
+}
+
+.o_content {
+    margin: 10px 14px;
+}
+
+.o_control_panel {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+
+    .o_breadcrumb .breadcrumb-item,
+    .breadcrumb .breadcrumb-item,
+    .breadcrumb li {
+        font-size: 14px;
+    }
+}
+
+// Buttons
+button,
+.btn,
+input[type="button"],
+input[type="submit"],
+.o_button {
+    padding: 5px 12px;
+    font-size: $lg-font;
+}
+
+.btn-sm {
+    padding: 3px 8px;
+    font-size: $lg-font-sm;
+}
+
+.o-form-buttonbox .oe_stat_button {
+    padding: 4px 10px !important;
+    border-radius: $radius-sm;
+    min-height: 0;
+
+    .o_stat_text,
+    .o_stat_value,
+    .o_stat_info {
+        font-size: $lg-font-sm;
+        line-height: 1.2;
+    }
+
+    .o_button_icon {
+        font-size: 16px;
+    }
+}
+
+// Form
+.o_form_view {
+    font-size: $lg-font;
+
+    .o_form_sheet_bg .o_form_sheet {
+        margin: 10px;
+        padding: 12px 18px;
+    }
+
+    .o_form_statusbar {
+        padding: 3px 8px;
+
+        .o_statusbar_buttons .btn {
+            padding: 4px 10px;
+        }
+
+        .o_arrow_button {
+            padding: 4px 12px 4px 18px !important;
+            font-size: $lg-font;
+        }
+    }
+
+    .oe_title h1,
+    .oe_title .o_field_widget {
+        font-size: 20px;
+    }
+
+    .o_horizontal_separator,
+    .o_group .o_horizontal_separator {
+        font-size: 14px;
+        margin-top: 8px;
+        margin-bottom: 4px;
+    }
+
+    .o_form_label,
+    .o_field_widget,
+    .o_input,
+    .form-control,
+    .form-select,
+    label {
+        font-size: $lg-font;
+    }
+
+    .o_inner_group,
+    .o_group {
+        --gutter-y: 4px;
+    }
+
+    .o_inner_group > .o_wrap_field,
+    .o_inner_group tr {
+        margin-bottom: 4px;
+    }
+
+    .o_field_widget .o_input,
+    .o_input {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        min-height: 0;
+    }
+
+    .o_notebook .nav-tabs .nav-link {
+        padding: 5px 12px;
+        margin-bottom: 8px;
+        margin-right: 8px;
+        font-size: $lg-font;
+    }
+}
+
+.o_cell {
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+// List
+.o_list_renderer {
+    padding: 4px;
+}
+
+.o_list_table {
+    font-size: $lg-font;
+
+    thead th {
+        padding: 6px 8px !important;
+    }
+
+    tbody td {
+        padding: 5px 8px;
+    }
+}
+
+// Kanban cards
+.o_kanban_renderer {
+    font-size: $lg-font;
+}
+
+// ---------------------------------------------------------------------
+// 4. Form colour layers: record sheet / field label / field value
+// ---------------------------------------------------------------------
+$lg-sheet-bg: rgba(12, 22, 40, 0.55);
+$lg-sheet-border: rgba(6, 190, 160, 0.25);
+$lg-label-bg: rgba(6, 190, 160, 0.16);
+$lg-label-border: rgba(6, 190, 160, 0.40);
+$lg-label-text: #8eeedd;
+$lg-value-bg: rgba(255, 255, 255, 0.07);
+$lg-value-bg-hover: rgba(255, 255, 255, 0.12);
+$lg-value-border: rgba(255, 255, 255, 0.14);
+$lg-value-text: #ffffff;
+
+.o_action_manager .o_form_view {
+    // Record sheet
+    .o_form_sheet_bg .o_form_sheet {
+        background: $lg-sheet-bg !important;
+        border: 1px solid $lg-sheet-border !important;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .o_horizontal_separator {
+        color: $lg-label-text !important;
+        border-bottom-color: $lg-sheet-border !important;
+    }
+
+    // Field name
+    .o_inner_group .o_cell.o_wrap_label {
+        background: $lg-label-bg !important;
+        border: 1px solid $lg-label-border !important;
+
+        &:hover {
+            background: rgba(6, 190, 160, 0.22) !important;
+            border-color: rgba(6, 190, 160, 0.55) !important;
+        }
+
+        .o_form_label,
+        label,
+        span,
+        div {
+            color: $lg-label-text !important;
+            font-weight: 600;
+        }
+    }
+
+    // Field value
+    .o_inner_group .o_cell:not(.o_wrap_label):not(.o_no_box) {
+        background: $lg-value-bg !important;
+        border: 1px solid $lg-value-border !important;
+
+        &:hover,
+        &:focus-within {
+            background: $lg-value-bg-hover !important;
+            border-color: rgba(255, 255, 255, 0.28) !important;
+        }
+
+        .o_field_widget,
+        .o_input,
+        span:not(.badge):not(.o_tag_badge_text),
+        div,
+        p {
+            color: $lg-value-text !important;
+            font-weight: 400;
+        }
+
+        .o_input::placeholder {
+            color: rgba(255, 255, 255, 0.4) !important;
+        }
+
+        a,
+        .o_form_uri,
+        .o_form_uri span {
+            color: #5fd4ff !important;
+        }
+    }
+}

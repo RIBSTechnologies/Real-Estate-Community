@@ -47,7 +47,7 @@
                             <div class="d-flex gap-3 flex-wrap align-items-start">
                                 <div>
                                     <label for="nova_brand_name" string="Brand name"/>
-                                    <field name="nova_brand_name" placeholder="Zeetavix"/>
+                                    <field name="nova_brand_name" placeholder="Odoo"/>
                                 </div>
                                 <div>
                                     <label for="nova_brand_email" string="Contact email"/>

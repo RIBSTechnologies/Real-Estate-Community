@@ -19,7 +19,7 @@
         <tr t-if="object.property_id"><td><b>Unit</b></td><td><t t-out="object.property_id.name"/></td></tr>
         <tr><td><b>Scheduled Date</b></td><td><t t-out="object.schedule_date" t-options="{'widget': 'datetime'}"/></td></tr>
         <tr><td><b>Current Stage</b></td><td><t t-out="object.stage_id.name"/></td></tr>
-        <tr t-if="object.user_id"><td><b>Technician</b></td><td><t t-out="object.user_id.name"/></td></tr>
+        <tr t-if="object.user_ids"><td><b>Technician</b></td><td><t t-out="', '.join(object.user_ids.mapped('name'))"/></td></tr>
     </table>
     <p style="margin-top: 16px;">
         <a t-att-href="'%s/odoo/action-maintenance.hr_equipment_request_action/%s' % (object.get_base_url(), object.id)"

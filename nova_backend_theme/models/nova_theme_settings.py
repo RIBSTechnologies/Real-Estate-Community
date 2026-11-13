@@ -28,7 +28,7 @@ except ImportError:  # pragma: no cover - very old Pillow
     _LANCZOS = _NEAREST = 1
 
 # Default identity; every branding field falls back to it when unset.
-NOVA_DEFAULT_BRAND = "Zeetavix"
+NOVA_DEFAULT_BRAND = "Odoo"
 
 # Upload guards. Anything bigger is refused with a readable message
 # instead of silently bloating every page load.
@@ -376,7 +376,7 @@ class ResCompany(models.Model):
         string="Nova Column Spotlight", default=False,
     )
     # -- White-label branding -------------------------------------------
-    # The theme ships with Zeetavix as the default identity, but a client
+    # The theme ships with Odoo as the default identity, but a client
     # must be able to put their own name, logo and favicon on the login
     # page, the browser tab and the document title. Empty values fall back
     # to those defaults, so nothing breaks when only one asset is set.
@@ -545,8 +545,8 @@ class ResCompany(models.Model):
         # Cache-busting: the assets are cached hard, so a changed logo must
         # change the URL. The digest is stored at upload time, so rendering
         # a page never has to read the binary just to build a URL.
-        logo_v = logo_meta.get("v") or "0"
-        favicon_v = favicon_meta.get("v") or "0"
+        logo_v = logo_meta.get("v") or "odoo"
+        favicon_v = favicon_meta.get("v") or "odoo"
         try:
             logo_ratio = float(logo_meta.get("ratio") or 1.0)
         except (TypeError, ValueError):

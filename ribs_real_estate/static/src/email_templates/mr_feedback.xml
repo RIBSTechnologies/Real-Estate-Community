@@ -26,7 +26,7 @@
                         <li><b>Contract :</b> <t t-out="object.rent_contract_id.tenancy_seq"/></li>
                         <li><b>Unit :</b> <t t-out="object.property_id.property_seq"/></li>
                         <li><b>Building :</b> <t t-out="object.property_id.property_project_id.name"/></li>
-                        <li><b>Responsible Person :</b> <t t-out="object.user_id.name"/></li>
+                        <li><b>Responsible Person :</b> <t t-out="', '.join(object.user_ids.mapped('name'))"/></li>
                         <li><b>Request Created On:</b> <t t-out="object.create_date and object.create_date.date()"/></li>
                         <li><b>Completed On:</b> <t t-out="object.close_date"/></li>
                     </ul>

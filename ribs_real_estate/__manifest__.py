@@ -74,6 +74,7 @@
         'views/account_account.xml',
         'views/templates/property_web_template_intherit.xml',
         'views/menus.xml',
+        'views/apps_action.xml',
         'views/pdc_wizard_inherit_view.xml',
         'views/account_payment_register_view.xml',
         'views/account_payment_view.xml',

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Website hides every theme_* module from Apps (website themes are
+         installed from Website > Settings > Choose a theme). Backend themes
+         (category Theme/Backend) cannot be installed from there, so keep
+         them visible in Apps; website themes stay hidden. -->
+    <record id="base.open_module_tree" model="ir.actions.act_window">
+        <field name="domain">['|', '!', ('name', '=like', 'theme_%'), ('category_id.name', '=', 'Backend')]</field>
+    </record>
+</odoo>

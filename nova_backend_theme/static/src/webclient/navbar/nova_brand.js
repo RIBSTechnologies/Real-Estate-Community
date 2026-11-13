@@ -10,7 +10,7 @@ import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { TitlePlugin } from "@web/core/browser/title_plugin";
 
-const BRAND = (session.nova_brand && session.nova_brand.name) || "Zeetavix";
+const BRAND = (session.nova_brand && session.nova_brand.name) || "Odoo";
 
 try {
     patch(TitlePlugin.prototype, {

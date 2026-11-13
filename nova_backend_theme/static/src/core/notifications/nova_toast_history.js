@@ -286,7 +286,7 @@ if (!novaToastPatched) {
 
 export class NovaToastBell extends Component {
     static template = "nova_backend_theme.NovaToastBell";
-    static props = {};
+    // No props: Owl 3 (Odoo 20) rejects "static props"; schemas go through useProps().
 
     setup() {
         this.notification = useService("notification");

@@ -4,7 +4,7 @@
         <record id="email_template_recurring_complaints" model="mail.template">
             <field name="name">Recurring Complaints</field>
             <field name="model_id" ref="maintenance.model_maintenance_request"/>
-            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_from">{{ (object.user_ids[:1].email_formatted or user.email_formatted) }}</field>
             <field name="subject">Multiple Complaints for {{ object.property_id.name }}</field>
             <field name="body_html">
                 <![CDATA[
