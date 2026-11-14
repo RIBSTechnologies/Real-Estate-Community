@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The chosen color, as SCSS variables read before Odoo's own (which all use !default).
+         Rewritten from the settings; its write date versions the asset bundles. -->
+    <record id="theme_color_scss" model="ir.attachment">
+        <field name="name">theme_color.scss</field>
+        <field name="type">binary</field>
+        <field name="url">/_custom/hn_theme_color/theme_color.scss</field>
+        <field name="mimetype">text/scss</field>
+        <!-- Odoo 20 reads binary field text as base64: "// Theme Color: Odoo default colors" -->
+        <field name="raw">Ly8gVGhlbWUgQ29sb3I6IE9kb28gZGVmYXVsdCBjb2xvcnMK</field>
+    </record>
+
+    <record id="asset_theme_color_primary_variables" model="ir.asset">
+        <field name="name">Theme Color: primary variables</field>
+        <field name="bundle">web._assets_primary_variables</field>
+        <field name="directive">prepend</field>
+        <field name="path">/_custom/hn_theme_color/theme_color.scss</field>
+    </record>
+
+    <record id="asset_theme_color_dark_variables" model="ir.asset">
+        <field name="name">Theme Color: dark mode variables</field>
+        <field name="bundle">web.dark_mode_variables</field>
+        <field name="directive">prepend</field>
+        <field name="path">/_custom/hn_theme_color/theme_color.scss</field>
+    </record>
+</odoo>

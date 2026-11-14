@@ -1,0 +1,4 @@
+// Places where Odoo writes its default color directly instead of using $o-brand-primary.
+body .o-we-tablepicker .o-we-cell.active {
+    background-color: $o-brand-primary;
+}

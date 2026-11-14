@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.hn_theme_color</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='companies_setting_container']" position="after">
+                <block title="Theme" name="hn_theme_color_container">
+                    <setting string="Theme color" help="Main color of Odoo: buttons, links, top menu and highlights. The page reloads when you save.">
+                        <div class="d-flex align-items-center gap-2 mt-2">
+                            <field name="hn_theme_color" widget="color" class="oe_inline"/>
+                            <field name="hn_theme_color" placeholder="#71639e" class="oe_inline w-auto"/>
+                        </div>
+                        <div class="mt-2">
+                            <field name="hn_theme_color_preset" placeholder="Choose a preset..." class="w-auto"/>
+                        </div>
+                        <div class="mt-2">
+                            <button name="action_hn_theme_color_reset" type="object" string="Back to the default color" icon="east" class="btn-link"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
